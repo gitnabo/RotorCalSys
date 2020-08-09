@@ -1,5 +1,6 @@
 #include "TestEngine.h"
 #include <QElapsedTimer>
+#include "Agent.h"
 
 
 
@@ -80,7 +81,18 @@ void TestEngine::RunTest()
 {
 	LOG("Hello");
 
-	Wait(5000);
+	// Setup the test agent for communications
+	Agent agent;
+	agent.Open();
+
+	// Read in a loop infinitely
+	while (true)
+	{
+		Agent::Data data = agent.GetData();
+		Wait(400);
+	}
 
 	LOG("Goodbye");
+
+	agent.Close();
 }

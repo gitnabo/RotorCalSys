@@ -2,7 +2,7 @@
 #include <QThread>
 
 /**
-@brief 
+@brief The test thread to control and gather data
 */
 class TestEngine : public QThread
 {
