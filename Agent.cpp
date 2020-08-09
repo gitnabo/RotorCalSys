@@ -1,5 +1,5 @@
 #include "Agent.h"
-
+#include <windows.h>
 
 Agent::Agent()
 {
@@ -14,8 +14,35 @@ Agent::~Agent()
 
 void Agent::Open()
 {
+	// Setup the DCB
+	DCB dcb;
+	memset(&dcb, 0, sizeof(DCB));
+	dcb.DCBlength = sizeof(DCB);
+	dcb.BaudRate = 57600;
+	dcb.fBinary = TRUE;
+	dcb.fParity = FALSE;
+	dcb.fOutxCtsFlow = FALSE;
+	dcb.fOutxDsrFlow = FALSE;
+	dcb.fDtrControl = DTR_CONTROL_DISABLE;
+	dcb.fDsrSensitivity = FALSE;
+	dcb.fTXContinueOnXoff = FALSE;
+	dcb.fOutX = FALSE;
+	dcb.fInX = FALSE;
+	dcb.fErrorChar = FALSE;
+	dcb.fNull = FALSE;
+	dcb.fRtsControl = RTS_CONTROL_DISABLE;
+	dcb.fAbortOnError = FALSE;
+	dcb.ByteSize = 8;
+	dcb.Parity = NOPARITY;
+	dcb.StopBits = ONESTOPBIT;
+	dcb.XonChar = 0x03;
+	dcb.XonChar = 0xE5;
+
+
 	// For now, fixed at COM4
-	m_serial.Open(4, 57600);
+	m_serial.SetCommPort(4);
+	m_serial.open(QIODevice::ReadWrite);
+	m_serial.SetDCB(&dcb);
 }
 
 void Agent::Close()
