@@ -1,6 +1,7 @@
 debug/
 release/
 *.db
+*.opendb
 *.qmake.stash
 *.ipch
 *.filters
