@@ -90,7 +90,6 @@ void SerialPort::Open(int iPort, int iBaud)
 	// Setup the DCB
 	DCB dcb;
 	memset(&dcb, 0, sizeof(DCB));
-	GetDCB(&dcb);
 	dcb.DCBlength = sizeof(DCB);
 	dcb.BaudRate = iBaud;
 	dcb.fBinary = TRUE;
@@ -112,6 +111,12 @@ void SerialPort::Open(int iPort, int iBaud)
 
 	if (!open(QIODevice::ReadWrite))
 		EXERR("PLP4", "Could not open COM port %d", iPort);
+
+	// HACK: Debugging
+	DCB dcb2;
+	memset(&dcb2, 0, sizeof(DCB));
+	dcb.DCBlength = sizeof(DCB);
+	GetDCB(&dcb2);	
 
 	SetDCB(&dcb);
 }
