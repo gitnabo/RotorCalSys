@@ -3,6 +3,7 @@
 #include <QElapsedTimer>
 #include <QSettings>
 #include <windows.h>
+#include <QThread>
 
 //DECLARE_LOG_SRC("SerialPort", LOGCAT_Common);
 
@@ -11,9 +12,23 @@ using namespace std;
 
 #define OPEN_TIMEOUT_MS		5000
 
-void EXERR(const QString& sCode, const QString& sMsg)
+void EXERR(const QString& sCode, const char* pszFormat, ...)
 {
-	throw sMsg;
+	// Process the string formatting
+	va_list args;
+	va_start(args, pszFormat);
+	char szMsg[2048];
+#ifdef Q_OS_WIN
+	_vsnprintf(szMsg, sizeof(szMsg) / sizeof(szMsg[0]), pszFormat, args);
+#else
+	vsnprintf(szMsg, sizeof(szMsg) / sizeof(szMsg[0]), pszFormat, args);
+#endif
+	va_end(args);
+	szMsg[sizeof(szMsg) - 1] = 0; // null terminate to be safe
+
+
+	Q_UNUSED(sCode);
+	throw QString(szMsg);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -68,7 +83,7 @@ void SerialPort::Open(int iPort, int iBaud)
 	case CBR_256000:
 		break;
 	default:
-		EXERR("84FR", "Invalid baud rate %dprovided", iBaud);
+		EXERR("84FR", "Invalid baud rate %d provided", iBaud);
 		break;
 	}
 
@@ -149,7 +164,7 @@ bool SerialPort::open(OpenMode mode)
 		}
 		
 		// Pause a moment
-		Util::msleep(250);
+		QThread::msleep(250);
 	}
 
 	return true;
