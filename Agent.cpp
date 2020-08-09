@@ -1,5 +1,4 @@
 #include "Agent.h"
-#include <windows.h>
 
 
 Agent::Agent()
@@ -15,9 +14,6 @@ Agent::~Agent()
 
 void Agent::Open()
 {
-	DCB dcb;
-	m_serial.GetDCB(&dcb);
-
 	// For now, fixed at COM4
 	m_serial.Open(4, 57600);
 }

@@ -90,6 +90,7 @@ void SerialPort::Open(int iPort, int iBaud)
 	// Setup the DCB
 	DCB dcb;
 	memset(&dcb, 0, sizeof(DCB));
+	GetDCB(&dcb);
 	dcb.DCBlength = sizeof(DCB);
 	dcb.BaudRate = iBaud;
 	dcb.fBinary = TRUE;
