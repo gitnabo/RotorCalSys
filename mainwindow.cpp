@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+	m_pTestEngine = new TestEngine(this);
+	m_pTestEngine->Start();
 }
 
 MainWindow::~MainWindow()
