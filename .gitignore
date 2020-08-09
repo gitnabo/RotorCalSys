@@ -1,2 +1,8 @@
 debug/
 release/
+*.db
+*.qmake.stash
+*.ipch
+*.filters
+*.user
+ui_*.h
