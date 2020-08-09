@@ -1,12 +1,12 @@
 #include "SerialPort.h"
 #include <winerror.h>
-#include "Logging.h"
+#include <qthread.h>
 #include <QElapsedTimer>
 #include <QSettings>
 #include <windows.h>
-#include <Util.h>
 
-DECLARE_LOG_SRC("SerialPort", LOGCAT_Common);
+
+//DECLARE_LOG_SRC("SerialPort", LOGCAT_Common);
 
 
 using namespace std;
@@ -66,7 +66,8 @@ void SerialPort::Open(int iPort, int iBaud)
 	case CBR_256000:
 		break;
 	default:
-		EXERR("84FR", "Invalid baud rate %dprovided", iBaud);
+		//EXERR("84FR", "Invalid baud rate %dprovided", iBaud);
+		throw QString("Bad Baud Rate");
 		break;
 	}
 
@@ -93,8 +94,8 @@ void SerialPort::Open(int iPort, int iBaud)
 	dcb.StopBits = ONESTOPBIT;
 
 	if (!open(QIODevice::ReadWrite))
-		EXERR("PLP4", "Could not open COM port %d", iPort);
-
+		//EXERR("PLP4", "Could not open COM port %d", iPort);
+		throw QString("Could not open COM port");
 	SetDCB(&dcb);
 }
 
@@ -106,8 +107,8 @@ bool SerialPort::open(OpenMode mode)
 	sPort.toWCharArray(szPort);
 
 	if (m_iCommPort <= 0)
-		EXERR("HGZG", "Comm port %d is not valid", m_iCommPort);
-
+		//EXERR("HGZG", "Comm port %d is not valid", m_iCommPort);
+		throw QString("Comm port is not valid");
 	// When waking up from sleep, it sometimes takes a moment
 	// for the serial port to be ready. Poll it.
 	QElapsedTimer timer;
@@ -121,7 +122,7 @@ bool SerialPort::open(OpenMode mode)
 		if(INVALID_HANDLE_VALUE != m_hFile)
 		{
 			// All is well
-			LOGDBG("SerialPort::Open()-Opened '%s'\r\n", qPrintable(sPort));
+			//LOGDBG("SerialPort::Open()-Opened '%s'\r\n", qPrintable(sPort));
 			return QIODevice::open(mode);
 		}
 
@@ -131,23 +132,26 @@ bool SerialPort::open(OpenMode mode)
 		if(ERROR_DEV_NOT_EXIST != dwErr)
 		{
 			// A real error occurred
-			EXERR("HQ66", "SerialPort::Open- Could not open port '%s', error %d (CreateFile returned 0x%08X)\r\n",
-						qPrintable(sPort), dwErr, m_hFile);	
+			//EXERR("HQ66", "SerialPort::Open- Could not open port '%s', error %d (CreateFile returned 0x%08X)\r\n",
+						//qPrintable(sPort), dwErr, m_hFile);	
+			throw QString("Could not open port");
 		}
 
 		// If we got here, then it was because the serial port is not yet ready.
 		// Try again in a moment.
-		EXERR("U4YJ", "SerialPort::Open- Serial port not available '%s', error %d (CreateFile returned 0x%08X)\r\n",
-						qPrintable(sPort), dwErr, m_hFile);
+		//EXERR("U4YJ", "SerialPort::Open- Serial port not available '%s', error %d (CreateFile returned 0x%08X)\r\n",
+						//qPrintable(sPort), dwErr, m_hFile);
+		throw QString("Serial port not available");
 		
 		// Timed out?
 		if(timer.elapsed() > OPEN_TIMEOUT_MS)
 		{
-			EXERR("QCZZ", "SerialPort::Open- Timed out waiting for serial port '%s' to become available\r\n", qPrintable(sPort));
+			//EXERR("QCZZ", "SerialPort::Open-throw QString("Serial port not available"); '%s' to become available\r\n", qPrintable(sPort));
+			throw QString("Serial port not available");
 		}
 		
 		// Pause a moment
-		Util::msleep(250);
+		QThread::msleep(250);
 	}
 
 	return true;
@@ -163,7 +167,8 @@ void SerialPort::close()
 	
 	if(!::PurgeComm(m_hFile, PURGE_TXABORT | PURGE_RXABORT))
 	{
-		LOGDBG("SerialPort::Close PurgeComm failed! (err %d)\r\n", ::GetLastError());
+		// LOGDBG("SerialPort::Close PurgeComm failed! (err %d)\r\n", ::GetLastError());
+		throw QString("Close PurgeComm failed");
 		return;
 	}
 
@@ -189,7 +194,8 @@ void SerialPort::GetDCB(DCB *pDCB)
 	//ASSERT(m_hFile);
 
 	if (!::GetCommState(m_hFile, pDCB))
-		EXERR("LZGU", "Failed to fetch DCB");
+		//EXERR("LZGU", "Failed to fetch DCB");
+		throw QString("Failed to fetch DCB");
 }
 
 void SerialPort::SetDCB(DCB *pDCB)
@@ -200,7 +206,8 @@ void SerialPort::SetDCB(DCB *pDCB)
 
 	pDCB->DCBlength = sizeof(DCB);       
 	if (!::SetCommState(m_hFile, pDCB))
-		EXERR("TAGD", "Failed to set DCB");
+		//EXERR("TAGD", "Failed to set DCB");
+		throw QString("Failed to set DCB");
 }
 
 
@@ -211,7 +218,8 @@ void SerialPort::GetTimeouts(COMMTIMEOUTS *pTimeouts)
 	//ASSERT(m_hFile);
 
 	if (!::GetCommTimeouts(m_hFile, pTimeouts))
-		EXERR("U2Q4", "Failed to get timeouts");
+		//EXERR("U2Q4", "Failed to get timeouts");
+		throw QString("Failed to get timeouts");
 }
 
 void SerialPort::SetTimeouts(COMMTIMEOUTS *pTimeouts)
@@ -221,7 +229,8 @@ void SerialPort::SetTimeouts(COMMTIMEOUTS *pTimeouts)
 	//ASSERT(m_hFile);
 
 	if(!::SetCommTimeouts(m_hFile, pTimeouts))
-		EXERR("6WHP", "Failed to set timeouts %d", ::GetLastError());
+		//EXERR("6WHP", "Failed to set timeouts %d", ::GetLastError());
+		throw QString("Failed to set timeouts");
 }
 
 
@@ -242,8 +251,8 @@ qint64 SerialPort::writeData(const char *pData, qint64 qiSize)
 	{
 		DWORD dwBytesWritten;
 		if (!::WriteFile(m_hFile, pData, dwBytesLeft, &dwBytesWritten, NULL))
-			EXERR("GEAK", "Error %d while writing to serial port", ::GetLastError());
-
+			//EXERR("GEAK", "Error %d while writing to serial port", ::GetLastError());
+			throw QString("Error while writing to serial port");
 		dwTotalBytesWritten += dwBytesWritten;
 		dwBytesLeft -= dwBytesWritten;
 
@@ -259,7 +268,8 @@ qint64 SerialPort::writeData(const char *pData, qint64 qiSize)
 		{
 			// We tried to write to serial bus 100 times, but it's stuck and not responding
 			// For my PC the only thing worked was to shut down the computer and turn it back on.
-			EXERR("WUC6", "Looks like serial bus is in bad condition and not responding. Shutdown your PC, then turn it back on. It should fix this issue.");
+			//EXERR("WUC6", "Looks like serial bus is in bad condition and not responding. Shutdown your PC, then turn it back on. It should fix this issue.");
+			throw QString("Looks like serial bus is in bad condition and not responding. Shutdown your PC, then turn it back on. It should fix this issue.");
 		}
 	}
 
@@ -281,7 +291,8 @@ qint64 SerialPort::readData(char *pData, qint64 qiSize)
 	//ASSERT(m_hFile);
 	DWORD dwBytesRead = 0;
 	if (!::ReadFile(m_hFile, pData, qiSize, &dwBytesRead, NULL))
-		EXERR("HEZW", "Error %d while reading from serial port", ::GetLastError());
+		//EXERR("HEZW", "Error %d while reading from serial port", ::GetLastError());
+		throw QString("Error while reading from serial port");
 
 	return dwBytesRead;
 }
@@ -296,7 +307,8 @@ void SerialPort::Flush(void)
 {
 	Q_ASSERT(m_hFile);
 	if (!::PurgeComm(m_hFile, PURGE_RXCLEAR | PURGE_TXCLEAR))
-		EXERR("AQEW", "Flush Failed");
+		//EXERR("AQEW", "Flush Failed");
+		throw QString("Flush Failed");
 }
 
 
@@ -306,7 +318,8 @@ void SerialPort::GetCommMask(ulong *lpEvtMask)
 {
 	Q_ASSERT(m_hFile);
 	if (!::GetCommMask(m_hFile, lpEvtMask))
-		EXERR("TJ4K", "Failed to get Comm Mask");
+		//EXERR("TJ4K", "Failed to get Comm Mask");
+		throw QString("Failed to get Comm Mask");
 }
 
 
@@ -314,7 +327,8 @@ void SerialPort::SetCommMask(ulong dwEvtMask)
 {
 	Q_ASSERT(m_hFile);
 	if(!::SetCommMask(m_hFile, dwEvtMask))
-		EXERR("GD9W", "Failed to set Comm Mask");
+		//EXERR("GD9W", "Failed to set Comm Mask");
+		throw QString("Failed to get Comm Mask");	
 }
 
 QList<int> SerialPort::ListCommPorts()
@@ -334,7 +348,8 @@ QList<int> SerialPort::ListCommPorts()
 		if (hFile != INVALID_HANDLE_VALUE)
 		{
 			list << i;
-			LOGINFO("PORT %d", i);
+			//LOGINFO("PORT %d", i);
+			
 			::CloseHandle(hFile);
 		}
 	}
