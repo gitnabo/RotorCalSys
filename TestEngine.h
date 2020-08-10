@@ -11,7 +11,7 @@ public:
 	TestEngine(QObject *parent);
 	~TestEngine();
 
-	void Start();
+	void Start(const QString& sPort);
 	void Stop();
 	bool IsRunning();
 
@@ -29,5 +29,6 @@ private:
 	void Wait(int iMs);
 	void CheckAbort();
 	void RunTest();
+	QString m_sPort;
 };
 

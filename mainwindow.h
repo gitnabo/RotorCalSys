@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include "TestEngine.h"
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,10 +21,14 @@ private slots:
 	void UpdateControls();
 	void on_pbStart_clicked();
 	void on_pbStop_clicked();
+	void OnStopped();
+	void OnError(QString sMsg);
+	void OnUpdateTimer();
 
 private:
 	void SaveSettings();
 	void LoadSettings();
     Ui::MainWindow *ui;
 	TestEngine *m_pTestEngine = nullptr;
+	QTimer* m_pTimerUpdate = nullptr;
 };

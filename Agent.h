@@ -13,7 +13,7 @@ public:
 	Agent();
 	~Agent();
 
-	void Open();
+	void Open(const QString& sPort);
 	void Close();
 
 	void SetRPM(float fRPM);

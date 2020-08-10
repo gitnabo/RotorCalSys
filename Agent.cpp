@@ -2,6 +2,8 @@
 #include <QSerialPortInfo>
 
 
+#define TIMEOUT_MS		4000
+
 Agent::Agent()
 {
 }
@@ -13,11 +15,10 @@ Agent::~Agent()
 }
 
 
-void Agent::Open()
+void Agent::Open(const QString& sPort)
 {
 	QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
-	QSerialPortInfo port = ports.at(1);
-	QString sName = port.portName();
+	QSerialPortInfo port(sPort);
 	m_serial.setPort(port);
 	m_serial.setBaudRate(57600);
 	m_serial.setDataBits(QSerialPort::Data8);
@@ -57,7 +58,8 @@ Agent::Data Agent::GetData()
 	m_serial.waitForBytesWritten(1);
 
 	// Read data from the serial port
-	m_serial.waitForReadyRead();
+	if (!m_serial.waitForReadyRead(TIMEOUT_MS))
+		throw QString("No response from test stand");
 	QString sLine(m_serial.readLine());
 
 	// Parse out the data

@@ -16,9 +16,10 @@ TestEngine::~TestEngine()
 }
 
 
-void TestEngine::Start()
+void TestEngine::Start(const QString& sPort)
 {
 	m_bStopRequest = false;
+	m_sPort = sPort;
 	start();
 }
 
@@ -88,7 +89,7 @@ void TestEngine::RunTest()
 
 	// Setup the test agent for communications
 	Agent agent;
-	agent.Open();
+	agent.Open(m_sPort);
 
 	// Read in a loop infinitely
 	while (true)
