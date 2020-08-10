@@ -25,6 +25,11 @@ void TestEngine::Start()
 void TestEngine::Stop()
 {
 	m_bStopRequest = true;
+
+	while (IsRunning())
+	{
+		QThread::msleep(50);
+	}
 }
 
 bool TestEngine::IsRunning()
