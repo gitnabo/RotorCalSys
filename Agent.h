@@ -1,5 +1,6 @@
 #pragma once
-#include "SerialPort.h"
+#include <QSerialPort>
+
 
 /**
 @brief API for the Arduino test stand
@@ -27,6 +28,6 @@ public:
 	Data GetData();
 
 private:
-	SerialPort m_serial;
+	QSerialPort m_serial;
 };
 

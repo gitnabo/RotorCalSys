@@ -1,5 +1,6 @@
 #include "Agent.h"
-#include <windows.h>
+#include <QSerialPortInfo>
+
 
 Agent::Agent()
 {
@@ -14,45 +15,17 @@ Agent::~Agent()
 
 void Agent::Open()
 {
-	// Setup the DCB
-	DCB dcb;
-	memset(&dcb, 0, sizeof(DCB));
-	dcb.DCBlength = sizeof(DCB);
-	dcb.BaudRate = 57600;
-	dcb.fBinary = TRUE;
-	dcb.fParity = FALSE;
-	dcb.fOutxCtsFlow = FALSE;
-	dcb.fOutxDsrFlow = FALSE;
-	dcb.fDtrControl = DTR_CONTROL_DISABLE;
-	dcb.fDsrSensitivity = FALSE;
-	dcb.fTXContinueOnXoff = FALSE;
-	dcb.fOutX = FALSE;
-	dcb.fInX = FALSE;
-	dcb.fErrorChar = FALSE;
-	dcb.fNull = FALSE;
-	dcb.fRtsControl = RTS_CONTROL_DISABLE;
-	dcb.fAbortOnError = FALSE;
-	dcb.ByteSize = 8;
-	dcb.Parity = NOPARITY;
-	dcb.StopBits = ONESTOPBIT;
-	dcb.XonChar = 0x03;
-	dcb.XoffChar = 0xE5;
-
-
-	// For now, fixed at COM4
-	//m_serial.SetCommPort(3);
-	//m_serial.open(QIODevice::ReadWrite);
-	//m_serial.SetDCB(&dcb);
-	m_serial.Open(3, 57600);
-
-	COMMTIMEOUTS to;
-	memset(&to, 0, sizeof(to));
-	to.ReadIntervalTimeout = 10;
-	to.ReadTotalTimeoutMultiplier = 2;
-	to.ReadTotalTimeoutConstant = 100;
-	to.WriteTotalTimeoutMultiplier = 2;
-	to.WriteTotalTimeoutConstant = 50;
-	m_serial.SetTimeouts(&to);
+	QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+	QSerialPortInfo port = ports.at(1);
+	QString sName = port.portName();
+	m_serial.setPort(port);
+	m_serial.setBaudRate(57600);
+	m_serial.setDataBits(QSerialPort::Data8);
+	m_serial.setStopBits(QSerialPort::StopBits::OneStop);
+	m_serial.setParity(QSerialPort::Parity::NoParity);
+	m_serial.setFlowControl(QSerialPort::NoFlowControl);
+	if (!m_serial.open(QIODevice::ReadWrite))
+		throw QString("Could not open serial port %1").arg("x");
 }
 
 void Agent::Close()
@@ -81,13 +54,14 @@ Agent::Data Agent::GetData()
 {
 	// Send the command to request the data
 	m_serial.write("printContinuous\r\n");
-	m_serial.Flush();
+	m_serial.waitForBytesWritten(1);
 
 	// Read data from the serial port
-	QByteArray ba = m_serial.read(15);
-	QString s(ba);
+	m_serial.waitForReadyRead();
+	QString sLine(m_serial.readLine());
 
 	// Parse out the data
+	QStringList slTokens = sLine.split(',');
 	Data data;
 	memset(&data, 0, sizeof(data));
 	return data;
