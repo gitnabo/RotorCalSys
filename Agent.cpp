@@ -36,13 +36,23 @@ void Agent::Open()
 	dcb.Parity = NOPARITY;
 	dcb.StopBits = ONESTOPBIT;
 	dcb.XonChar = 0x03;
-	dcb.XonChar = 0xE5;
+	dcb.XoffChar = 0xE5;
 
 
 	// For now, fixed at COM4
-	m_serial.SetCommPort(4);
-	m_serial.open(QIODevice::ReadWrite);
-	m_serial.SetDCB(&dcb);
+	//m_serial.SetCommPort(3);
+	//m_serial.open(QIODevice::ReadWrite);
+	//m_serial.SetDCB(&dcb);
+	m_serial.Open(3, 57600);
+
+	COMMTIMEOUTS to;
+	memset(&to, 0, sizeof(to));
+	to.ReadIntervalTimeout = 10;
+	to.ReadTotalTimeoutMultiplier = 2;
+	to.ReadTotalTimeoutConstant = 100;
+	to.WriteTotalTimeoutMultiplier = 2;
+	to.WriteTotalTimeoutConstant = 50;
+	m_serial.SetTimeouts(&to);
 }
 
 void Agent::Close()
@@ -70,11 +80,11 @@ struct Data {
 Agent::Data Agent::GetData()
 {
 	// Send the command to request the data
-	m_serial.write("printVals\r\n");
+	m_serial.write("printContinuous\r\n");
 	m_serial.Flush();
 
 	// Read data from the serial port
-	QByteArray ba = m_serial.read(64);
+	QByteArray ba = m_serial.read(15);
 	QString s(ba);
 
 	// Parse out the data
