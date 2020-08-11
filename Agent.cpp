@@ -1,6 +1,7 @@
 #include "Agent.h"
 #include <QSerialPortInfo>
-
+#include <QElapsedTimer>
+#include <QThread>
 
 #define TIMEOUT_MS		4000
 
@@ -60,6 +61,16 @@ Agent::Data Agent::GetData()
 	// Read data from the serial port
 	if (!m_serial.waitForReadyRead(TIMEOUT_MS))
 		throw QString("No response from test stand");
+
+	QElapsedTimer tmr;
+	tmr.start();
+	while (!m_serial.canReadLine())
+	{
+		QThread::msleep(30);
+		if(tmr.elapsed() > 1000)
+			throw QString("No response from test stand (no full line)");
+	}
+
 	QString sLine(m_serial.readLine());
 
 	// Parse out the data
