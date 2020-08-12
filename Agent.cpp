@@ -30,7 +30,7 @@ void Agent::Open(const QString& sPort)
 		throw QString("Could not open serial port %1").arg("x");
 
 	// Read whatever data might still be in the serial port buffer, ya never know!
-	m_serial.readLine();
+	m_serial.readAll();
 }
 
 void Agent::Close()
