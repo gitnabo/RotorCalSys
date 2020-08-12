@@ -30,7 +30,7 @@ void Agent::Open(const QString& sPort)
 		throw QString("Could not open serial port %1").arg("x");
 
 	// Read whatever data might still be in the serial port buffer, ya never know!
-	// CYRIL: Do this
+	m_serial.readLine();
 }
 
 void Agent::Close()
@@ -81,12 +81,15 @@ Agent::Data Agent::GetData()
 		throw QString("Invalid printContinuous response size");
 
 	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
-	bool bOk;
-	float fValA = slTokens.at(1).toFloat(&bOk);
-	if (!bOk)
-		throw QString("Bad value A received");
 	Data data;
 	memset(&data, 0, sizeof(data));
+	
+	bool bOk;
+	// data = slTokens.at(1).toFloat(&bOk); // # Not working. Look into it
+	if (!bOk)
+		throw QString("Bad value A received");
+	
+	
 	return data;
 }
 
