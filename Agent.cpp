@@ -28,6 +28,9 @@ void Agent::Open(const QString& sPort)
 	m_serial.setFlowControl(QSerialPort::NoFlowControl);
 	if (!m_serial.open(QIODevice::ReadWrite))
 		throw QString("Could not open serial port %1").arg("x");
+
+	// Read whatever data might still be in the serial port buffer, ya never know!
+	// CYRIL: Do this
 }
 
 void Agent::Close()
@@ -35,14 +38,26 @@ void Agent::Close()
 	m_serial.close();
 }
 
-void Agent::SetRPM(float fRPM)
+
+QString Agent::ReadLine()
 {
+	// Wait for some data to arrive to the serial port internal buffer
+	if (!m_serial.waitForReadyRead(TIMEOUT_MS))
+		throw QString("No response from test stand");
 
-}
+	// Spin a bit so that we can hopefully just read a single line
+	QElapsedTimer tmr;
+	tmr.start();
+	while (!m_serial.canReadLine())
+	{
+		m_serial.waitForReadyRead(30);
+		if (tmr.elapsed() > 1000)
+			throw QString("No response from test stand (no full line)");
+	}
 
-void Agent::SetPitch(float fDegrees)
-{
-
+	// Read the line
+	QString sLine = m_serial.readLine();
+	return sLine;
 }
 
 /*
@@ -58,24 +73,36 @@ Agent::Data Agent::GetData()
 	m_serial.write("printContinuous\r\n");
 	m_serial.waitForBytesWritten(1);
 
-	// Read data from the serial port
-	if (!m_serial.waitForReadyRead(TIMEOUT_MS))
-		throw QString("No response from test stand");
-
-	QElapsedTimer tmr;
-	tmr.start();
-	while (!m_serial.canReadLine())
-	{
-		QThread::msleep(30);
-		if(tmr.elapsed() > 1000)
-			throw QString("No response from test stand (no full line)");
-	}
-
-	QString sLine(m_serial.readLine());
+	QString sLine = ReadLine();
 
 	// Parse out the data
 	QStringList slTokens = sLine.split(',');
+	if(9 != slTokens.count())
+		throw QString("Invalid printContinuous response size");
+
+	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
+	bool bOk;
+	float fValA = slTokens.at(1).toFloat(&bOk);
+	if (!bOk)
+		throw QString("Bad value A received");
 	Data data;
 	memset(&data, 0, sizeof(data));
 	return data;
+}
+
+void Agent::SetRPM(float fRPM)
+{
+	m_serial.write("setRpm\r\n");
+	m_serial.waitForBytesWritten(1);
+
+	QString sLine = ReadLine();
+
+	// Parse out the response
+	QStringList slTokens = sLine.split(',');
+
+}
+
+void Agent::SetPitch(float fDegrees)
+{
+
 }
