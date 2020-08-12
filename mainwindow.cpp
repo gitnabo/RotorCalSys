@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(m_pTestEngine, &TestEngine::Stopped, this, &MainWindow::OnStopped);
 	connect(m_pTestEngine, &TestEngine::Error, this, &MainWindow::OnError);
 	
+	connect(m_pTestEngine, &TestEngine::Log, this, &MainWindow::OnLog);
+	connect(m_pTestEngine, &TestEngine::NewData, this, &MainWindow::OnNewData);
+
 	// Populate the serial port combo dialog
 	QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 	for (QSerialPortInfo port : ports)
@@ -119,6 +122,8 @@ void MainWindow::UpdateControls()
 
 void MainWindow::on_pbStart_clicked()
 {
+
+	ui->pteLog->setPlainText("");
 	QString sSerialPortName = ui->cbSerialPorts->currentText();
 	m_pTestEngine->Start(sSerialPortName);
 	UpdateControls();
@@ -139,4 +144,13 @@ void MainWindow::OnStopped()
 void MainWindow::OnError(QString sMsg)
 {
 	QMessageBox::critical(this, "Error", sMsg);
+}
+
+void MainWindow::OnNewData(Agent::Data data)
+{
+}
+
+void MainWindow::OnLog(QString sMsg)
+{
+	ui->pteLog->appendPlainText(sMsg);
 }

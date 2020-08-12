@@ -24,6 +24,8 @@ private slots:
 	void OnStopped();
 	void OnError(QString sMsg);
 	void OnUpdateTimer();
+	void OnNewData(Agent::Data data);
+	void OnLog(QString sMsg);
 
 private:
 	void SaveSettings();
