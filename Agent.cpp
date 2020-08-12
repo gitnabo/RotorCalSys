@@ -76,21 +76,26 @@ Agent::Data Agent::GetData()
 	QString sLine = ReadLine();
 
 	// Parse out the data
+	int iDataPkgSize = 9;
 	QStringList slTokens = sLine.split(',');
-	if(9 != slTokens.count())
+	if(iDataPkgSize != slTokens.count())
 		throw QString("Invalid printContinuous response size");
 
 	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
 	Data data;
 	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
 
-	
+	/// Check data coming out of the Arduino
 	bool bOk;
-	data = slTokens.at(1).toFloat(&bOk); // # Not working. Look at this when 
-	if (!bOk)
-		throw QString("Bad value A received");
-	
-	
+	for (int i = 1; i < (iDataPkgSize - 1); i++) { /// (iDataPkgSize-1) bc Read is skipped
+		slTokens.at(i).toFloat(&bOk);
+		if (!bOk) {		
+			throw QString("Bad value A received");
+		}
+	}
+
+	data.fTime = slTokens.at(1).toFloat(); /// Continue for the rest of the values
+
 	return data;
 }
 
