@@ -19,11 +19,15 @@ public:
 	void SetRPM(float fRPM);
 	void SetPitch(float fDegrees); ///< Or PWM?
 
-	struct Data {
-		float fLiftForce;
-		float fPitchServoA;
-		float fPitchServoV;
-		float fMotorPosition;
+	struct Data {		
+		float fTime;
+		float fLoadCell; /// Lbs
+		float fServoCurrent; /// mA
+		float fServoVoltage; /// V
+		float fMotorControllerCurrent; /// A
+		float fMotorControllerVoltage; /// V
+		float fServoPostion; /// us pulse width
+		float fMotorRpmSetting; /// us pulse width
 	};
 	Data GetData();
 

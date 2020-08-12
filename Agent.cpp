@@ -82,10 +82,11 @@ Agent::Data Agent::GetData()
 
 	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
 	Data data;
-	memset(&data, 0, sizeof(data));
+	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
+
 	
 	bool bOk;
-	// data = slTokens.at(1).toFloat(&bOk); // # Not working. Look into it
+	data = slTokens.at(1).toFloat(&bOk); // # Not working. Look at this when 
 	if (!bOk)
 		throw QString("Bad value A received");
 	
