@@ -3,6 +3,8 @@
 #include <QWidget>
 #include "TestEngine.h"
 #include <QTimer>
+#include <QVector>
+#include <QtCharts>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,6 +30,10 @@ private slots:
 	void OnLog(QString sMsg);
 
 private:
+	QVector<Agent::Data> m_vectData;
+	QLineSeries* m_pLineSeries = nullptr;
+	void CreateChart();
+	void ResetChart();
 	void SaveSettings();
 	void LoadSettings();
     Ui::MainWindow *ui;

@@ -36,3 +36,5 @@ private:
 	QString ReadLine();
 };
 
+
+Q_DECLARE_METATYPE(Agent::Data)

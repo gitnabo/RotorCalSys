@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "Agent.h"
 
 #include <QApplication>
 
@@ -8,6 +9,8 @@ int main(int argc, char *argv[])
 	QCoreApplication::setOrganizationName("GeoScout");
 	QCoreApplication::setOrganizationDomain("geoscout.com");
 	QCoreApplication::setApplicationName("RotorSysCal");
+
+	qRegisterMetaType<Agent::Data>("Agent::Data");
 
     MainWindow w;
     w.show();
