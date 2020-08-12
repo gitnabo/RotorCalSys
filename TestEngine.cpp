@@ -66,7 +66,7 @@ void TestEngine::Wait(int iMs)
 	}
 }
 
-void TestEngine::run()
+void TestEngine::run() /// Entry Point
 {
 	emit Started();
 	try
@@ -92,6 +92,7 @@ void TestEngine::RunTest()
 	agent.Open(m_sPort);
 
 	// Read in a loop infinitely
+	/// This is temp until Agent is completed
 	while (true)
 	{
 		Agent::Data data = agent.GetData();

@@ -70,6 +70,8 @@ struct Data {
 Agent::Data Agent::GetData()
 {
 	// Send the command to request the data
+	/// Read whatever data might still be in the serial port buffer, ya never know!
+	m_serial.readAll();
 	m_serial.write("printContinuous\r\n");
 	m_serial.waitForBytesWritten(1);
 
@@ -88,7 +90,7 @@ Agent::Data Agent::GetData()
 	/// Check data coming out of the Arduino
 	bool bOk;
 	for (int i = 1; i < (iDataPkgSize - 1); i++) { /// (iDataPkgSize-1) bc Read is skipped
-		slTokens.at(i).toFloat(&bOk);
+		slTokens.at(i).toFloat(&bOk); // Del thisa
 		if (!bOk) {		
 			throw QString("Bad value A received");
 		}

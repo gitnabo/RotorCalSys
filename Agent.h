@@ -20,7 +20,8 @@ public:
 	void SetPitch(float fDegrees); ///< Or PWM?
 
 	struct Data {		
-		float fTime;
+		QString Read;
+		float fTime; /// Unformated
 		float fLoadCell; /// Lbs
 		float fServoCurrent; /// mA
 		float fServoVoltage; /// V
