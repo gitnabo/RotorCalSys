@@ -86,17 +86,49 @@ Agent::Data Agent::GetData()
 	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
 	Data data;
 	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
-
-	/// Check data coming out of the Arduino
 	bool bOk;
-	for (int i = 1; i < (iDataPkgSize - 1); i++) { /// (iDataPkgSize-1) bc Read is skipped
-		slTokens.at(i).toFloat(&bOk); // Del thisa
-		if (!bOk) {		
-			throw QString("Bad value A received");
-		}
+	
+	// data.sRead = slTokens.at(0); /// Parsing "Read:" for consistency // Generating error
+
+	data.fTime = slTokens.at(1).toFloat(&bOk); 
+	if (!bOk) {
+		throw QString("Bad value received from Arduino: fTime");
 	}
 
-	data.fTime = slTokens.at(1).toFloat(); /// Continue for the rest of the values
+	data.fLoadCell = slTokens.at(2).toFloat(&bOk);
+	if (!bOk) {
+		throw QString("Bad value received from Arduino: fLoadCell");
+	}
+
+	data.fServoCurrent = slTokens.at(3).toFloat(&bOk);
+	if (!bOk) {
+		throw QString("Bad value received from Arduino: fServoCurrent");
+	}
+
+	data.fServoVoltage = slTokens.at(4).toFloat(&bOk);
+	if (!bOk) {
+		throw QString("Bad value received from Arduino: fServoVoltage");
+	}
+
+	data.fMotorControllerCurrent = slTokens.at(5).toFloat(&bOk);
+	if (!bOk) {
+		throw QString("Bad value received from Arduino: fMotorControllerCurrent");
+	}
+
+	data.fMotorControllerVoltage = slTokens.at(6).toFloat(&bOk);
+	if (!bOk) {
+		throw QString("Bad value received from Arduino: fMotorControllerVoltage");
+	}
+
+	data.fServoPostion = slTokens.at(7).toFloat(&bOk);
+	if (!bOk) {
+		throw QString("Bad value received from Arduino: fServoPostion");
+	}
+
+	data.fMotorRpmSetting = slTokens.at(8).toFloat(&bOk);
+	if (!bOk) {
+		throw QString("Bad value received from Arduino: fMotorRpmSetting");
+	}
 
 	return data;
 }
