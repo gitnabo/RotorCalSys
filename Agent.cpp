@@ -9,7 +9,6 @@ Agent::Agent()
 {
 }
 
-
 Agent::~Agent()
 {
 	Close();
@@ -60,13 +59,6 @@ QString Agent::ReadLine()
 	return sLine;
 }
 
-/*
-struct Data {
-	float fLiftForce;
-	float fPitchServoA;
-	float fPitchServoV;
-	float fMotorPosition;
-};*/
 Agent::Data Agent::GetData()
 {
 	// Send the command to request the data
@@ -86,7 +78,7 @@ Agent::Data Agent::GetData()
 	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
 	Data data;
 	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
-	bool bOk;
+	bool bOk;      
 	
 	// data.sRead = slTokens.at(0); /// Parsing "Read:" for consistency // Generating error
 
@@ -130,21 +122,22 @@ Agent::Data Agent::GetData()
 		throw QString("Bad value received from Arduino: fMotorRpmSetting");
 	}
 
-	return data;
+	return data; 
 }
 
+// ! setServoTwoPos = Engine !
 void Agent::SetRPM(float fRPM)
 {
-	m_serial.write("setRpm\r\n");
+	m_serial.write("setServoTwoPos\r\n");
 	m_serial.waitForBytesWritten(1);
 
 	QString sLine = ReadLine();
 
 	// Parse out the response
 	QStringList slTokens = sLine.split(',');
-
 }
 
+// ! setServoOnePos = Servo !
 void Agent::SetPitch(float fDegrees)
 {
 
