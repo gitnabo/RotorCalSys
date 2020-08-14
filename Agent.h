@@ -16,8 +16,9 @@ public:
 	void Open(const QString& sPort);
 	void Close();
 
-	void SetRPM(float fRPM);
 	void SetPitch(int iServoPos); ///< Or PWM?
+	void SetMotorSpeed(int iMotorSpeedCmd);
+	
 
 	struct Data {		
 		QString sRead;
@@ -27,8 +28,8 @@ public:
 		float fServoVoltage; /// V
 		float fMotorControllerCurrent; /// A
 		float fMotorControllerVoltage; /// V
-		int   int iServoPos; /// us pulse width
-		float fMotorRpmSetting; /// us pulse width
+	    int   iServoPos; /// us pulse width
+		int   iMotorSpeed; /// us pulse width
 	};
 	Data GetData();
 

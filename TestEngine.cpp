@@ -96,6 +96,8 @@ void TestEngine::RunTest()
 	while (true)
 	{
 		Agent::Data data = agent.GetData();
+		agent.SetPitch(1280);
+		agent.SetPitch(1680);
 		Wait(400);
 	}
 

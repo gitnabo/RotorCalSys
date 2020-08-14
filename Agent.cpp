@@ -112,12 +112,12 @@ Agent::Data Agent::GetData()
 		throw QString("Bad value received from Arduino: fMotorControllerVoltage");
 	}
 
-	data.fServoPostion = slTokens.at(7).toFloat(&bOk);
+	data.iServoPos = slTokens.at(7).toFloat(&bOk);
 	if (!bOk) {
 		throw QString("Bad value received from Arduino: fServoPostion");
 	}
 
-	data.fMotorRpmSetting = slTokens.at(8).toFloat(&bOk);
+	data.iMotorSpeed = slTokens.at(8).toFloat(&bOk);
 	if (!bOk) {
 		throw QString("Bad value received from Arduino: fMotorRpmSetting");
 	}
@@ -129,25 +129,43 @@ Agent::Data Agent::GetData()
 //  Servo Pos = setServoOnePos
 void Agent::SetPitch(int iServoPos)
 {
-	m_serial.write("setServoTwoPos\r\n");
+	QString sServoPos = QString::number(iServoPos);
+	QByteArray baServoPos = sServoPos.toLocal8Bit();
+	const char *ccServoPos = baServoPos.data();
+	
+	m_serial.write("setServoOnePos");
+	m_serial.write(ccServoPos);
+	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
 
+	// Do we need the read back?
+	/*
 	QString sLine = ReadLine();
 
 	// Parse out the response
 	QStringList slTokens = sLine.split(',');
+	*/
 }
 
 // ! Engine RPM = setServoTwoPos !
-void Agent::SetRPM(float fRPM)
+void Agent::SetMotorSpeed(int iMotorSpeedCmd)
 {
-	m_serial.write("setServoTwoPos\r\n");
+	QString sMotorSpeed = QString::number(iMotorSpeedCmd);
+	QByteArray baMotorSpeed = sMotorSpeed.toLocal8Bit();
+	const char *ccMotorSpeed = baMotorSpeed.data();
+
+	m_serial.write("setServoTwoPos");
+	m_serial.write(ccMotorSpeed);
+	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
 
+	// Do we need the read back?
+	/*
 	QString sLine = ReadLine();
 
 	// Parse out the response
 	QStringList slTokens = sLine.split(',');
+	*/
 }
 
 
