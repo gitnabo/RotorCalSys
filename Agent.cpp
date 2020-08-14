@@ -125,7 +125,20 @@ Agent::Data Agent::GetData()
 	return data; 
 }
 
-// ! setServoTwoPos = Engine !
+
+//  Servo Pos = setServoOnePos
+void Agent::SetPitch(int iServoPos)
+{
+	m_serial.write("setServoTwoPos\r\n");
+	m_serial.waitForBytesWritten(1);
+
+	QString sLine = ReadLine();
+
+	// Parse out the response
+	QStringList slTokens = sLine.split(',');
+}
+
+// ! Engine RPM = setServoTwoPos !
 void Agent::SetRPM(float fRPM)
 {
 	m_serial.write("setServoTwoPos\r\n");
@@ -137,8 +150,4 @@ void Agent::SetRPM(float fRPM)
 	QStringList slTokens = sLine.split(',');
 }
 
-// ! setServoOnePos = Servo !
-void Agent::SetPitch(float fDegrees)
-{
 
-}

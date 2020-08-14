@@ -17,17 +17,17 @@ public:
 	void Close();
 
 	void SetRPM(float fRPM);
-	void SetPitch(float fDegrees); ///< Or PWM?
+	void SetPitch(int iServoPos); ///< Or PWM?
 
 	struct Data {		
 		QString sRead;
-		float fTime; /// Unformated
+		float fTime; /// Unformatted
 		float fLoadCell; /// Lbs
 		float fServoCurrent; /// mA
 		float fServoVoltage; /// V
 		float fMotorControllerCurrent; /// A
 		float fMotorControllerVoltage; /// V
-		float fServoPostion; /// us pulse width
+		int   int iServoPos; /// us pulse width
 		float fMotorRpmSetting; /// us pulse width
 	};
 	Data GetData();
