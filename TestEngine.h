@@ -28,7 +28,7 @@ private:
 	virtual void run() override;	///< The thread function where 
 	void Wait(int iMs);
 	void CheckAbort();
-	void RunTest();
+	void RunSequence();
 	QString m_sPort;
 };
 

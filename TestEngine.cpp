@@ -71,7 +71,7 @@ void TestEngine::run() /// Entry Point
 	emit Started();
 	try
 	{
-		RunTest();
+		RunSequence();
 	}
 	catch (const QString& sMsg)
 	{
@@ -83,23 +83,20 @@ void TestEngine::run() /// Entry Point
 
 
 
-void TestEngine::RunTest()
+void TestEngine::RunSequence()
 {
-	LOG("Hello");
-
 	// Setup the test agent for communications
 	Agent agent;
 	agent.Open(m_sPort);
-
-	// Read in a loop infinitely
-	/// This is temp until Agent is completed
-	while (true)
-	{
-		Agent::Data data = agent.GetData();
-		agent.SetPitch(1280);
-		agent.SetPitch(1680);
-		Wait(400);
-	}
+		
+	Agent::Data data = agent.GetData();
+	agent.SetPitch(1280);
+	Wait(500);
+	agent.SetPitch(1680);
+	Wait(500);
+	agent.SetPitch(1280);
+	Wait(400);
+	
 
 	LOG("Goodbye");
 
