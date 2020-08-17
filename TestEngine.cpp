@@ -1,20 +1,8 @@
 #include "TestEngine.h"
 #include <QElapsedTimer>
 #include "Agent.h"
+#include "Exception.h"
 
-
-class Exception : public QString {
-public:
-	Exception() {}
-	Exception(QString sMsg)
-		: QString(sMsg)
-	{
-
-	}
-};
-
-class AbortException : public Exception {
-};
 
 
 
@@ -133,6 +121,9 @@ void TestEngine::RunSequence()
 	
 	// ToDo: Add a warning Sequence
 
+	const int iSampleMs = 200;
+	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / iSampleMs;
+
 	// Iteration of the Angle Of Attack 
 	float fDegree = m_fAngleAtStartOfTestDegree;
 	while (fDegree < m_fAngleAtEndOfTestDegree) {
@@ -140,10 +131,10 @@ void TestEngine::RunSequence()
 		agent.SetPitch(ConvDegreeToPwm(fDegree));
 		emit NewPitch(fDegree);
 
-		for (int i = 0; i < m_iTimeSpentAtAOA; i + 200){ /// 5 Readings per sec
+		for (int i = 0; i < iSamplesPerSetpoint; ++i){
 			data = agent.GetData();
 			emit NewData(data);
-			Wait(200);
+			Wait(iSampleMs);
 		}
 		fDegree++;
 	}

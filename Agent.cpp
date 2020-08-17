@@ -2,6 +2,7 @@
 #include <QSerialPortInfo>
 #include <QElapsedTimer>
 #include <QThread>
+#include "Exception.h"
 
 #define TIMEOUT_MS		4000
 
@@ -28,7 +29,7 @@ void Agent::Open(const QString& sPort)
 	m_serial.setParity(QSerialPort::Parity::NoParity);
 	m_serial.setFlowControl(QSerialPort::NoFlowControl);
 	if (!m_serial.open(QIODevice::ReadWrite))
-		throw QString("Could not open serial port %1").arg("x");
+		throw Exception("Could not open serial port %1").arg("x");
 
 	// Read whatever data might still be in the serial port buffer, ya never know!
 	m_serial.readAll();
@@ -44,7 +45,7 @@ QString Agent::ReadLine()
 {
 	// Wait for some data to arrive to the serial port internal buffer
 	if (!m_serial.waitForReadyRead(TIMEOUT_MS))
-		throw QString("No response from test stand");
+		throw Exception("No response from test stand");
 
 	// Spin a bit so that we can hopefully just read a single line
 	QElapsedTimer tmr;
@@ -53,7 +54,7 @@ QString Agent::ReadLine()
 	{
 		m_serial.waitForReadyRead(30);
 		if (tmr.elapsed() > 1000)
-			throw QString("No response from test stand (no full line)");
+			throw Exception("No response from test stand (no full line)");
 	}
 
 	// Read the line
@@ -75,7 +76,7 @@ Agent::Data Agent::GetData()
 	int iDataPkgSize = 8;
 	QStringList slTokens = sLine.split(',');
 	if(iDataPkgSize != slTokens.count())
-		throw QString("Invalid printContinuous response size");
+		throw Exception("Invalid printContinuous response size");
 
 	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
 	Data data;
@@ -84,42 +85,42 @@ Agent::Data Agent::GetData()
 	
 	data.fTime = slTokens.at(1).toFloat(&bOk); 
 	if (!bOk) {
-		throw QString("Bad value received from Arduino: fTime");
+		throw Exception("Bad value received from Arduino: fTime");
 	}
 
 	data.fLoadCell = slTokens.at(2).toFloat(&bOk);
 	if (!bOk) {
-		throw QString("Bad value received from Arduino: fLoadCell");
+		throw Exception("Bad value received from Arduino: fLoadCell");
 	}
 
 	data.fServoCurrent = slTokens.at(3).toFloat(&bOk);
 	if (!bOk) {
-		throw QString("Bad value received from Arduino: fServoCurrent");
+		throw Exception("Bad value received from Arduino: fServoCurrent");
 	}
 
 	data.fServoVoltage = slTokens.at(4).toFloat(&bOk);
 	if (!bOk) {
-		throw QString("Bad value received from Arduino: fServoVoltage");
+		throw Exception("Bad value received from Arduino: fServoVoltage");
 	}
 
 	data.fMotorControllerCurrent = slTokens.at(5).toFloat(&bOk);
 	if (!bOk) {
-		throw QString("Bad value received from Arduino: fMotorControllerCurrent");
+		throw Exception("Bad value received from Arduino: fMotorControllerCurrent");
 	}
 
 	data.fMotorControllerVoltage = slTokens.at(6).toFloat(&bOk);
 	if (!bOk) {
-		throw QString("Bad value received from Arduino: fMotorControllerVoltage");
+		throw Exception("Bad value received from Arduino: fMotorControllerVoltage");
 	}
 
 	data.iServoPos = slTokens.at(7).toFloat(&bOk);
 	if (!bOk) {
-		throw QString("Bad value received from Arduino: fServoPostion");
+		throw Exception("Bad value received from Arduino: fServoPostion");
 	}
 
 	data.iMotorSpeed = slTokens.at(8).toFloat(&bOk);
 	if (!bOk) {
-		throw QString("Bad value received from Arduino: fMotorRpmSetting");
+		throw Exception("Bad value received from Arduino: fMotorRpmSetting");
 	}
 
 	return data; 
