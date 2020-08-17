@@ -43,18 +43,19 @@ void Agent::Close()
 
 QString Agent::ReadLine()
 {
-	// Wait for some data to arrive to the serial port internal buffer
-	if (!m_serial.waitForReadyRead(TIMEOUT_MS))
-		throw Exception("No response from test stand");
-
 	// Spin a bit so that we can hopefully just read a single line
 	QElapsedTimer tmr;
 	tmr.start();
 	while (!m_serial.canReadLine())
 	{
 		m_serial.waitForReadyRead(30);
-		if (tmr.elapsed() > 1000)
-			throw Exception("No response from test stand (no full line)");
+		if (tmr.elapsed() > TIMEOUT_MS) {
+			// Something went wrong
+			if (m_serial.bytesAvailable() == 0)
+				throw Exception("No response from test stand");
+			else
+				throw Exception("No response from test stand (no full line)");
+		}
 	}
 
 	// Read the line
