@@ -68,7 +68,7 @@ Agent::Data Agent::GetData()
 	// Send the command to request the data
 	/// Read whatever data might still be in the serial port buffer, ya never know!
 	m_serial.readAll();
-	m_serial.write("printContinuous\r\n");
+	m_serial.write("printVals\r\n");
 	m_serial.waitForBytesWritten(1);
 
 	QString sLine = ReadLine();

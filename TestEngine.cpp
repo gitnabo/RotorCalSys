@@ -96,7 +96,17 @@ void TestEngine::run() /// Entry Point
 
 	try
 	{
-		RunSequence();
+		//RunSequence();
+		
+		// Troubleshooting 
+		Agent agent;
+		agent.Open(m_sPort);
+		Agent::Data data;
+
+		data = agent.GetData();
+		agent.SetPitch(1280);
+		agent.SetPitch(1500);
+		agent.SetPitch(1280);
 	}
 	catch (const AbortException&)
 	{
