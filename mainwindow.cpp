@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 	
 	connect(m_pTestEngine, &TestEngine::Log, this, &MainWindow::OnLog);
 	connect(m_pTestEngine, &TestEngine::NewData, this, &MainWindow::OnNewData);
+	connect(m_pTestEngine, &TestEngine::NewPitch, this, &MainWindow::OnNewPitch);
 
 	// Populate the serial port combo dialog
 	QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
@@ -178,6 +179,14 @@ void MainWindow::ResetChart()
 	m_pLineSeries->clear();
 }
 
+
+void MainWindow::OnNewPitch(float fDegrees)
+{
+	SetPoint sp;
+	sp.fDegree = fDegrees;
+	m_listSetpointSamples += sp;
+}
+
 void MainWindow::OnNewData(Agent::Data data)
 {
 	m_vectData += data;
@@ -190,4 +199,20 @@ void MainWindow::OnNewData(Agent::Data data)
 	if (m_pLineSeries->count() > 50)
 		m_pLineSeries->remove(0);
 	pChart->addSeries(m_pLineSeries);
+
+	// Also add to our more organized setpoint storage method
+	if (!m_listSetpointSamples.isEmpty())
+	{
+		m_listSetpointSamples.last().vectSamples += data;
+	}
+
+
+	/*for (SetPoint& sp : m_listSetpointSamples)
+	{
+		// Process this one setpoint
+		for (Agent::Data& data : sp.vectSamples)
+		{
+
+		}
+	}*/
 }

@@ -27,10 +27,10 @@ private slots:
 	void OnError(QString sMsg);
 	void OnUpdateTimer();
 	void OnNewData(Agent::Data data);
+	void OnNewPitch(float fDegrees);
 	void OnLog(QString sMsg);
 
 private:
-	QVector<Agent::Data> m_vectData;
 	QLineSeries* m_pLineSeries = nullptr;
 	void CreateChart();
 	void ResetChart();
@@ -39,4 +39,14 @@ private:
     Ui::MainWindow *ui;
 	TestEngine *m_pTestEngine = nullptr;
 	QTimer* m_pTimerUpdate = nullptr;
+
+
+	QVector<Agent::Data> m_vectData;	///< The simple way to store all our samples, used for charting
+	
+	struct SetPoint {
+		float fDegree = 0.0f;
+		QVector<Agent::Data> vectSamples;
+	};
+
+	QList<SetPoint> m_listSetpointSamples;	///< A more structured way to save our data. Organized by 'setpoint/degree'.
 };

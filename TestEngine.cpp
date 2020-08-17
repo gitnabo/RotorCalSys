@@ -108,7 +108,6 @@ void TestEngine::run() /// Entry Point
 
 	try
 	{
-		RunDummyData();
 		RunSequence();
 	}
 	catch (const AbortException&)
@@ -139,9 +138,11 @@ void TestEngine::RunSequence()
 	while (fDegree < m_fAngleAtEndOfTestDegree) {
 		
 		agent.SetPitch(ConvDegreeToPwm(fDegree));
+		emit NewPitch(fDegree);
 
 		for (int i = 0; i < m_iTimeSpentAtAOA; i + 200){ /// 5 Readings per sec
 			data = agent.GetData();
+			emit NewData(data);
 			Wait(200);
 		}
 		fDegree++;
@@ -172,8 +173,8 @@ void TestEngine::RunDummyData()
 		data.fServoVoltage = funcGen(); /// V
 		data.fMotorControllerCurrent = funcGen(); /// A
 		data.fMotorControllerVoltage = funcGen(); /// V
-		data.fServoPostion = funcGen(); /// us pulse width
-		data.fMotorRpmSetting = funcGen(); /// us pulse width
+		//data.fServoPostion = funcGen(); /// us pulse width
+		//data.fMotorRpmSetting = funcGen(); /// us pulse width
 		emit NewData(data);
 
 		Wait(200);
