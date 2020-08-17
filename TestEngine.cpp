@@ -85,20 +85,22 @@ void TestEngine::run() /// Entry Point
 
 void TestEngine::RunSequence()
 {
+	LOG("Sequence A: Opening");
+
 	// Setup the test agent for communications
 	Agent agent;
 	agent.Open(m_sPort);
 		
 	Agent::Data data = agent.GetData();
 	agent.SetPitch(1280);
+	for (int iTime = 0, iTime < 00iTime++, )
 	Wait(500);
 	agent.SetPitch(1680);
 	Wait(500);
 	agent.SetPitch(1280);
-	Wait(400);
-	
+	Wait(400);	
 
-	LOG("Goodbye");
+	LOG("Sequence A: Closing");
 
 	agent.Close();
 }
