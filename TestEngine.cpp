@@ -76,24 +76,21 @@ float TestEngine::ConvPwmToDegree(float fPwmAOA)
 
 // Angle of attack: Convert from PWM to Degrees 
 float TestEngine::ConvDegreeToPwm(float fDegreeAOA)
-{
-	
+{	
 	float fPwm;
 	fPwm = (fDegreeAOA - m_fRotorConst0Intcerpt) / m_fRotorConstSlope;
 	return fPwm;
-
 }
-
 
 
 void TestEngine::run() /// Entry Point
 {
 	emit Started();
 	float fTestPwm   = 1350; /// Should be 1.7degrees
-	float fFoo = ConvPwmToDegree(fTestPwm);
+	float fFoo = ConvPwmToDegree(fTestPwm); // Test dewdwe
 
 	float fTestDegree = 6.4; /// Should be 1550pwm
-	float fMoo = ConvDegreeToPwm(fTestDegree);
+	float fMoo = ConvDegreeToPwm(fTestDegree); // grsege
 
 
 	try
@@ -120,15 +117,16 @@ void TestEngine::RunSequence()
 	// ToDo: Add a warning Sequence
 
 	// Iteration of the Angle Of Attack 
-	while (m_fAngleAtStartOfTestDegree < m_fAngleAtEndOfTestDegree) {
+	float fDegree = m_fAngleAtStartOfTestDegree;
+	while (fDegree < m_fAngleAtEndOfTestDegree) {
 		
-		agent.SetPitch(ConvDegreeToPwm(m_fAngleAtStartOfTestDegree));
+		agent.SetPitch(ConvDegreeToPwm(fDegree));
 
 		for (int i = 0; i < m_iTimeSpentAtAOA; i + 200){ /// 5 Readings per sec
 			data = agent.GetData();
 			Wait(200);
 		}
-		m_fAngleAtStartOfTestDegree++;
+		fDegree++;
 	}
 
 	LOG("Sequence Closing");

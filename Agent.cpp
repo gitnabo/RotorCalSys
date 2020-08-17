@@ -70,7 +70,7 @@ Agent::Data Agent::GetData()
 	QString sLine = ReadLine();
 
 	// Parse out the data
-	int iDataPkgSize = 9;
+	int iDataPkgSize = 8;
 	QStringList slTokens = sLine.split(',');
 	if(iDataPkgSize != slTokens.count())
 		throw QString("Invalid printContinuous response size");
@@ -78,10 +78,8 @@ Agent::Data Agent::GetData()
 	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
 	Data data;
 	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
-	bool bOk;      
+	bool bOk;   //	
 	
-	// data.sRead = slTokens.at(0); /// Parsing "Read:" for consistency // Generating error
-
 	data.fTime = slTokens.at(1).toFloat(&bOk); 
 	if (!bOk) {
 		throw QString("Bad value received from Arduino: fTime");

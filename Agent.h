@@ -22,7 +22,6 @@ public:
 	
 
 	struct Data {		
-		QString sRead;
 		float fTime; /// Unformatted
 		float fLoadCell; /// Lbs
 		float fServoCurrent; /// mA

@@ -91,7 +91,6 @@ void MainWindow::LoadSettings()
 	}
 }
 
-
 void MainWindow::SaveSettings()
 {
 	QSettings settings("GeoScout", "RotorSysCal");
@@ -115,7 +114,6 @@ void MainWindow::UpdateControls()
 	ui->pbStart->setEnabled(!bRunning);
 	ui->pbStop->setEnabled(bRunning);
 }
-
 
 void MainWindow::on_pbStart_clicked()
 {
