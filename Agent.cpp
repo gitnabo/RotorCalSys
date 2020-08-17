@@ -74,7 +74,7 @@ Agent::Data Agent::GetData()
 	QString sLine = ReadLine();
 
 	// Parse out the data
-	int iDataPkgSize = 8;
+	int iDataPkgSize = 9;
 	QStringList slTokens = sLine.split(',');
 	if(iDataPkgSize != slTokens.count())
 		throw Exception("Invalid printContinuous response size");
