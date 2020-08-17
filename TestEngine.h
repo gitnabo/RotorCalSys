@@ -1,5 +1,6 @@
 #pragma once
 #include <QThread>
+#include "Agent.h"
 
 /**
 @brief The test thread to control and gather data
@@ -19,7 +20,7 @@ signals:
 	void Started();
 	void Error(QString sError);
 	void Stopped();
-	void NewData(float fRPM, float fV, float fLiftUNITS);
+	void NewData(Agent::Data data);
 	void Log(QString sMsg);
 
 private:
@@ -29,6 +30,7 @@ private:
 	void Wait(int iMs);
 	void CheckAbort();
 	void RunSequence();
+	void RunDummyData();
 	QString m_sPort;
 
 	float ConvPwmToDegree(float fPwmAOA); /// Angle of Attack

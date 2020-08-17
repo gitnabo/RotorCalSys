@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(m_pTestEngine, &TestEngine::Stopped, this, &MainWindow::OnStopped);
 	connect(m_pTestEngine, &TestEngine::Error, this, &MainWindow::OnError);
 	
+	connect(m_pTestEngine, &TestEngine::Log, this, &MainWindow::OnLog);
+	connect(m_pTestEngine, &TestEngine::NewData, this, &MainWindow::OnNewData);
+
 	// Populate the serial port combo dialog
 	QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 	for (QSerialPortInfo port : ports)
@@ -29,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(m_pTimerUpdate, &QTimer::timeout, this, &MainWindow::OnUpdateTimer);
 	m_pTimerUpdate->start();
 	setWindowTitle("Rotor Calibrator");
+	CreateChart();
 }
 
 MainWindow::~MainWindow()
@@ -36,6 +40,8 @@ MainWindow::~MainWindow()
 	on_pbStop_clicked();
     delete ui;
 }
+
+
 
 void MainWindow::OnUpdateTimer()
 {
@@ -117,6 +123,9 @@ void MainWindow::UpdateControls()
 
 void MainWindow::on_pbStart_clicked()
 {
+	m_vectData.clear();
+	ResetChart();
+	ui->pteLog->setPlainText("");
 	QString sSerialPortName = ui->cbSerialPorts->currentText();
 	m_pTestEngine->Start(sSerialPortName);
 	UpdateControls();
@@ -137,4 +146,48 @@ void MainWindow::OnStopped()
 void MainWindow::OnError(QString sMsg)
 {
 	QMessageBox::critical(this, "Error", sMsg);
+}
+
+
+void MainWindow::OnLog(QString sMsg)
+{
+	ui->pteLog->appendPlainText(sMsg);
+}
+
+void MainWindow::CreateChart()
+{
+	QChart *pChart = ui->wChartView->chart();
+	pChart->setTitle("Data Chart");
+	QValueAxis *axisX = new QValueAxis;
+	axisX->setTickCount(10);
+	pChart->addAxis(axisX, Qt::AlignBottom);
+	m_pLineSeries = new QLineSeries;
+	pChart->addSeries(m_pLineSeries);
+
+	QValueAxis *axisY = new QValueAxis;
+	axisY->setLinePenColor(m_pLineSeries->pen().color());
+
+	pChart->addAxis(axisY, Qt::AlignLeft);
+	m_pLineSeries->attachAxis(axisX);
+	m_pLineSeries->attachAxis(axisY);
+}
+
+void MainWindow::ResetChart()
+{
+	QChart *pChart = ui->wChartView->chart();
+	m_pLineSeries->clear();
+}
+
+void MainWindow::OnNewData(Agent::Data data)
+{
+	m_vectData += data;
+
+	QChart *pChart = ui->wChartView->chart();
+	pChart->removeSeries(m_pLineSeries);
+	QPointF ptF(m_vectData.count() - 1, data.fLoadCell);
+	*m_pLineSeries << ptF;
+
+	if (m_pLineSeries->count() > 50)
+		m_pLineSeries->remove(0);
+	pChart->addSeries(m_pLineSeries);
 }
