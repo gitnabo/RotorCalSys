@@ -16,6 +16,7 @@ public:
 	void Open(const QString& sPort);
 	void Close();
 
+	
 	void SetPitch(int iServoPos); ///< Or PWM?
 	void SetMotorSpeed(int iMotorSpeedCmd);
 	
