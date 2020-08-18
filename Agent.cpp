@@ -114,12 +114,12 @@ Agent::Data Agent::GetData()
 		throw Exception("Bad value received from Arduino: fMotorControllerVoltage");
 	}
 
-	data.iServoPos = slTokens.at(7).toFloat(&bOk);
+	data.fServoPos = slTokens.at(7).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fServoPostion");
 	}
 
-	data.iMotorSpeed = slTokens.at(8).toFloat(&bOk);
+	data.fMotorSpeed = slTokens.at(8).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fMotorRpmSetting");
 	}
@@ -129,9 +129,9 @@ Agent::Data Agent::GetData()
 
 
 //  Servo Pos = setServoOnePos
-void Agent::SetPitch(int iServoPos)
+void Agent::SetPitch(float fServoPos)
 {
-	QString sServoPos = QString::number(iServoPos);
+	QString sServoPos = QString::number(fServoPos);
 	QByteArray baServoPos = sServoPos.toLocal8Bit();
 	const char *ccServoPos = baServoPos.data();
 	
@@ -150,9 +150,9 @@ void Agent::SetPitch(int iServoPos)
 }
 
 // ! Engine RPM = setServoTwoPos !
-void Agent::SetMotorSpeed(int iMotorSpeedCmd)
+void Agent::SetMotorSpeed(float fMotorSpeedCmd)
 {
-	QString sMotorSpeed = QString::number(iMotorSpeedCmd);
+	QString sMotorSpeed = QString::number(fMotorSpeedCmd);
 	QByteArray baMotorSpeed = sMotorSpeed.toLocal8Bit();
 	const char *ccMotorSpeed = baMotorSpeed.data();
 

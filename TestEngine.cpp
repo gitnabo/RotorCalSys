@@ -2,6 +2,7 @@
 #include <QElapsedTimer>
 #include "Agent.h"
 #include "Exception.h"
+#include <QDebug>
 
 
 
@@ -42,6 +43,7 @@ bool TestEngine::IsRunning()
 
 void TestEngine::LOG(QString sMsg)
 {
+	qDebug() << sMsg;
 	emit Log(sMsg);
 }
 
@@ -88,16 +90,16 @@ void TestEngine::run() /// Entry Point
 {
 	emit Started();
 	float fTestPwm   = 1350; /// Should be 1.7degrees
-	float fFoo = ConvPwmToDegree(fTestPwm); // Test dewdwe
+	float fFoo = ConvPwmToDegree(fTestPwm);
 
 	float fTestDegree = 6.4; /// Should be 1550pwm
-	float fMoo = ConvDegreeToPwm(fTestDegree); // grsege
+	float fMoo = ConvDegreeToPwm(fTestDegree);
 
 
 	try
 	{
 		//RunSequence();
-		
+		LOG("LOG IS WORKING");
 		// Troubleshooting 
 		Agent agent;
 		agent.Open(m_sPort);

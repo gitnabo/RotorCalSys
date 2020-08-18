@@ -17,8 +17,8 @@ public:
 	void Close();
 
 	
-	void SetPitch(int iServoPos); ///< Or PWM?
-	void SetMotorSpeed(int iMotorSpeedCmd);
+	void SetPitch(float fServoPos); ///< Or PWM?
+	void SetMotorSpeed(float fMotorSpeedCmd);
 	
 
 	struct Data {		
@@ -28,8 +28,8 @@ public:
 		float fServoVoltage; /// V
 		float fMotorControllerCurrent; /// A
 		float fMotorControllerVoltage; /// V
-	    int   iServoPos; /// us pulse width
-		int   iMotorSpeed; /// us pulse width
+	    float fServoPos; /// us pulse width
+		float fMotorSpeed; /// us pulse width
 	};
 	Data GetData();
 
