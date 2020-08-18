@@ -17,7 +17,7 @@ public:
 	void Close();
 
 	
-	void SetPitch(float fServoPos); ///< Or PWM?
+	void SetPitch(float fDegree); 
 	void SetMotorSpeed(float fMotorSpeedCmd);
 	
 
@@ -37,6 +37,12 @@ private:
 	QSerialPort m_serial;
 	QString ReadLine();
 
+
+	float ConvPwmToDegree(float fPwmAOA); /// Angle of Attack
+	float ConvDegreeToPwm(float fDegreeAOA); /// Angle of Attack
+	// Rotor Calibration Defaults
+	float m_fRotorConstSlope = 0.024485714f;
+	float m_fRotorConst0Intcerpt = -31.46047619f;
 };
 
 

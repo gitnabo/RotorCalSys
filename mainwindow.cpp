@@ -175,7 +175,7 @@ void MainWindow::CreateChart()
 
 void MainWindow::ResetChart()
 {
-	QChart *pChart = ui->wChartView->chart();
+	//QChart *pChart = ui->wChartView->chart();
 	m_pLineSeries->clear();
 }
 

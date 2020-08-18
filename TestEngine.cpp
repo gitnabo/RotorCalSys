@@ -69,46 +69,14 @@ void TestEngine::Wait(int iMs)
 	}
 }
 
-// Angle of attack: Convert from PWM to Degrees 
-float TestEngine::ConvPwmToDegree(float fPwmAOA)
-{
-	float fDegree;
-	fDegree = fPwmAOA * m_fRotorConstSlope + m_fRotorConst0Intcerpt;
-	return fDegree;
-}
-
-// Angle of attack: Convert from PWM to Degrees 
-float TestEngine::ConvDegreeToPwm(float fDegreeAOA)
-{	
-	float fPwm;
-	fPwm = (fDegreeAOA - m_fRotorConst0Intcerpt) / m_fRotorConstSlope;
-	return fPwm;
-}
 
 
 void TestEngine::run() /// Entry Point
 {
 	emit Started();
-	float fTestPwm   = 1350; /// Should be 1.59degrees
-	float fFoo = ConvPwmToDegree(fTestPwm);
-
-	float fTestDegree = 6.4; /// Should be 1546pwm
-	float fMoo = ConvDegreeToPwm(fTestDegree);
-
-
 	try
 	{
 		RunSequence();	
-		// Troubleshooting 
-		/*
-		Agent agent;
-		agent.Open(m_sPort);
-		Agent::Data data;
-
-		data = agent.GetData();
-		agent.SetPitch(1280);
-		agent.SetPitch(1500);
-		agent.SetPitch(1280);*/
 	}
 	catch (const AbortException&)
 	{
@@ -138,15 +106,15 @@ void TestEngine::RunSequence()
 
 	// Iteration of the Angle Of Attack 
 	float fDegree = m_fAngleAtStartOfTestDegree;
-	for (fDegree; fDegree < m_fAngleAtEndOfTestDegree; fDegree++) {
-		float fAOAPwm = ConvDegreeToPwm(fDegree);
-		agent.SetPitch(fAOAPwm);
+	for (fDegree; fDegree < m_fAngleAtEndOfTestDegree; fDegree++) {	
+		agent.SetPitch(fDegree);
 		emit NewPitch(fDegree);
 
 		for (int i = 0; i < iSamplesPerSetpoint; ++i){
 			data = agent.GetData();
 			emit NewData(data);
 			Wait(iSampleMs);
+			LOG("New Cycle");
 		}
 	}
 
