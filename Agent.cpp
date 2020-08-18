@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Agent.h"
 #include <QSerialPortInfo>
 #include <QElapsedTimer>

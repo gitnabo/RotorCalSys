@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QSerialPortInfo>
