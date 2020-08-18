@@ -36,6 +36,7 @@ public:
 private:
 	QSerialPort m_serial;
 	QString ReadLine();
+
 };
 
 

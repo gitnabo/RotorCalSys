@@ -98,8 +98,7 @@ void TestEngine::run() /// Entry Point
 
 	try
 	{
-		//RunSequence();
-		LOG("LOG IS WORKING");
+		//RunSequence();	
 		// Troubleshooting 
 		Agent agent;
 		agent.Open(m_sPort);
