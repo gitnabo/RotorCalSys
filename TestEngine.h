@@ -43,7 +43,7 @@ private:
 	float m_fRotorConst0Intcerpt      = -31.46047619;
 	float m_fAngleAtStartOfTestDegree = -1;          
 	float m_fAngleAtEndOfTestDegree   = 12;			 
-	int   m_iTimeSpentAtAOA           = 30000;       
+	int   m_iTimeSpentAtAOA           = 1000; // TEMP 30000 -> 1000  for TS      
 
 };
 
