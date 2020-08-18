@@ -171,3 +171,44 @@ void Agent::SetMotorSpeed(float fMotorSpeedCmd)
 }
 
 
+
+// Angle of attack: Convert from PWM to Degrees 
+float Agent::ConvPwmToDegree(float fPwmAOA)
+{
+	float fDegree;
+	fDegree = fPwmAOA * m_fRotorConstSlope + m_fRotorConst0Intcerpt;
+	return fDegree;
+}
+
+// Angle of attack: Convert from PWM to Degrees 
+float Agent::ConvDegreeToPwm(float fDegreeAOA)
+{
+	float fPwm;
+	fPwm = (fDegreeAOA - m_fRotorConst0Intcerpt) / m_fRotorConstSlope;
+	return fPwm;
+}
+
+void Agent::RunSequence()
+{	
+	// ToDo: Add a warning Sequence
+	const int iSampleMs = 200;
+	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / iSampleMs;
+
+	// Iteration of the Angle Of Attack 
+	float fDegree = m_fAngleAtStartOfTestDegree;
+	while (fDegree < m_fAngleAtEndOfTestDegree) {
+
+		SetPitch(fDegree);
+		emit NewPitch(fDegree);
+
+		for (int i = 0; i < iSamplesPerSetpoint; ++i) {
+			data = agent.GetData();
+			emit NewData(data);
+			Wait(iSampleMs);
+		}
+		fDegree++;
+	}
+
+	LOG("Sequence Closing");
+	agent.Close();
+}
