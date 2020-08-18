@@ -34,6 +34,13 @@ private:
 	void RunDummyData();
 	QString m_sPort;
 
-	int   m_iTimeSpentAtAOA = 30000;
+
+
+
+	// Rotor Calibration Constants
+	float m_fAngleAtStartOfTestDegree = -1;          
+	float m_fAngleAtEndOfTestDegree   = 12;			 
+	int   m_iTimeSpentAtAOA           = 1000; // TEMP 30000 -> 1000  for TS      
+
 };
 

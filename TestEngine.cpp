@@ -74,26 +74,9 @@ void TestEngine::Wait(int iMs)
 void TestEngine::run() /// Entry Point
 {
 	emit Started();
-	float fTestPwm   = 1350; /// Should be 1.7degrees
-	float fFoo = ConvPwmToDegree(fTestPwm);
-
-	float fTestDegree = 6.4; /// Should be 1550pwm
-	float fMoo = ConvDegreeToPwm(fTestDegree);
-
-
 	try
 	{
-		LOG("Sequence is Opening");
-		//RunSequence();	
-		// Troubleshooting 
-		Agent agent;
-		agent.Open(m_sPort);
-		Agent::Data data;
-
-		data = agent.GetData();
-		agent.SetPitch(1280);
-		agent.SetPitch(1500);
-		agent.SetPitch(1280);
+		RunSequence();	
 	}
 	catch (const AbortException&)
 	{
@@ -123,8 +106,7 @@ void TestEngine::RunSequence()
 
 	// Iteration of the Angle Of Attack 
 	float fDegree = m_fAngleAtStartOfTestDegree;
-	while (fDegree < m_fAngleAtEndOfTestDegree) {
-		
+	for (fDegree; fDegree < m_fAngleAtEndOfTestDegree; fDegree++) {	
 		agent.SetPitch(fDegree);
 		emit NewPitch(fDegree);
 
@@ -132,8 +114,8 @@ void TestEngine::RunSequence()
 			data = agent.GetData();
 			emit NewData(data);
 			Wait(iSampleMs);
+			LOG("New Cycle");
 		}
-		fDegree++;
 	}
 
 	LOG("Sequence Closing");

@@ -129,9 +129,11 @@ Agent::Data Agent::GetData()
 
 
 //  Servo Pos = setServoOnePos
-void Agent::SetPitch(float fServoPos)
+void Agent::SetPitch(float fDegree)
 {
-	QString sServoPos = QString::number(fServoPos);
+	float fAnglePwm = ConvDegreeToPwm(fDegree);
+	
+	QString sServoPos = QString::number(fAnglePwm);
 	QByteArray baServoPos = sServoPos.toLocal8Bit();
 	const char *ccServoPos = baServoPos.data();
 	
@@ -139,14 +141,6 @@ void Agent::SetPitch(float fServoPos)
 	m_serial.write(ccServoPos);
 	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
-
-	// Do we need the read back?
-	/*
-	QString sLine = ReadLine();
-
-	// Parse out the response
-	QStringList slTokens = sLine.split(',');
-	*/
 }
 
 // ! Engine RPM = setServoTwoPos !
@@ -171,7 +165,6 @@ void Agent::SetMotorSpeed(float fMotorSpeedCmd)
 }
 
 
-
 // Angle of attack: Convert from PWM to Degrees 
 float Agent::ConvPwmToDegree(float fPwmAOA)
 {
@@ -186,29 +179,4 @@ float Agent::ConvDegreeToPwm(float fDegreeAOA)
 	float fPwm;
 	fPwm = (fDegreeAOA - m_fRotorConst0Intcerpt) / m_fRotorConstSlope;
 	return fPwm;
-}
-
-void Agent::RunSequence()
-{	
-	// ToDo: Add a warning Sequence
-	const int iSampleMs = 200;
-	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / iSampleMs;
-
-	// Iteration of the Angle Of Attack 
-	float fDegree = m_fAngleAtStartOfTestDegree;
-	while (fDegree < m_fAngleAtEndOfTestDegree) {
-
-		SetPitch(fDegree);
-		emit NewPitch(fDegree);
-
-		for (int i = 0; i < iSamplesPerSetpoint; ++i) {
-			data = agent.GetData();
-			emit NewData(data);
-			Wait(iSampleMs);
-		}
-		fDegree++;
-	}
-
-	LOG("Sequence Closing");
-	agent.Close();
 }
