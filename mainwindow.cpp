@@ -4,6 +4,7 @@
 #include <QSerialPortInfo>
 #include <QSettings>
 #include <QMessageBox>
+#include <QPointF>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 	m_pTimerUpdate->start();
 	setWindowTitle("Rotor Calibrator");
 	CreateChart();
+	TestLinearRegresssion();
 }
 
 MainWindow::~MainWindow()
@@ -216,4 +218,47 @@ void MainWindow::OnNewData(Agent::Data data)
 
 		}
 	}*/
+}
+
+
+void MainWindow::TestLinearRegresssion()
+{
+	QVector<QPointF> points;
+	points += QPointF(43, 99);
+	points += QPointF(21, 65);
+	points += QPointF(25, 79);
+	points += QPointF(42, 75);
+	points += QPointF(57, 87);
+	points += QPointF(59, 81);
+
+	QVector<float> coeffs = LinearRegression(points);
+}
+
+/// Example stolen from
+/// https://www.statisticshowto.com/probability-and-statistics/regression-analysis/find-a-linear-regression-equation/
+QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
+{
+	float fSumX = 0.0f;
+	float fSumY = 0.0f;
+	float fSumXY = 0.0f;
+	float fSumXX = 0.0f;
+	float fSumYY = 0.0f;
+	for (QPointF pt : data)
+	{
+		fSumX += pt.x();
+		fSumY += pt.y();
+		fSumXY += pt.x() * pt.y();
+		fSumXX += pt.x() * pt.x();
+		fSumYY += pt.y() * pt.y();
+	}
+
+	float fN = data.count();
+	float fB = (fSumY * fSumXX - fSumX * fSumXY)
+			/ (fN*fSumXX - fSumX * fSumX);
+	float fM = (fN * fSumXY - fSumX * fSumY)
+			/ (fN*fSumXX - fSumX * fSumX);
+	QVector<float> vectCoeffs;
+	vectCoeffs += fB;
+	vectCoeffs += fM;
+	return vectCoeffs;
 }

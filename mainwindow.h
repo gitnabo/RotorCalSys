@@ -49,4 +49,9 @@ private:
 	};
 
 	QList<SetPoint> m_listSetpointSamples;	///< A more structured way to save our data. Organized by 'setpoint/degree'.
+	
+	void TestLinearRegresssion();
+	
+	
+	QVector<float> LinearRegression(QVector<QPointF> data);
 };
