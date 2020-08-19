@@ -63,7 +63,7 @@ private:
 
 
 
-	float CaclDegreeAvg(SetPoint);
+	float CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs);
 
 
 

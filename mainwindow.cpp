@@ -141,8 +141,8 @@ void MainWindow::on_pbStop_clicked()
 
 void MainWindow::OnStopped()
 {
-	// #
-	// 
+	CaclLiftAvgLbs(m_listSetpointSamples.at(0).vectSamples); // TEST
+
 	UpdateControls();
 }
 
@@ -217,13 +217,13 @@ void MainWindow::OnNewData(Agent::Data data)
 	}*/
 }
 
-float MainWindow::CaclDegreeAvg(SetPoint SetPointDataAtDegree) {
-	QVector<Agent::Data> vectSampleData = SetPointDataAtDegree.vectSamples;
+float MainWindow::CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs) {
 	float fSumOfLiftLbs = 0;
-	for (int i = 0; i < vectSampleData.size(); i++) { /// ToDo: Check cycle num
-		fSumOfLiftLbs =+ vectSampleData.at(i).fLoadCell;
+	for (int i = 0; i < LiftDataLbs.size(); i++) { /// ToDo: Check cycle num
+		float foo = LiftDataLbs.at(i).fLoadCell;
+		fSumOfLiftLbs += foo;
 	}
-	float fAvgOfLiftLbs = fSumOfLiftLbs / vectSampleData.size();
+	float fAvgOfLiftLbs = fSumOfLiftLbs / LiftDataLbs.size();
 
 	return fAvgOfLiftLbs;
 }

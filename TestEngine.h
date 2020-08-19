@@ -39,8 +39,8 @@ private:
 
 	// Rotor Calibration Constants
 	float m_fAngleAtStartOfTestDegree = 1;  // ! Should Be -1    
-	float m_fAngleAtEndOfTestDegree   = 3;	// ! Should Be 13		 
-	int   m_iTimeSpentAtAOA           = 1000; // TEMP 30000 -> 1000  for TS      
+	float m_fAngleAtEndOfTestDegree   = 2;	// ! Should Be 13		 
+	int   m_iTimeSpentAtAOA           = 500; // TEMP 30000 -> 1000  for TS      
 	const int m_iSampleMs = 250;
 };
 
