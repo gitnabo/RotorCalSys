@@ -102,20 +102,20 @@ void TestEngine::RunSequence()
 	
 	// ToDo: Add a warning Sequence
 
-	const int iSampleMs = 200;
-	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / iSampleMs;
+	
+	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / m_iSampleMs;
 
 	// Iteration of the Angle Of Attack 
 	float fDegree = m_fAngleAtStartOfTestDegree;
-	for (fDegree; fDegree < m_fAngleAtEndOfTestDegree; fDegree++) {	
+	for (fDegree; fDegree <= m_fAngleAtEndOfTestDegree; fDegree++) {	
 		agent.SetPitch(fDegree);
 		emit NewPitch(fDegree);
-
+		QString sLogMsg = "Angle of Attack:" + QString::number(fDegree);
+		LOG(sLogMsg);		
 		for (int i = 0; i < iSamplesPerSetpoint; ++i){
 			data = agent.GetData();
 			emit NewData(data);
-			Wait(iSampleMs);
-			LOG("New Cycle");
+			Wait(m_iSampleMs);			
 		}
 	}
 

@@ -39,14 +39,30 @@ private:
     Ui::MainWindow *ui;
 	TestEngine *m_pTestEngine = nullptr;
 	QTimer* m_pTimerUpdate = nullptr;
-
-
+	
+	// Stores load force at a specific degree
 	QVector<Agent::Data> m_vectData;	///< The simple way to store all our samples, used for charting
 	
+
+
 	struct SetPoint {
 		float fDegree = 0.0f;
 		QVector<Agent::Data> vectSamples;
+		float fLiftAvgLbf = 0.0f;
 	};
 
 	QList<SetPoint> m_listSetpointSamples;	///< A more structured way to save our data. Organized by 'setpoint/degree'.
+	
+
+
+	struct RotorSetPointAvg {
+		float fDegreeSet = 0.0f;
+		float fAvgLift = 0.0f;
+	};
+
+	QList<RotorSetPointAvg> m_listRotorSetPointAvg;
+
+
+
+	float CaclDegreeAvg(SetPoint);
 };

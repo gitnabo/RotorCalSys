@@ -44,7 +44,6 @@ MainWindow::~MainWindow()
 }
 
 
-
 void MainWindow::OnUpdateTimer()
 {
 	static QStringList slTitles = QStringList()
@@ -142,6 +141,8 @@ void MainWindow::on_pbStop_clicked()
 
 void MainWindow::OnStopped()
 {
+	// #
+	// 
 	UpdateControls();
 }
 
@@ -206,8 +207,6 @@ void MainWindow::OnNewData(Agent::Data data)
 	{
 		m_listSetpointSamples.last().vectSamples += data;
 	}
-
-
 	/*for (SetPoint& sp : m_listSetpointSamples)
 	{
 		// Process this one setpoint
@@ -216,4 +215,9 @@ void MainWindow::OnNewData(Agent::Data data)
 
 		}
 	}*/
+}
+
+float MainWindow::CaclDegreeAvg(SetPoint SetPointDataAtDegree) {
+	QVector<Agent::Data> vectSampleData = SetPointDataAtDegree.vectSamples;
+
 }
