@@ -219,5 +219,11 @@ void MainWindow::OnNewData(Agent::Data data)
 
 float MainWindow::CaclDegreeAvg(SetPoint SetPointDataAtDegree) {
 	QVector<Agent::Data> vectSampleData = SetPointDataAtDegree.vectSamples;
+	float fSumOfLiftLbs = 0;
+	for (int i = 0; i < vectSampleData.size(); i++) { /// ToDo: Check cycle num
+		fSumOfLiftLbs =+ vectSampleData.at(i).fLoadCell;
+	}
+	float fAvgOfLiftLbs = fSumOfLiftLbs / vectSampleData.size();
 
+	return fAvgOfLiftLbs;
 }

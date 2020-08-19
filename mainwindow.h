@@ -48,8 +48,7 @@ private:
 	struct SetPoint {
 		float fDegree = 0.0f;
 		QVector<Agent::Data> vectSamples;
-		float fLiftAvgLbf = 0.0f;
-	};
+		};
 
 	QList<SetPoint> m_listSetpointSamples;	///< A more structured way to save our data. Organized by 'setpoint/degree'.
 	
@@ -65,4 +64,14 @@ private:
 
 
 	float CaclDegreeAvg(SetPoint);
+
+
+
+	struct RotorCalibration {
+		int RotorSerialNum;
+		float LiftCurveSlope;
+		float LiftCurve0Intercept;
+	};
+
+
 };
