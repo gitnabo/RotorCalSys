@@ -55,12 +55,18 @@ private:
 
 	float CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs);
 
+
 	struct RotorSetPointAvg {
 		float fDegreeSet = 0.0f;
 		float fAvgLift = 0.0f;
 	};
-
+	
 	QList<RotorSetPointAvg> m_listRotorSetPointAvg;
+
+	QVector<QPointF> m_vRotorSetPointAvg; // x = fDegreeSet &
+										  // y = fAvgLift
+	
+	QVector<float> TEMPLinearRegression(QVector<QPointF> data);
 
 	QVector<float> TEMPLinearRegression(QVector<QPointF> data); 
 

@@ -144,22 +144,25 @@ void MainWindow::OnStopped()
 {
 	
 	// Outputs the average lift at each Angle of Attack measured, 
-	// and stores in m_listRotorSetPointAvg
-	for (int i = 0; i < m_listSetpointSamples.size(); i++) { // 		
+	// and stores in m_vRotorSetPointAvg
+	for (int i = 0; i < m_listSetpointSamples.size(); i++) { 		
 		/*RotorSetPointAvg rotorSetPointAvg = { m_listSetpointSamples.at(i).fDegree,
 											  CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples)};	*/ // This doesn't either
+		/*
 		RotorSetPointAvg rotorSetPointAvg;
 		rotorSetPointAvg.fDegreeSet = m_listSetpointSamples.at(i).fDegree;
-		rotorSetPointAvg.fAvgLift = CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples);
+		rotorSetPointAvg.fAvgLift = CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples);*/
 
-		m_listRotorSetPointAvg += rotorSetPointAvg; /// Append to list
+		QPointF pointfRotorSetPointAvg(m_listSetpointSamples.at(i).fDegree,					    // x = fDegreeSet &
+				                       CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples));// y = fAvgLift
+
+		m_vRotorSetPointAvg.append(pointfRotorSetPointAvg); /// Append to list
 	}; 
 
 	// Outputs the RotorCalibration
-	for (int i = 0; i < m_listRotorSetPointAvg.size(); i++) {
-		// Convert the struct RotorSetPointAvg to QPointF
-		RotorSetPointAvg rspa = m_listRotorSetPointAvg.at(i);
-		QPointF qpfRotorSetPointAvg(rspa.fDegreeSet, rspa.fAvgLift);
+	for (int i = 0; i < m_vRotorSetPointAvg.size(); i++) {
+	
+
 
 		
 
