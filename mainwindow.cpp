@@ -150,7 +150,8 @@ void MainWindow::OnStopped()
 		RotorSetPointAvg rotorSetPointAvg;
 		rotorSetPointAvg.fDegreeSet = m_listSetpointSamples.at(i).fDegree;
 		rotorSetPointAvg.fAvgLift = CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples);
-		m_listRotorSetPointAvg.append(rotorSetPointAvg);
+
+		m_listRotorSetPointAvg += rotorSetPointAvg; /// Append to list
 	}; 
 
 
@@ -213,7 +214,7 @@ void MainWindow::OnNewData(Agent::Data data)
 		m_pLineSeries->remove(0);
 	pChart->addSeries(m_pLineSeries);
 
-	// Also add to our more organized setpoint storage method
+	// Also add to our more organized set point storage method
 	if (!m_listSetpointSamples.isEmpty())
 	{
 		m_listSetpointSamples.last().vectSamples += data;
