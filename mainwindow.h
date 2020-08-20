@@ -65,10 +65,10 @@ private:
 
 	QVector<QPointF> m_vRotorSetPointAvg; // x = fDegreeSet &
 										  // y = fAvgLift
-	
+
+
 	QVector<float> TEMPLinearRegression(QVector<QPointF> data);
 
-	QVector<float> TEMPLinearRegression(QVector<QPointF> data); 
 
 	struct RotorCalibration {
 		int RotorSerialNum;
