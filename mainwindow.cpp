@@ -141,7 +141,12 @@ void MainWindow::on_pbStop_clicked()
 
 void MainWindow::OnStopped()
 {
-	CaclLiftAvgLbs(m_listSetpointSamples.at(0).vectSamples); // TEST
+	
+	for (int i = 0; i < m_listSetpointSamples.size(); i++) {		
+		RotorSetPointAvg foo = { CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples), 
+								m_listSetpointSamples.at(i).fDegree };
+	};
+	   
 
 	UpdateControls();
 }
@@ -219,7 +224,7 @@ void MainWindow::OnNewData(Agent::Data data)
 
 float MainWindow::CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs) {
 	float fSumOfLiftLbs = 0;
-	for (int i = 0; i < LiftDataLbs.size(); i++) { /// ToDo: Check cycle num
+	for (int i = 0; i < LiftDataLbs.size(); i++) {
 		float foo = LiftDataLbs.at(i).fLoadCell;
 		fSumOfLiftLbs += foo;
 	}
