@@ -142,11 +142,17 @@ void MainWindow::on_pbStop_clicked()
 void MainWindow::OnStopped()
 {
 	
-	for (int i = 0; i < m_listSetpointSamples.size(); i++) {		
-		RotorSetPointAvg foo = { CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples), 
-								m_listSetpointSamples.at(i).fDegree };
-	};
-	   
+	// Outputs the average lift at each Angle of Attack measured, 
+	// and stores in m_listRotorSetPointAvg
+	for (int i = 0; i < m_listSetpointSamples.size(); i++) { // 		
+		/*RotorSetPointAvg rotorSetPointAvg = { m_listSetpointSamples.at(i).fDegree,
+											  CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples)};	*/ // This doesn't either
+		RotorSetPointAvg rotorSetPointAvg;
+		rotorSetPointAvg.fDegreeSet = m_listSetpointSamples.at(i).fDegree;
+		rotorSetPointAvg.fAvgLift = CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples);
+		m_listRotorSetPointAvg.append(rotorSetPointAvg);
+	}; 
+
 
 	UpdateControls();
 }
@@ -223,10 +229,9 @@ void MainWindow::OnNewData(Agent::Data data)
 }
 
 float MainWindow::CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs) {
-	float fSumOfLiftLbs = 0;
+	float fSumOfLiftLbs = 0.0f;
 	for (int i = 0; i < LiftDataLbs.size(); i++) {
-		float foo = LiftDataLbs.at(i).fLoadCell;
-		fSumOfLiftLbs += foo;
+		fSumOfLiftLbs += LiftDataLbs.at(i).fLoadCell;
 	}
 	float fAvgOfLiftLbs = fSumOfLiftLbs / LiftDataLbs.size();
 
