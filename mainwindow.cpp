@@ -4,6 +4,7 @@
 #include <QSerialPortInfo>
 #include <QSettings>
 #include <QMessageBox>
+#include <QPointF>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -154,6 +155,17 @@ void MainWindow::OnStopped()
 		m_listRotorSetPointAvg += rotorSetPointAvg; /// Append to list
 	}; 
 
+	// Outputs the RotorCalibration
+	for (int i = 0; i < m_listRotorSetPointAvg.size(); i++) {
+		// Convert the struct RotorSetPointAvg to QPointF
+		RotorSetPointAvg rspa = m_listRotorSetPointAvg.at(i);
+		QPointF qpfRotorSetPointAvg(rspa.fDegreeSet, rspa.fAvgLift);
+
+		
+
+	}
+
+
 
 	UpdateControls();
 }
@@ -238,3 +250,13 @@ float MainWindow::CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs) {
 
 	return fAvgOfLiftLbs;
 }
+
+QVector<float> MainWindow::TEMPLinearRegression(QVector<QPointF> data) {// To do: Replace with Actual Linear Reg
+
+	QVector<float> vectCoeffs;
+	float fB = 22222; // Intercept
+	vectCoeffs += fB;
+	float fM = 11111; // Slope
+	vectCoeffs += fM;
+	return vectCoeffs;
+};

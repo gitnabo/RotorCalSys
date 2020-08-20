@@ -62,6 +62,7 @@ private:
 
 	QList<RotorSetPointAvg> m_listRotorSetPointAvg;
 
+	QVector<float> TEMPLinearRegression(QVector<QPointF> data); 
 
 	struct RotorCalibration {
 		int RotorSerialNum;
