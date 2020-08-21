@@ -127,9 +127,8 @@ void MainWindow::on_pbStop_clicked()
 void MainWindow::OnStopped()
 {
 	
-	// Outputs the average lift at each Angle of Attack measured, 
-	// and stores in m_vRotorSetPointAvg
-	for (int i = 0; i < m_listSetpointSamples.size(); i++) { 		
+	// Outputs Avg Lift at each Angle of Attack measured, 
+		for (int i = 0; i < m_listSetpointSamples.size(); i++) { 		
 		QPointF pointfRotorSetPointAvg(m_listSetpointSamples.at(i).fDegree,					    // x = fDegreeSet &
 				                       CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples));// y = fAvgLift
 
