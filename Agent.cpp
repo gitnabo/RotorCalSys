@@ -136,8 +136,8 @@ void Agent::SetPitch(float fDegree)
 	
 	QString sServoPos = QString::number(fAnglePwm);
 	QByteArray baServoPos = sServoPos.toLocal8Bit();
-	const char *ccServoPos = baServoPos.data();
-	
+	const char *ccServoPos = baServoPos.data(); /// Creates a pointer. 
+												/// This is not the data from Agent::Data Agent::GetData()	
 	m_serial.write("setServoOnePos");
 	m_serial.write(ccServoPos);
 	m_serial.write("\r\n");

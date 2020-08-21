@@ -39,19 +39,23 @@ private:
     Ui::MainWindow *ui;
 	TestEngine *m_pTestEngine = nullptr;
 	QTimer* m_pTimerUpdate = nullptr;
-
-
-	QVector<Agent::Data> m_vectData;	///< The simple way to store all our samples, used for charting
 	
+	// Stores load force at a specific degree
+	QVector<Agent::Data> m_vectData;	
+
+	// Organize degree set point and all readings from load cell at that degree set point 
 	struct SetPoint {
 		float fDegree = 0.0f;
 		QVector<Agent::Data> vectSamples;
-	};
+		};
+	QList<SetPoint> m_listSetpointSamples;
 
-	QList<SetPoint> m_listSetpointSamples;	///< A more structured way to save our data. Organized by 'setpoint/degree'.
-	
-	void TestLinearRegresssion();
-	
-	
-	QVector<float> LinearRegression(QVector<QPointF> data);
+	float CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs);	
+
+	QVector<float> LinearRegression(QVector<QPointF> data); // (Slope, Intercept)			
+
+	struct RotorCalibration {
+		int RotorSerialNum;
+		QVector<float> vfLinearRegression; // (Slope, Intercept)
+	};   	 
 };

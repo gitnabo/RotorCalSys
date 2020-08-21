@@ -36,7 +36,6 @@ MainWindow::MainWindow(QWidget *parent)
 	m_pTimerUpdate->start();
 	setWindowTitle("Rotor Calibrator");
 	CreateChart();
-	TestLinearRegresssion();
 }
 
 MainWindow::~MainWindow()
@@ -44,7 +43,6 @@ MainWindow::~MainWindow()
 	on_pbStop_clicked();
     delete ui;
 }
-
 
 
 void MainWindow::OnUpdateTimer()
@@ -56,14 +54,14 @@ void MainWindow::OnUpdateTimer()
 		<< ""
 		<< ""
 		<< ""
-		<< "ASphincterSaysWhat?"
-		<< ""
-		<< "Istvan is watching you"
-		<< ""
-		<< "Hey momo"
 		<< ""
 		<< ""
-		<< "Don't try this at home kids!"
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
 		<< ""
 		;
 	static int iPos = 0;
@@ -125,6 +123,7 @@ void MainWindow::UpdateControls()
 	ui->pbStop->setEnabled(bRunning);
 }
 
+
 void MainWindow::on_pbStart_clicked()
 {
 	m_vectData.clear();
@@ -141,22 +140,40 @@ void MainWindow::on_pbStop_clicked()
 	UpdateControls();
 }
 
-
 void MainWindow::OnStopped()
 {
+	
+	// Outputs Avg Lift at each Angle of Attack measured, 
+	QVector<QPointF> vRotorSetPointAvg; // x = fDegreeSet & y = fAvgLift	   
+	for (int i = 0; i < m_listSetpointSamples.size(); i++) { 		
+		QPointF pointfRotorSetPointAvg(m_listSetpointSamples.at(i).fDegree,					    // x = fDegreeSet &
+				                       CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples));// y = fAvgLift
+		
+		vRotorSetPointAvg.append(pointfRotorSetPointAvg);
+	}
+
+	// Outputs the RotorCalibration
+	QVector<float> vfLinearRegression = LinearRegression(vRotorSetPointAvg);
+		
+	//ui->horizontalLayout_2.v
+		
+		// lineEdit_Slope->SetText(vfLinearRegression.at(0);
+
+	   
 	UpdateControls();
 }
+
 
 void MainWindow::OnError(QString sMsg)
 {
 	QMessageBox::critical(this, "Error", sMsg);
 }
 
-
 void MainWindow::OnLog(QString sMsg)
 {
 	ui->pteLog->appendPlainText(sMsg);
 }
+
 
 void MainWindow::CreateChart()
 {
@@ -203,13 +220,11 @@ void MainWindow::OnNewData(Agent::Data data)
 		m_pLineSeries->remove(0);
 	pChart->addSeries(m_pLineSeries);
 
-	// Also add to our more organized setpoint storage method
+	// Also add to our more organized set point storage method
 	if (!m_listSetpointSamples.isEmpty())
 	{
 		m_listSetpointSamples.last().vectSamples += data;
 	}
-
-
 	/*for (SetPoint& sp : m_listSetpointSamples)
 	{
 		// Process this one setpoint
@@ -220,24 +235,20 @@ void MainWindow::OnNewData(Agent::Data data)
 	}*/
 }
 
+float MainWindow::CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs) {
+	float fSumOfLiftLbs = 0.0f;
+	for (int i = 0; i < LiftDataLbs.size(); i++) {
+		fSumOfLiftLbs += LiftDataLbs.at(i).fLoadCell;
+	}
+	float fAvgOfLiftLbs = fSumOfLiftLbs / LiftDataLbs.size();
 
-void MainWindow::TestLinearRegresssion()
-{
-	QVector<QPointF> points;
-	points += QPointF(43, 99);
-	points += QPointF(21, 65);
-	points += QPointF(25, 79);
-	points += QPointF(42, 75);
-	points += QPointF(57, 87);
-	points += QPointF(59, 81);
-
-	QVector<float> coeffs = LinearRegression(points);
+	return fAvgOfLiftLbs;
 }
 
-/// Example stolen from
-/// https://www.statisticshowto.com/probability-and-statistics/regression-analysis/find-a-linear-regression-equation/
 QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
 {
+	/// Example from
+	/// https://www.statisticshowto.com/probability-and-statistics/regression-analysis/find-a-linear-regression-equation/
 	float fSumX = 0.0f;
 	float fSumY = 0.0f;
 	float fSumXY = 0.0f;
@@ -253,12 +264,17 @@ QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
 	}
 
 	float fN = data.count();
-	float fB = (fSumY * fSumXX - fSumX * fSumXY)
-			/ (fN*fSumXX - fSumX * fSumX);
+
+	// Slope
 	float fM = (fN * fSumXY - fSumX * fSumY)
-			/ (fN*fSumXX - fSumX * fSumX);
+		/ (fN*fSumXX - fSumX * fSumX);
+
+	// Intercept
+	float fB = (fSumY * fSumXX - fSumX * fSumXY)
+		/ (fN*fSumXX - fSumX * fSumX);
+
 	QVector<float> vectCoeffs;
-	vectCoeffs += fB;
 	vectCoeffs += fM;
+	vectCoeffs += fB;	
 	return vectCoeffs;
 }
