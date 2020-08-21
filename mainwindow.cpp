@@ -146,23 +146,16 @@ void MainWindow::OnStopped()
 	// Outputs the average lift at each Angle of Attack measured, 
 	// and stores in m_vRotorSetPointAvg
 	for (int i = 0; i < m_listSetpointSamples.size(); i++) { 		
-				QPointF pointfRotorSetPointAvg(m_listSetpointSamples.at(i).fDegree,					    // x = fDegreeSet &
+		QPointF pointfRotorSetPointAvg(m_listSetpointSamples.at(i).fDegree,					    // x = fDegreeSet &
 				                       CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples));// y = fAvgLift
 
 		m_vRotorSetPointAvg.append(pointfRotorSetPointAvg);
 	}; 
 
 	// Outputs the RotorCalibration
-	for (int i = 0; i < m_vRotorSetPointAvg.size(); i++) {
-	
-
-
+	QVector<float> vfLinearRegression = LinearRegression(m_vRotorSetPointAvg);
 		
-
-	}
-
-
-
+	   
 	UpdateControls();
 }
 
@@ -247,12 +240,38 @@ float MainWindow::CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs) {
 	return fAvgOfLiftLbs;
 }
 
-QVector<float> MainWindow::TEMPLinearRegression(QVector<QPointF> data) {// To do: Replace with Actual Linear Reg
+
+
+/// Example from
+/// https://www.statisticshowto.com/probability-and-statistics/regression-analysis/find-a-linear-regression-equation/
+QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
+{
+	float fSumX = 0.0f;
+	float fSumY = 0.0f;
+	float fSumXY = 0.0f;
+	float fSumXX = 0.0f;
+	float fSumYY = 0.0f;
+	for (QPointF pt : data)
+	{
+		fSumX += pt.x();
+		fSumY += pt.y();
+		fSumXY += pt.x() * pt.y();
+		fSumXX += pt.x() * pt.x();
+		fSumYY += pt.y() * pt.y();
+	}
+
+	float fN = data.count();
+
+	// Slope
+	float fM = (fN * fSumXY - fSumX * fSumY)
+		/ (fN*fSumXX - fSumX * fSumX);
+
+	// Intercept
+	float fB = (fSumY * fSumXX - fSumX * fSumXY)
+		/ (fN*fSumXX - fSumX * fSumX);
 
 	QVector<float> vectCoeffs;
-	float fB = 22222; // Intercept
-	vectCoeffs += fB;
-	float fM = 11111; // Slope
 	vectCoeffs += fM;
+	vectCoeffs += fB;	
 	return vectCoeffs;
-};
+}

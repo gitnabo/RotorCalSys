@@ -44,6 +44,7 @@ private:
 	QVector<Agent::Data> m_vectData;	///< The simple way to store all our samples, used for charting
 	
 
+	int iRotorSerialNumTEMP;
 
 	struct SetPoint {
 		float fDegree = 0.0f;
@@ -54,32 +55,16 @@ private:
 	
 
 	float CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs);
-
-
-	struct RotorSetPointAvg {
-		float fDegreeSet = 0.0f;
-		float fAvgLift = 0.0f;
-	};
-	
-	QList<RotorSetPointAvg> m_listRotorSetPointAvg;
+	   
 
 	QVector<QPointF> m_vRotorSetPointAvg; // x = fDegreeSet &
 										  // y = fAvgLift
-
-
-	QVector<float> TEMPLinearRegression(QVector<QPointF> data);
-
+	   
+	QVector<float> LinearRegression(QVector<QPointF> data); // (Slope, Intercept)
+			
 
 	struct RotorCalibration {
 		int RotorSerialNum;
-		float LiftCurveSlope;
-		float LiftCurve0Intercept;
-	};
-	
-
-	   	 
-
-
-
-
+		QVector<float> vfLinearRegression;// (Slope, Intercept)
+	};   	 
 };
