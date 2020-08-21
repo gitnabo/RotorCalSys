@@ -52,7 +52,6 @@ private:
 
 	float CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs);	
 
-	QVector<QPointF> m_vRotorSetPointAvg; // x = fDegreeSet & y = fAvgLift	   
 	QVector<float> LinearRegression(QVector<QPointF> data); // (Slope, Intercept)			
 
 	struct RotorCalibration {

@@ -144,15 +144,16 @@ void MainWindow::OnStopped()
 {
 	
 	// Outputs Avg Lift at each Angle of Attack measured, 
-		for (int i = 0; i < m_listSetpointSamples.size(); i++) { 		
+	QVector<QPointF> vRotorSetPointAvg; // x = fDegreeSet & y = fAvgLift	   
+	for (int i = 0; i < m_listSetpointSamples.size(); i++) { 		
 		QPointF pointfRotorSetPointAvg(m_listSetpointSamples.at(i).fDegree,					    // x = fDegreeSet &
 				                       CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples));// y = fAvgLift
-
-		m_vRotorSetPointAvg.append(pointfRotorSetPointAvg);
-	}; 
+		
+		vRotorSetPointAvg.append(pointfRotorSetPointAvg);
+	}
 
 	// Outputs the RotorCalibration
-	QVector<float> vfLinearRegression = LinearRegression(m_vRotorSetPointAvg);
+	QVector<float> vfLinearRegression = LinearRegression(vRotorSetPointAvg);
 		
 	//ui->horizontalLayout_2.v
 		
