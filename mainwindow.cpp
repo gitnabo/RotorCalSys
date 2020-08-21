@@ -47,7 +47,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnUpdateTimer()
 {
-	static QStringList slTitles = QStringList();
+	static QStringList slTitles = QStringList()
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		<< ""
+		;
 	static int iPos = 0;
 
 	// Build a title 
