@@ -41,30 +41,22 @@ private:
 	QTimer* m_pTimerUpdate = nullptr;
 	
 	// Stores load force at a specific degree
-	QVector<Agent::Data> m_vectData;	///< The simple way to store all our samples, used for charting
-	
+	QVector<Agent::Data> m_vectData;	
 
-	int iRotorSerialNumTEMP;
-
+	// Organize degree set point and all readings from load cell at that degree set point 
 	struct SetPoint {
 		float fDegree = 0.0f;
 		QVector<Agent::Data> vectSamples;
 		};
-	
-	QList<SetPoint> m_listSetpointSamples;	///< A more structured way to save our data. Organized by 'setpoint/degree'.
-	
+	QList<SetPoint> m_listSetpointSamples;
 
-	float CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs);
-	   
+	float CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs);	
 
-	QVector<QPointF> m_vRotorSetPointAvg; // x = fDegreeSet &
-										  // y = fAvgLift
-	   
-	QVector<float> LinearRegression(QVector<QPointF> data); // (Slope, Intercept)
-			
+	QVector<QPointF> m_vRotorSetPointAvg; // x = fDegreeSet & y = fAvgLift	   
+	QVector<float> LinearRegression(QVector<QPointF> data); // (Slope, Intercept)			
 
 	struct RotorCalibration {
 		int RotorSerialNum;
-		QVector<float> vfLinearRegression;// (Slope, Intercept)
+		QVector<float> vfLinearRegression; // (Slope, Intercept)
 	};   	 
 };

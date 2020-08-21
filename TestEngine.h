@@ -34,9 +34,6 @@ private:
 	void RunDummyData();
 	QString m_sPort;
 
-
-
-
 	// Rotor Calibration Constants
 	float m_fAngleAtStartOfTestDegree = 1;  // ! Should Be -1    
 	float m_fAngleAtEndOfTestDegree   = 3;	// ! Should Be 13		 

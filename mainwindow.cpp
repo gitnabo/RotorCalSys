@@ -47,23 +47,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnUpdateTimer()
 {
-	static QStringList slTitles = QStringList()
-		<< ""
-		<< ""
-		<< ""
-		<< ""
-		<< ""
-		<< ""
-		<< "ASphincterSaysWhat?"
-		<< ""
-		<< "Istvan is watching you"
-		<< ""
-		<< "Hey momo"
-		<< ""
-		<< ""
-		<< "Don't try this at home kids!"
-		<< ""
-		;
+	static QStringList slTitles = QStringList();
 	static int iPos = 0;
 
 	// Build a title 
@@ -123,6 +107,7 @@ void MainWindow::UpdateControls()
 	ui->pbStop->setEnabled(bRunning);
 }
 
+
 void MainWindow::on_pbStart_clicked()
 {
 	m_vectData.clear();
@@ -139,7 +124,6 @@ void MainWindow::on_pbStop_clicked()
 	UpdateControls();
 }
 
-
 void MainWindow::OnStopped()
 {
 	
@@ -155,21 +139,25 @@ void MainWindow::OnStopped()
 	// Outputs the RotorCalibration
 	QVector<float> vfLinearRegression = LinearRegression(m_vRotorSetPointAvg);
 		
-	ui.
+	//ui->horizontalLayout_2.v
+		
+		// lineEdit_Slope->SetText(vfLinearRegression.at(0);
+
 	   
 	UpdateControls();
 }
+
 
 void MainWindow::OnError(QString sMsg)
 {
 	QMessageBox::critical(this, "Error", sMsg);
 }
 
-
 void MainWindow::OnLog(QString sMsg)
 {
 	ui->pteLog->appendPlainText(sMsg);
 }
+
 
 void MainWindow::CreateChart()
 {
@@ -241,12 +229,10 @@ float MainWindow::CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs) {
 	return fAvgOfLiftLbs;
 }
 
-
-
-/// Example from
-/// https://www.statisticshowto.com/probability-and-statistics/regression-analysis/find-a-linear-regression-equation/
 QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
 {
+	/// Example from
+	/// https://www.statisticshowto.com/probability-and-statistics/regression-analysis/find-a-linear-regression-equation/
 	float fSumX = 0.0f;
 	float fSumY = 0.0f;
 	float fSumXY = 0.0f;

@@ -100,9 +100,8 @@ void TestEngine::RunSequence()
 	agent.Open(m_sPort);		
 	Agent::Data data;
 	
-	// ToDo: Add a warning Sequence
+	// TODO: Add a warning Sequence
 
-	
 	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / m_iSampleMs;
 
 	// Iteration of the Angle Of Attack 
