@@ -155,9 +155,8 @@ void MainWindow::OnStopped()
 	// Outputs the RotorCalibration
 	QVector<float> vfLinearRegression = LinearRegression(vRotorSetPointAvg);
 		
-	//ui->horizontalLayout_2.v
-		
-		// lineEdit_Slope->SetText(vfLinearRegression.at(0);
+	ui->lineEdit_Slope->setText(QString::number(vfLinearRegression.at(0)));
+	ui->lineEdit_Intercept->setText(QString::number(vfLinearRegression.at(1)));
 
 	   
 	UpdateControls();
