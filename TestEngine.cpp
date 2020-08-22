@@ -77,6 +77,8 @@ void TestEngine::run() /// Entry Point
 	emit Started();
 	try
 	{
+		// Always have Warning Seq
+		SeqStartWarning;
 		RunSequence();	
 	}
 	catch (const AbortException&)
@@ -89,6 +91,62 @@ void TestEngine::run() /// Entry Point
 		emit Error(ex);
 	}
 	emit Stopped();
+}
+
+void TestEngine::SeqStartWarning()
+{
+	LOG("Seq Opening: SeqStartWarning");
+
+	// Setup the test agent for communications
+	Agent agent;
+	agent.Open(m_sPort);
+	Agent::Data data;
+
+	
+	// Iteration of the Angle Of Attack 
+	float fDegreeStart      = -3;
+	float fDegreeEnd        = 12;
+	float fDegreeStep       = 0.5; 
+	float fDegreeUpdateTime = 250; // Milli S
+
+	// Cycle Up
+	float fDegree = fDegreeStart;
+	for (fDegree; fDegree <= fDegreeEnd; fDegree + fDegreeStep) {
+		agent.SetPitch(fDegree);
+		emit NewPitch(fDegree);
+		Wait(fDegreeUpdateTime); 
+	}
+	LOG("Seq Opening: SeqStartWarning");
+
+	// Cycle Down
+	float fDegree = fDegreeEnd;
+	for (fDegree; fDegree >= fDegreeStart; fDegree - fDegreeStep) {
+		agent.SetPitch(fDegree);
+		emit NewPitch(fDegree);
+		Wait(fDegreeUpdateTime);
+	}
+	LOG("Seq Opening: SeqStartWarning");
+
+	// Cycle Up
+	float fDegree = fDegreeStart;
+	for (fDegree; fDegree <= fDegreeEnd; fDegree + fDegreeStep) {
+		agent.SetPitch(fDegree);
+		emit NewPitch(fDegree);
+		Wait(fDegreeUpdateTime);
+	}
+	LOG("Seq Opening: SeqStartWarning");
+
+	// Cycle Down
+	float fDegree = fDegreeEnd;
+	for (fDegree; fDegree >= fDegreeStart; fDegree - fDegreeStep) {
+		agent.SetPitch(fDegree);
+		emit NewPitch(fDegree);
+		Wait(fDegreeUpdateTime);
+	}
+
+
+	LOG("Seq Closing: SeqStartWarning");
+	agent.Close();
 }
 
 void TestEngine::RunSequence()

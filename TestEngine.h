@@ -30,7 +30,11 @@ private:
 	virtual void run() override;	///< The thread function where 
 	void Wait(int iMs);
 	void CheckAbort();
+
+	void SeqStartWarning();
 	void RunSequence();
+
+
 	void RunDummyData();
 	QString m_sPort;
 
