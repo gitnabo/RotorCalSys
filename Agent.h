@@ -18,7 +18,7 @@ public:
 
 	
 	void SetPitch(float fDegree); 
-	void SetMotorSpeed(float fMotorSpeedCmd);
+	void SetMotorSpeed(float fMotorSpeedRpm);
 	
 
 	struct Data {		

@@ -145,9 +145,14 @@ void Agent::SetPitch(float fDegree)
 }
 
 // ! Engine RPM = setServoTwoPos !
-void Agent::SetMotorSpeed(float fMotorSpeedCmd)
+void Agent::SetMotorSpeed(float fMotorSpeedRpm)
 {
-	QString sMotorSpeed = QString::number(fMotorSpeedCmd);
+	// Convert fMotorSpeedRpm to PWM signal
+	/// Equation based on Lenny's measurument with a tach in early 2020
+	///
+	float fMotorSpeedPwmCdm = 261.93 * fMotorSpeedPwmCdm + 1465.9;
+
+	QString sMotorSpeed = QString::number(fMotorSpeedPwmCdm);
 	QByteArray baMotorSpeed = sMotorSpeed.toLocal8Bit();
 	const char *ccMotorSpeed = baMotorSpeed.data();
 
@@ -155,14 +160,6 @@ void Agent::SetMotorSpeed(float fMotorSpeedCmd)
 	m_serial.write(ccMotorSpeed);
 	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
-
-	// Do we need the read back?
-	/*
-	QString sLine = ReadLine();
-
-	// Parse out the response
-	QStringList slTokens = sLine.split(',');
-	*/
 }
 
 
