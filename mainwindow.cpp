@@ -140,6 +140,10 @@ void MainWindow::on_pbStart_clicked()
 
 void MainWindow::on_pbStop_clicked()
 {
+	// Stops the motor
+	Agent agent;
+	agent.SetMotorSpeed(1000);
+
 	m_pTestEngine->Stop();
 	UpdateControls();
 }
