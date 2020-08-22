@@ -285,3 +285,7 @@ QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
 	vectCoeffs += fB;	
 	return vectCoeffs;
 }
+
+int MainWindow::GetRotorNum() {
+
+}
