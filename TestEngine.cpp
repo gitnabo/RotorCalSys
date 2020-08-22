@@ -194,8 +194,7 @@ void TestEngine::Seq_Calib_A()
 	Wait(1000);
 	agent.SetMotorSpeed(2010); // Speed for S48 Blades
 	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
-
-
+	
 	// Iteration of the Angle Of Attack 
 	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / m_iSampleMs;
 	float fDegree = m_fAngleAtStartOfTestDegree;
