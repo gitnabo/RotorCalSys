@@ -134,6 +134,12 @@
       <QtUicDir>$(ProjectDir)</QtUicDir>
       <QtUicFileName>ui_%(Filename).h</QtUicFileName>
     </QtUic>
+    <CustomBuildStep>
+      <Command>postbuild.bat $(QtDllPath) $(ProjectDir) $(OutputPath)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(ProjectDir)$(OutputPath)postbuild.trg</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -189,6 +195,12 @@
       <QtUicDir>$(ProjectDir)</QtUicDir>
       <QtUicFileName>ui_%(Filename).h</QtUicFileName>
     </QtUic>
+    <CustomBuildStep>
+      <Command>postbuild.bat $(QtDllPath) $(ProjectDir) $(OutputPath)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(ProjectDir)$(OutputPath)postbuild.trg</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Agent.cpp" />
@@ -236,6 +248,7 @@
     <QtMoc Include="TestEngine.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="postbuild.bat" />
     <None Include="RotorCalSys-Arduino.ino" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
