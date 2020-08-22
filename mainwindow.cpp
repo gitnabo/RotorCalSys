@@ -127,6 +127,10 @@ void MainWindow::UpdateControls()
 void MainWindow::on_pbStart_clicked()
 {
 	m_vectData.clear();
+
+	//Clear the slope and intercept output
+	ui->lineEdit_Slope->clear();
+	ui->lineEdit_Intercept->clear();
 	ResetChart();
 	ui->pteLog->setPlainText("");
 	QString sSerialPortName = ui->cbSerialPorts->currentText();
