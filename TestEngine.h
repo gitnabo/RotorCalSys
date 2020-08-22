@@ -29,10 +29,13 @@ private:
 	volatile bool m_bStopRequest = false;
 	virtual void run() override;	///< The thread function where 
 	void Wait(int iMs);
+	void WaitAndGetData(int ms);
 	void CheckAbort();
 
-	void SeqStartWarning();
-	void RunSequence();
+	void Seq_StartWarning();
+	void Seq_SwDev_A();
+	void Seq_Calib_A();
+	
 
 
 	void RunDummyData();
@@ -43,5 +46,6 @@ private:
 	float m_fAngleAtEndOfTestDegree   = 3;	// ! Should Be 13		 
 	int   m_iTimeSpentAtAOA           = 500; // TEMP 30000 -> 1000  for TS      
 	const int m_iSampleMs = 250;
+	int m_iDelayForMotorRPM = 10000
 };
 

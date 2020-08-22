@@ -78,8 +78,8 @@ void TestEngine::run() /// Entry Point
 	try
 	{
 		// Always have Warning Seq
-		SeqStartWarning;
-		RunSequence();	
+		Seq_StartWarning;
+		Seq_SwDev_A();	
 	}
 	catch (const AbortException&)
 	{
@@ -93,9 +93,11 @@ void TestEngine::run() /// Entry Point
 	emit Stopped();
 }
 
-void TestEngine::SeqStartWarning()
+void TestEngine::Seq_StartWarning()
 {
-	LOG("Seq Opening: SeqStartWarning");
+	LOG("Seq Opening: Seq_StartWarning");
+	LOG("!!! Warning Sequence Starting !!!");
+	LOG("!!! Stand Clear of the Rotor System !!!");
 
 	// Setup the test agent for communications
 	Agent agent;
@@ -107,7 +109,7 @@ void TestEngine::SeqStartWarning()
 	float fDegreeStart      = -3;
 	float fDegreeEnd        = 12;
 	float fDegreeStep       = 0.5; 
-	float fDegreeUpdateTime = 250; // Milli S
+	float fDegreeUpdateTime = 250; // ms
 
 	// Cycle Up
 	float fDegree = fDegreeStart;
@@ -116,7 +118,7 @@ void TestEngine::SeqStartWarning()
 		emit NewPitch(fDegree);
 		Wait(fDegreeUpdateTime); 
 	}
-	LOG("Seq Opening: SeqStartWarning");
+	LOG("!!! Warning Sequence Starting !!!");
 
 	// Cycle Down
 	float fDegree = fDegreeEnd;
@@ -125,7 +127,7 @@ void TestEngine::SeqStartWarning()
 		emit NewPitch(fDegree);
 		Wait(fDegreeUpdateTime);
 	}
-	LOG("Seq Opening: SeqStartWarning");
+	LOG("!!! Warning Sequence Starting !!!");
 
 	// Cycle Up
 	float fDegree = fDegreeStart;
@@ -134,7 +136,7 @@ void TestEngine::SeqStartWarning()
 		emit NewPitch(fDegree);
 		Wait(fDegreeUpdateTime);
 	}
-	LOG("Seq Opening: SeqStartWarning");
+	LOG("!!! Warning Sequence Starting !!!");
 
 	// Cycle Down
 	float fDegree = fDegreeEnd;
@@ -145,20 +147,18 @@ void TestEngine::SeqStartWarning()
 	}
 
 
-	LOG("Seq Closing: SeqStartWarning");
+	LOG("Seq Closing: Seq_StartWarning");
 	agent.Close();
 }
 
-void TestEngine::RunSequence()
+void TestEngine::Seq_SwDev_A()
 {
-	LOG("Sequence Opening");
+	LOG("Seq Opening: Seq_SwDev_A");
 
 	// Setup the test agent for communications
 	Agent agent;
 	agent.Open(m_sPort);		
 	Agent::Data data;
-	
-	// TODO: Add a warning Sequence
 
 	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / m_iSampleMs;
 
@@ -173,6 +173,41 @@ void TestEngine::RunSequence()
 			data = agent.GetData();
 			emit NewData(data);
 			Wait(m_iSampleMs);			
+		}
+	}
+
+	LOG("Seq Closing: Seq_SwDev_A");
+	agent.Close();
+}
+
+void TestEngine::Seq_Calib_A()
+{
+	LOG("Seq Opening: Seq_Calib_A");
+
+	// Setup the test agent for communications
+	Agent agent;
+	agent.Open(m_sPort);
+	Agent::Data data;
+	
+	// Start Engine
+	agent.SetMotorSpeed(1000); // To turn on the ESC
+	Wait(1000);
+	agent.SetMotorSpeed(2010); // Speed for S48 Blades
+	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
+
+
+	// Iteration of the Angle Of Attack 
+	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / m_iSampleMs;
+	float fDegree = m_fAngleAtStartOfTestDegree;
+	for (fDegree; fDegree <= m_fAngleAtEndOfTestDegree; fDegree++) {
+		agent.SetPitch(fDegree);
+		emit NewPitch(fDegree);
+		QString sLogMsg = "Angle of Attack:" + QString::number(fDegree);
+		LOG(sLogMsg);
+		for (int i = 0; i < iSamplesPerSetpoint; ++i) {
+			data = agent.GetData();
+			emit NewData(data);
+			Wait(m_iSampleMs);
 		}
 	}
 
@@ -207,4 +242,20 @@ void TestEngine::RunDummyData()
 
 		Wait(200);
 	}
+}
+
+void TestEngine::WaitAndGetData(int ms) {
+	// Setup the test agent for communications
+	Agent agent;
+	agent.Open(m_sPort);
+	Agent::Data data;
+
+
+	int iRateofDataGet = 10; // ms
+	for (int i = 0; i < ms; i + iRateofDataGet) {
+		data = agent.GetData();
+		emit NewData(data);
+		Wait(iRateofDataGet);
+	}
+
 }
