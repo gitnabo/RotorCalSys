@@ -129,7 +129,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit__RotorNum">
+          <widget class="QLineEdit" name="lineEdit_RotorNum">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>

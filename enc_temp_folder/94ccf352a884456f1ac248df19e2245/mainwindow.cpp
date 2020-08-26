@@ -301,7 +301,7 @@ void MainWindow::CreateTelFile() {
 	QDateTime DateTime = QDateTime::currentDateTime();
 	QString sDateTimeFormat = "yyyyMMdd_hhmmss";
 	QString sDateTime = DateTime.toString(sDateTimeFormat);
-	QString sFileName = sFileLocation + "R_" + sRotorNum + "_D_" + sDateTime + ".csv";
+	QString sFileName = sFileLocation + "Rotor_" + sRotorNum + "_" + sDateTime + ".csv";
 	QFile file(sFileName);
 
 	if (file.open(QIODevice::WriteOnly)) {

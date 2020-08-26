@@ -46,10 +46,8 @@ private:
 	// Rotor Calibration Constants
 	float m_fRotorConstSlope = 0.024485714f;
 	float m_fRotorConst0Intcerpt = -31.46047619f;
-	float m_fLoadCellGainSlope = 1.098320069; /// Based on exp with Doug
-	float m_fLoadCellGainIntc = 0.108237333; /// Based on exp with Doug
-
-
+	float m_fLoadCellGainSlope = 1.098320069f; /// Based on exp with Doug
+	float m_fLoadCellGainIntc = 0.108237333f; /// Based on exp with Doug
 };
 
 
