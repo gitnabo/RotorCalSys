@@ -297,12 +297,12 @@ void MainWindow::CreateTelFile() {
 	QString sFileLocation = "C:/Dev/RotorCalSys/Output Files/";
 
 	// Tel File Name
-	QDateTime DateTime;
-	QString sDateTimeFormat = "yyMMddhhmmsszz";
-	QString sDateTime = DateTime.currentDateTime.toString(sDateTimeFormat);
-
-	QString sFileName = sFileLocation + sDateTime;
+	QDateTime DateTime = QDateTime::currentDateTime();
+	QString sDateTimeFormat = "yyyyMMdd_hhmmss";
+	QString sDateTime = DateTime.toString(sDateTimeFormat);
+	QString sFileName = sFileLocation + sDateTime + ".csv";
 	QFile file(sFileName);
+
 	if (file.open(QIODevice::WriteOnly)) {
 		QTextStream stream(&file);
 		// Create Telemetry Data Header
