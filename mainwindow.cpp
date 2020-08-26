@@ -217,7 +217,7 @@ void MainWindow::OnNewPitch(float fDegrees)
 {
 	SetPoint sp;
 	sp.fDegree = fDegrees;
-	m_listSetpointSamples += sp;
+	m_listSetpointSamples += sp; /// Samples as in data, not as in example data
 }
 
 void MainWindow::OnNewData(Agent::Data data)
@@ -236,7 +236,7 @@ void MainWindow::OnNewData(Agent::Data data)
 	// Also add to our more organized set point storage method
 	if (!m_listSetpointSamples.isEmpty())
 	{
-		m_listSetpointSamples.last().vectSamples += data;
+		m_listSetpointSamples.last().vectSamples += data; /// This is where the tel db is updated
 	}
 	/*for (SetPoint& sp : m_listSetpointSamples)
 	{
