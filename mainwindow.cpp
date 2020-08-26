@@ -7,6 +7,7 @@
 #include <QPointF>
 #include <QFile.h>
 #include <QTextStream.h>
+#include <QDateTime.h>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -292,7 +293,15 @@ QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
 }
 
 void MainWindow::CreateTelFile() {
-	QString sFileName = "C:/Dev/RotorCalSys/Output Files/Test1.csv";
+	// Tel File Location
+	QString sFileLocation = "C:/Dev/RotorCalSys/Output Files/";
+
+	// Tel File Name
+	QDateTime DateTime;
+	QString sDateTimeFormat = "yyMMddhhmmsszz";
+	QString sDateTime = DateTime.currentDateTime.toString(sDateTimeFormat);
+
+	QString sFileName = sFileLocation + sDateTime;
 	QFile file(sFileName);
 	if (file.open(QIODevice::WriteOnly)) {
 		QTextStream stream(&file);
