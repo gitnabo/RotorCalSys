@@ -42,9 +42,14 @@ private:
 
 	float ConvPwmToDegree(float fPwmAOA); /// Angle of Attack
 	float ConvDegreeToPwm(float fDegreeAOA); /// Angle of Attack
-	// Rotor Calibration Defaults
+
+	// Rotor Calibration Constants
 	float m_fRotorConstSlope = 0.024485714f;
 	float m_fRotorConst0Intcerpt = -31.46047619f;
+	float m_fLoadCellGainSlope = 1.098320069; /// Based on exp with Doug
+	float m_fLoadCellGainIntc = 0.108237333; /// Based on exp with Doug
+
+
 };
 
 

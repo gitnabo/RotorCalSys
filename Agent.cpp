@@ -90,12 +90,13 @@ Agent::Data Agent::GetData()
 		throw Exception("Bad value received from Arduino: fTime");
 	}
 
-	data.fLoadCell = slTokens.at(2).toFloat(&bOk);
+	// LoadCell gains is adjusted here
+	data.fLoadCell = (slTokens.at(2).toFloat(&bOk)) * m_fLoadCellGainSlope + m_fLoadCellGainIntc;
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fLoadCell");
 	}
 
-	data.fServoCurrent = slTokens.at(3).toFloat(&bOk);
+	data.fServoCurrent = slTokens.at(3).toFloat(&bOk);	
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fServoCurrent");
 	}
