@@ -32,7 +32,7 @@ private:
 	void WaitAndGetData(int ms);
 	void CheckAbort();
 
-	int :GetRotorNum();
+
 
 
 	void RunDummyData();

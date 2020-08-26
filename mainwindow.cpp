@@ -5,6 +5,9 @@
 #include <QSettings>
 #include <QMessageBox>
 #include <QPointF>
+#include <QFile.h>
+#include <QTextStream.h>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -150,7 +153,9 @@ void MainWindow::on_pbStop_clicked()
 
 void MainWindow::OnStopped()
 {
-	
+	CreateTelFile(); // TEMP
+
+
 	// Outputs Avg Lift at each Angle of Attack measured, 
 	QVector<QPointF> vRotorSetPointAvg; // x = fDegreeSet & y = fAvgLift	   
 	for (int i = 0; i < m_listSetpointSamples.size(); i++) { 		
@@ -286,6 +291,21 @@ QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
 	return vectCoeffs;
 }
 
-int MainWindow::GetRotorNum() {
+void MainWindow::CreateTelFile() {
+	QString sFileName = "C:/Dev/RotorCalSys/Output Files/Test1.csv";
+	QFile file(sFileName);
+	if (file.open(QIODevice::WriteOnly)) {
+		QTextStream stream(&file);
+		// Create Telemetry Data Header
+		stream << "Time (ms)" << "," << "Load Cell (Lbs)" << "," << "Servo Cur (mA)" << ","	<< "Servo Volt (V)" << "," 
+			   << "Motor Cur (A)" << "," << "Motor Vol (V)" << "," << "Servo Pos (us)" << "," << "Motor Speed (us)" << endl;
+		for (int i = 0; i < m_vectData.size(); i++) {
+			stream << m_vectData[i].fTime << "," <<  m_vectData[i].fLoadCell << "," << m_vectData[i].fServoCurrent << "," << m_vectData[i].fServoVoltage << ","
+				   << m_vectData[i].fMotorControllerCurrent << "," << m_vectData[i].fMotorControllerVoltage << "," << m_vectData[i].fServoPos << "," << m_vectData[i].fMotorSpeed << "," << endl;
+		}
+	}
+	
+	
+
 
 }

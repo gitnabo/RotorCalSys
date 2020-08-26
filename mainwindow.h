@@ -57,5 +57,7 @@ private:
 	struct RotorCalibration {
 		int RotorSerialNum;
 		QVector<float> vfLinearRegression; // (Slope, Intercept)
-	};   	 
+	}; 
+
+	void CreateTelFile();
 };
