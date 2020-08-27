@@ -59,5 +59,5 @@ private:
 		QVector<float> vfLinearRegression; // (Slope, Intercept)
 	}; 
 
-	void CreateTelFile();
+	void CreateTelFile(QVector<float> vfLinearRegressionPara);
 };

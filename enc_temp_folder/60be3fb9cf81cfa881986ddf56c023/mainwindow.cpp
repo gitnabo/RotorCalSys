@@ -350,8 +350,6 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 			   << QString::number(m_pTestEngine->m_iDelayForMotorRPM) << "," << "_ _ _" << endl << endl << endl;
 		#pragma endregion
 
-		// Parse Rotor Calibration Telemetry Data
-		stream << "ROTOR CALIBRATION SYSTEM - Telemetry Data" << endl << endl;
 		// Create Header for Telemetry Data 
 		stream << "Time (ms)" << "," << "Load Cell (Lbs)" << "," << "Servo Cur (mA)" << ","	<< "Servo Volt (V)" << "," 
 			   << "Motor Cur (A)" << "," << "Motor Vol (V)" << "," << "Servo Pos (us)" << "," << "Motor Speed (us)" << endl;
