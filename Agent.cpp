@@ -149,9 +149,9 @@ void Agent::SetPitch(float fDegree)
 void Agent::SetMotorSpeed(float fMotorSpeedRpm)
 {
 	// Convert fMotorSpeedRpm to PWM signal
-	/// Equation based on Lenny's measurument with a tach in early 2020
-	///
-	float fMotorSpeedPwmCdm = 261.93 * fMotorSpeedPwmCdm + 1465.9;
+	/// Equation based on Lenny's measurements 
+	/// with a tach in early 2020
+	float fMotorSpeedPwmCdm = m_fMotorConstSlope * fMotorSpeedPwmCdm + m_fMotorConstInct;
 
 	QString sMotorSpeed = QString::number(fMotorSpeedPwmCdm);
 	QByteArray baMotorSpeed = sMotorSpeed.toLocal8Bit();
@@ -168,7 +168,7 @@ void Agent::SetMotorSpeed(float fMotorSpeedRpm)
 float Agent::ConvPwmToDegree(float fPwmAOA)
 {
 	float fDegree;
-	fDegree = fPwmAOA * m_fRotorConstSlope + m_fRotorConst0Intcerpt;
+	fDegree = fPwmAOA * m_fRotorConstSlope + m_fRotorConstIntc;
 	return fDegree;
 }
 
@@ -176,6 +176,6 @@ float Agent::ConvPwmToDegree(float fPwmAOA)
 float Agent::ConvDegreeToPwm(float fDegreeAOA)
 {
 	float fPwm;
-	fPwm = (fDegreeAOA - m_fRotorConst0Intcerpt) / m_fRotorConstSlope;
+	fPwm = (fDegreeAOA - m_fRotorConstIntc) / m_fRotorConstSlope;
 	return fPwm;
 }

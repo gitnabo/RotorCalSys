@@ -14,7 +14,14 @@ public:
 
 	void Start(const QString& sPort);
 	void Stop();
-	bool IsRunning();	
+	bool IsRunning();
+
+	// Rotor Calibration Constants
+	const float m_fAngleAtStartOfTestDegree = 1.0f;  // ! Should Be -1    
+	const float m_fAngleAtEndOfTestDegree = 3.0f;	// ! Should Be 13		 
+	int   m_iTimeSpentAtAOA = 500; // TEMP 30000 -> 1000  for TS      
+	const int m_iSampleMs = 250.0f;
+	int m_iDelayForMotorRPM = 10000.0f;
 
 signals:
 	void Started();
@@ -24,6 +31,7 @@ signals:
 	void NewData(Agent::Data data);
 	void Log(QString sMsg);
 
+
 private:
 	void LOG(QString sMsg);
 	volatile bool m_bStopRequest = false;
@@ -32,18 +40,8 @@ private:
 	void WaitAndGetData(int ms);
 	void CheckAbort();
 
-
-
-
 	void RunDummyData();
 	QString m_sPort;
-
-	// Rotor Calibration Constants
-	float m_fAngleAtStartOfTestDegree = 1;  // ! Should Be -1    
-	float m_fAngleAtEndOfTestDegree   = 3;	// ! Should Be 13		 
-	int   m_iTimeSpentAtAOA           = 500; // TEMP 30000 -> 1000  for TS      
-	const int m_iSampleMs = 250;
-	int m_iDelayForMotorRPM = 10000;
 
 	// Sequences
 	void Seq_StartWarning();
