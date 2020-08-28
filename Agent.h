@@ -1,6 +1,14 @@
 #pragma once
 #include <QSerialPort>
 
+// Rotor Calibration Constants
+const float m_fRotorConstSlope = 0.024485714f;
+const float m_fRotorConstIntc = -31.46047619f;
+const float m_fLoadCellGainSlope = 1.098320069f; /// Based on exp with Doug
+const float m_fLoadCellGainIntc = 0.108237333f; /// Based on exp with Doug
+const float m_fMotorConstSlope = 261.93f; /// Based on Lenny's exp in early 2020
+const float m_fMotorConstInct = 1465.9f; /// Based on Lenny's exp in early 2020
+
 
 /**
 @brief API for the Arduino test stand
@@ -35,14 +43,7 @@ public:
 	};
 	Data GetData();
 
-	// Rotor Calibration Constants
-	const float m_fRotorConstSlope = 0.024485714f;
-	const float m_fRotorConstIntc = -31.46047619f;
-	const float m_fLoadCellGainSlope = 1.098320069f; /// Based on exp with Doug
-	const float m_fLoadCellGainIntc = 0.108237333f; /// Based on exp with Doug
-	const float m_fMotorConstSlope = 261.93f; /// Based on Lenny's exp in early 2020
-	const float m_fMotorConstInct = 1465.9f; /// Based on Lenny's exp in early 2020
-	const float m_fRotorRevision = 1.1f;
+
 
 	
 private:

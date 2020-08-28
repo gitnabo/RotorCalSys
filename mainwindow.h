@@ -60,4 +60,8 @@ private:
 	}; 
 
 	void CreateTelFile(QVector<float> vfLinearRegressionPara);
+	
+	// System Constants
+	const QString m_sRotorRevision = "1.1";
+
 };

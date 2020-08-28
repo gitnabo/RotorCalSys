@@ -23,12 +23,13 @@ void TestEngine::Start(const QString& sPort)
 {
 	m_bStopRequest = false;
 	m_sPort = sPort;
-	start();
+	start(); /// QThread Method which initiates an additional threads
 }
 
 void TestEngine::Stop()
 {
-	m_bStopRequest = true;
+	// To trigger: throw AbortException();
+	m_bStopRequest = true;	
 
 	while (IsRunning())
 	{
@@ -53,12 +54,13 @@ void TestEngine::CheckAbort()
 {
 	if (m_bStopRequest)
 		throw Exception("abort request from user");
+		
 }
 
 void TestEngine::Wait(int iMs)
 {
 	QElapsedTimer timer;
-	timer.start();
+	timer.start();	
 	while (true)
 	{
 		if (timer.elapsed() > iMs)
@@ -79,7 +81,8 @@ void TestEngine::run() /// Entry Point
 	{
 		// Always have Warning Seq
 		// Seq_StartWarning(); // TEMP: Put back in
-		Seq_SwDev_A();	   
+		// Seq_SwDev_A();	 
+		RunDummyData();
 	}
 	catch (const AbortException&)
 	{
@@ -117,28 +120,21 @@ void TestEngine::RunDummyData()
 		//data.fServoPostion = funcGen(); /// us pulse width
 		//data.fMotorRpmSetting = funcGen(); /// us pulse width
 		emit NewData(data);
+		LOG(QString::number(data.fLoadCell));
 
 		Wait(200);
 	}
 }
 
 void TestEngine::WaitAndGetData(int ms) {
-	// Setup the test agent for communications
-	Agent agent;
-	agent.Open(m_sPort);
-	Agent::Data data;
-
-
-	int iRateofDataGet = 10; // ms
-	int i = 0;
-	while (i < ms) {
-		data = agent.GetData();
+	QElapsedTimer tmr;
+	tmr.start();
+	while (tmr.elapsed() < ms)
+	{
+		Agent::Data data = m_pAgent->GetData();
 		emit NewData(data);
-		Wait(iRateofDataGet);
-		// Iterator
-		i = i + iRateofDataGet;
+		Wait(m_iSampleMs);
 	}
-
 }
 
 
@@ -152,7 +148,6 @@ void TestEngine::Seq_StartWarning()
 	// Setup the test agent for communications
 	Agent agent;
 	agent.Open(m_sPort);
-	Agent::Data data;
 
 	// Iteration of the Angle Of Attack 
 	float fDegreeStart = -3;
@@ -242,6 +237,7 @@ void TestEngine::Seq_Calib_A()
 
 	// Setup the test agent for communications
 	Agent agent;
+	m_pAgent = &agent;/// This is just to have access outside of this sequence
 	agent.Open(m_sPort);
 	Agent::Data data;
 

@@ -145,9 +145,6 @@ void MainWindow::on_pbStart_clicked()
 void MainWindow::on_pbStop_clicked()
 {
 	// Stops the motor
-	Agent agent;
-	agent.SetMotorSpeed(1000);
-
 	m_pTestEngine->Stop();
 	UpdateControls();
 }
@@ -189,14 +186,16 @@ void MainWindow::OnLog(QString sMsg)
 void MainWindow::CreateChart()
 {
 	QChart *pChart = ui->wChartView->chart();
-	pChart->setTitle("Data Chart");
+	pChart->setAnimationOptions(QChart::NoAnimation); 
+	pChart->setTitle("Load Cell (lbs)");
 	QValueAxis *axisX = new QValueAxis;
 	axisX->setTickCount(10);
 	pChart->addAxis(axisX, Qt::AlignBottom);
-	m_pLineSeries = new QLineSeries;
+	m_pLineSeries = new QLineSeries; /// Bc this is a pointer
 	pChart->addSeries(m_pLineSeries);
 
 	QValueAxis *axisY = new QValueAxis;
+	axisY->setRange(-10, 200); 
 	axisY->setLinePenColor(m_pLineSeries->pen().color());
 
 	pChart->addAxis(axisY, Qt::AlignLeft);
@@ -296,7 +295,7 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 
 	// Tel File Name
 	QString sRotorNum = ui->lineEdit_RotorNum->text();
-	if (ui->lineEdit_RotorNum->text() == NULL) {
+	if (sRotorNum.isEmpty()) {
 		sRotorNum = "NA";
 	}
 	QDateTime DateTime = QDateTime::currentDateTime();
@@ -306,60 +305,61 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 	QFile file(sFileName);
 
 	// Rotor Calibration Constants For Telemetry File
-	if (file.open(QIODevice::WriteOnly)) {	
-		Agent agent;
-		QTextStream stream(&file);
+	if (!file.open(QIODevice::WriteOnly)) {
+		return;
+	}
+	QTextStream stream(&file);
 		
-		// Parse Rotor Calibration Calculations
-		stream << "ROTOR CALIBRATION SYSTEM - CALCULATIONS" << endl << endl;
-		#pragma region Rotor Calibration Constants - Line 1		
-		stream << "Rotor #" << "," << "Cal Rotor Slope" << "," 
-			   << "Cal Rotor Intc" << "," << "Rotor Rev" << "," 
-			   << "Test Date" << "," << "Test Time" << endl;
-		// Parse Rotor Calibration Constants
-		stream << ui->lineEdit_RotorNum->text() << "," << QString::number(vfLinearRegressionPara.at(0)) << "," 
-			   << QString::number(vfLinearRegressionPara.at(1)) << "," << QString::number(agent.m_fRotorRevision) << ","
-			   << DateTime.toString("yyyy MM d") << "," << DateTime.toString("hh:mm:ss") << endl << endl << endl;
-		#pragma endregion
+	// Parse Rotor Calibration Calculations
+	stream << "ROTOR CALIBRATION SYSTEM - CALCULATIONS" << endl << endl;
+	#pragma region Rotor Calibration Constants - Line 1		
+	stream << "Rotor #" << "," << "Cal Rotor Slope" << "," 
+			<< "Cal Rotor Intc" << "," << "Rotor Rev" << "," 
+			<< "Test Date" << "," << "Test Time" << endl;
+	// Parse Rotor Calibration Constants
+	stream << ui->lineEdit_RotorNum->text() << "," << QString::number(vfLinearRegressionPara.at(0)) << "," 
+			<< QString::number(vfLinearRegressionPara.at(1)) << "," << m_sRotorRevision << ","
+			<< DateTime.toString("yyyy MM d") << "," << DateTime.toString("hh:mm:ss") << endl << endl << endl;
+	#pragma endregion
 
-		// Parse Rotor Calibration Constants
-		stream <<"ROTOR CALIBRATION SYSTEM - CONSTANTS" << endl << endl;
-		#pragma region Rotor Calibration Constants - Line 2		
-		stream << "Def Rotor Const Slope" << "," << "Def Rotor Const Intc" << "," 
-			   << "Load Cell Gain Slope" << "," << "Load Cell Gain Intc" << endl;
-		// Parse Rotor Calibration Constants
-		stream << QString::number(agent.m_fRotorConstSlope) << "," << QString::number(agent.m_fRotorConstIntc) << "," 
-			   << QString::number(agent.m_fLoadCellGainSlope) << "," << QString::number(agent.m_fLoadCellGainIntc) << endl << endl;
-		#pragma endregion
+	// Parse Rotor Calibration Constants
+	stream <<"ROTOR CALIBRATION SYSTEM - CONSTANTS" << endl << endl;
+	#pragma region Rotor Calibration Constants - Line 2		
+	stream << "Def Rotor Const Slope" << "," << "Def Rotor Const Intc" << "," 
+			<< "Load Cell Gain Slope" << "," << "Load Cell Gain Intc" << endl;
+	// Parse Rotor Calibration Constants
+	stream << QString::number(agent.m_fRotorConstSlope) << "," << QString::number(agent.m_fRotorConstIntc) << "," 
+			<< QString::number(agent.m_fLoadCellGainSlope) << "," << QString::number(agent.m_fLoadCellGainIntc) << endl << endl;
+	#pragma endregion
 		
-		#pragma region Rotor Calibration Constants - Line 3
-		// Create Header for Rotor Calibration Constants - Line 2
-		stream << "Angle Start (deg)" << "," << "Angle End (deg)" << ","
-		       << "Time at Angle (ms)" << "," << "Sample Rate (ms)" << endl;
-		// Parse Rotor Calibration Constants
-		stream << QString::number(m_pTestEngine->m_fAngleAtStartOfTestDegree) << "," << QString::number(m_pTestEngine->m_fAngleAtEndOfTestDegree) << ","
-			<< QString::number(m_pTestEngine->m_iTimeSpentAtAOA) << "," << QString::number(m_pTestEngine->m_iSampleMs) << endl << endl;
-		#pragma endregion
+	#pragma region Rotor Calibration Constants - Line 3
+	// Create Header for Rotor Calibration Constants - Line 2
+	stream << "Angle Start (deg)" << "," << "Angle End (deg)" << ","
+		    << "Time at Angle (ms)" << "," << "Sample Rate (ms)" << endl;
+	// Parse Rotor Calibration Constants
+	stream << QString::number(m_pTestEngine->m_fAngleAtStartOfTestDegree) << "," << QString::number(m_pTestEngine->m_fAngleAtEndOfTestDegree) << ","
+		<< QString::number(m_pTestEngine->m_iTimeSpentAtAOA) << "," << QString::number(m_pTestEngine->m_iSampleMs) << endl << endl;
+	#pragma endregion
 
-		#pragma region Rotor Calibration Constants - Line 4
-		// Create Header for Rotor Calibration Constants - Line 3
-		stream << "Motor Const Slope" << "," << " Motor Const Inct" << ","
-			   << "Motor Delay (ms)" << "," << "_" << endl;
-		// Parse Rotor Calibration Constants
-		stream << QString::number(agent.m_fMotorConstSlope) << "," << QString::number(agent.m_fMotorConstInct) << ","
-			   << QString::number(m_pTestEngine->m_iDelayForMotorRPM) << "," << "_ _ _" << endl << endl << endl;
-		#pragma endregion
+	#pragma region Rotor Calibration Constants - Line 4
+	// Create Header for Rotor Calibration Constants - Line 3
+	stream << "Motor Const Slope" << "," << " Motor Const Inct" << ","
+			<< "Motor Delay (ms)" << "," << "_" << endl;
+	// Parse Rotor Calibration Constants
+	stream << QString::number(agent.m_fMotorConstSlope) << "," << QString::number(agent.m_fMotorConstInct) << ","
+			<< QString::number(m_pTestEngine->m_iDelayForMotorRPM) << "," << "_ _ _" << endl << endl << endl;
+	#pragma endregion
 
-		// Parse Rotor Calibration Telemetry Data
-		stream << "ROTOR CALIBRATION SYSTEM - Telemetry Data" << endl << endl;
-		// Create Header for Telemetry Data 
-		stream << "Time (ms)" << "," << "Load Cell (Lbs)" << "," << "Servo Cur (mA)" << ","	<< "Servo Volt (V)" << "," 
-			   << "Motor Cur (A)" << "," << "Motor Vol (V)" << "," << "Servo Pos (us)" << "," << "Motor Speed (us)" << endl;
-		// Parse Telemetry Data
-		for (int i = 0; i < m_vectData.size(); i++) {
-			stream << m_vectData[i].fTime << "," <<  m_vectData[i].fLoadCell << "," << m_vectData[i].fServoCurrent << "," << m_vectData[i].fServoVoltage << ","
-				   << m_vectData[i].fMotorControllerCurrent << "," << m_vectData[i].fMotorControllerVoltage << "," << m_vectData[i].fServoPos << "," << m_vectData[i].fMotorSpeed << "," << endl;
-		}
+	// Parse Rotor Calibration Telemetry Data
+	stream << "ROTOR CALIBRATION SYSTEM - Telemetry Data" << endl << endl;
+	// Create Header for Telemetry Data 
+	stream << "Time (ms)" << "," << "Load Cell (Lbs)" << "," << "Servo Cur (mA)" << ","	<< "Servo Volt (V)" << "," 
+			<< "Motor Cur (A)" << "," << "Motor Vol (V)" << "," << "Servo Pos (us)" << "," << "Motor Speed (us)" << endl;
+	// Parse Telemetry Data
+	for (int i = 0; i < m_vectData.size(); i++) {
+		stream << m_vectData[i].fTime << "," <<  m_vectData[i].fLoadCell << "," << m_vectData[i].fServoCurrent << "," << m_vectData[i].fServoVoltage << ","
+				<< m_vectData[i].fMotorControllerCurrent << "," << m_vectData[i].fMotorControllerVoltage << "," << m_vectData[i].fServoPos << "," << m_vectData[i].fMotorSpeed << "," << endl;
+		
 	}
 	
 	

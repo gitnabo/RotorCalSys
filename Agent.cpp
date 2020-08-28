@@ -38,6 +38,8 @@ void Agent::Open(const QString& sPort)
 
 void Agent::Close()
 {
+	if (m_serial.isOpen())
+		SetMotorSpeed(0); // !!!! Make sure this Stops
 	m_serial.close();
 }
 
@@ -179,3 +181,4 @@ float Agent::ConvDegreeToPwm(float fDegreeAOA)
 	fPwm = (fDegreeAOA - m_fRotorConstIntc) / m_fRotorConstSlope;
 	return fPwm;
 }
+
