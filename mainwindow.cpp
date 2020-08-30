@@ -309,7 +309,7 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 		return;
 	}
 	QTextStream stream(&file);
-		
+		/*
 	// Parse Rotor Calibration Calculations
 	stream << "ROTOR CALIBRATION SYSTEM - CALCULATIONS" << endl << endl;
 	#pragma region Rotor Calibration Constants - Line 1		
@@ -360,7 +360,7 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 		stream << m_vectData[i].fTime << "," <<  m_vectData[i].fLoadCell << "," << m_vectData[i].fServoCurrent << "," << m_vectData[i].fServoVoltage << ","
 				<< m_vectData[i].fMotorControllerCurrent << "," << m_vectData[i].fMotorControllerVoltage << "," << m_vectData[i].fServoPos << "," << m_vectData[i].fMotorSpeed << "," << endl;
 		
-	}
+	}*/
 	
 	
 

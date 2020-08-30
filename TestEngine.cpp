@@ -80,9 +80,9 @@ void TestEngine::run() /// Entry Point
 	try
 	{
 		// Always have Warning Seq
-		// Seq_StartWarning(); // TEMP: Put back in
-		// Seq_SwDev_A();	 
-		RunDummyData();
+		Seq_StartWarning(); // TEMP: Put back in
+		Seq_SwDev_A();	 
+		// RunDummyData();
 	}
 	catch (const AbortException&)
 	{
