@@ -309,7 +309,7 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 		return;
 	}
 	QTextStream stream(&file);
-		/*
+	
 	// Parse Rotor Calibration Calculations
 	stream << "ROTOR CALIBRATION SYSTEM - CALCULATIONS" << endl << endl;
 	#pragma region Rotor Calibration Constants - Line 1		
@@ -328,8 +328,8 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 	stream << "Def Rotor Const Slope" << "," << "Def Rotor Const Intc" << "," 
 			<< "Load Cell Gain Slope" << "," << "Load Cell Gain Intc" << endl;
 	// Parse Rotor Calibration Constants
-	stream << QString::number(agent.m_fRotorConstSlope) << "," << QString::number(agent.m_fRotorConstIntc) << "," 
-			<< QString::number(agent.m_fLoadCellGainSlope) << "," << QString::number(agent.m_fLoadCellGainIntc) << endl << endl;
+	stream << QString::number(m_fRotorConstSlope) << "," << QString::number(m_fRotorConstIntc) << "," 
+			<< QString::number(m_fLoadCellGainSlope) << "," << QString::number(m_fLoadCellGainIntc) << endl << endl;
 	#pragma endregion
 		
 	#pragma region Rotor Calibration Constants - Line 3
@@ -346,23 +346,20 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 	stream << "Motor Const Slope" << "," << " Motor Const Inct" << ","
 			<< "Motor Delay (ms)" << "," << "_" << endl;
 	// Parse Rotor Calibration Constants
-	stream << QString::number(agent.m_fMotorConstSlope) << "," << QString::number(agent.m_fMotorConstInct) << ","
+	stream << QString::number(m_fMotorConstSlope) << "," << QString::number(m_fMotorConstInct) << ","
 			<< QString::number(m_pTestEngine->m_iDelayForMotorRPM) << "," << "_ _ _" << endl << endl << endl;
 	#pragma endregion
 
 	// Parse Rotor Calibration Telemetry Data
-	stream << "ROTOR CALIBRATION SYSTEM - Telemetry Data" << endl << endl;
+	stream << "ROTOR CALIBRATION SYSTEM - TELEMETRY DATA" << endl << endl;
 	// Create Header for Telemetry Data 
 	stream << "Time (ms)" << "," << "Load Cell (Lbs)" << "," << "Servo Cur (mA)" << ","	<< "Servo Volt (V)" << "," 
-			<< "Motor Cur (A)" << "," << "Motor Vol (V)" << "," << "Servo Pos (us)" << "," << "Motor Speed (us)" << endl;
+		   << "Motor Cur (A)" << "," << "Motor Vol (V)" << "," << "Servo Pos (us)" << "," << "Motor Speed (us)" << ","
+		   << " Motor Speed (Rpm)" << endl;
 	// Parse Telemetry Data
 	for (int i = 0; i < m_vectData.size(); i++) {
 		stream << m_vectData[i].fTime << "," <<  m_vectData[i].fLoadCell << "," << m_vectData[i].fServoCurrent << "," << m_vectData[i].fServoVoltage << ","
-				<< m_vectData[i].fMotorControllerCurrent << "," << m_vectData[i].fMotorControllerVoltage << "," << m_vectData[i].fServoPos << "," << m_vectData[i].fMotorSpeed << "," << endl;
-		
-	}*/
-	
-	
-
-
+			   << m_vectData[i].fMotorControllerCurrent << "," << m_vectData[i].fMotorControllerVoltage << "," << m_vectData[i].fServoPos << "," << m_vectData[i].fMotorSpeedPwm << "," 
+			   << m_vectData[i].fMotorSpeedRpmData << endl;
+	}
 }

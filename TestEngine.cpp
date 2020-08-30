@@ -80,7 +80,7 @@ void TestEngine::run() /// Entry Point
 	try
 	{
 		// Always have Warning Seq
-		Seq_StartWarning(); // TEMP: Put back in
+		// Seq_StartWarning(); // TEMP: Put back in
 		Seq_SwDev_A();	 
 		// RunDummyData();
 	}
@@ -242,9 +242,9 @@ void TestEngine::Seq_Calib_A()
 	Agent::Data data;
 
 	// Start Engine
-	agent.SetMotorSpeed(1000); // To turn on the ESC
+	agent.SetMotorSpeedRPM(0); // To turn on the ESC
 	Wait(1000);
-	agent.SetMotorSpeed(2010); // Speed for S48 Blades
+	agent.SetMotorSpeedRPM(2010); // Speed for S48 Blades
 	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
 
 	// Iteration of the Angle Of Attack 
@@ -262,6 +262,8 @@ void TestEngine::Seq_Calib_A()
 		}
 	}
 
+	// Shut Down System
+	agent.SetMotorSpeedRPM(0);
 	LOG("Sequence Closing");
 	agent.Close();
 }
