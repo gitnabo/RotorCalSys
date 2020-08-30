@@ -33,7 +33,7 @@ public:
 		float fTime; /// Returns the number of milliseconds passed since the 
 		             /// Arduino board began running the current program. 
 					 /// This number will overflow (go back to zero), after approximately 50 days.
-		float fLoadCell; /// Lbs
+		float fLoadCellKg; /// Kg
 		float fServoCurrent; /// mA
 		float fServoVoltage; /// V
 		float fMotorControllerCurrent; /// A

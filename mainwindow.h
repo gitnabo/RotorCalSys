@@ -50,7 +50,7 @@ private:
 		};
 	QList<SetPoint> m_listSetpointSamples;
 
-	float CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs);	
+	float CaclLiftAvgKg(QVector<Agent::Data>  LiftDataKg);	
 
 	QVector<float> LinearRegression(QVector<QPointF> data); // (Slope, Intercept)			
 

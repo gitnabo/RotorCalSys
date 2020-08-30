@@ -112,7 +112,7 @@ void TestEngine::RunDummyData()
 
 		Agent::Data data;
 		data.fTime = funcGen();
-		data.fLoadCell = funcGen(); /// Lbs
+		data.fLoadCellKg = funcGen(); /// Kg
 		data.fServoCurrent = funcGen(); /// mA
 		data.fServoVoltage = funcGen(); /// V
 		data.fMotorControllerCurrent = funcGen(); /// A
@@ -120,7 +120,7 @@ void TestEngine::RunDummyData()
 		//data.fServoPostion = funcGen(); /// us pulse width
 		//data.fMotorRpmSetting = funcGen(); /// us pulse width
 		emit NewData(data);
-		LOG(QString::number(data.fLoadCell));
+		LOG(QString::number(data.fLoadCellKg));
 
 		Wait(200);
 	}

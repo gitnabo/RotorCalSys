@@ -94,7 +94,8 @@ Agent::Data Agent::GetData()
 	}
 
 	// LoadCell gains is adjusted here
-	data.fLoadCell = (slTokens.at(2).toFloat(&bOk)) * m_fLoadCellGainSlope + m_fLoadCellGainIntc;
+	data.fLoadCellKg = ((slTokens.at(2).toFloat(&bOk)) * m_fLoadCellGainSlope + m_fLoadCellGainIntc) / 2.205; 
+	//  2.205 is constant to convert from Lb to kg
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fLoadCell");
 	}

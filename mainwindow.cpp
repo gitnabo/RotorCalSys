@@ -155,7 +155,7 @@ void MainWindow::OnStopped()
 	QVector<QPointF> vRotorSetPointAvg; // x = fDegreeSet & y = fAvgLift	   
 	for (int i = 0; i < m_listSetpointSamples.size(); i++) { 		
 		QPointF pointfRotorSetPointAvg(m_listSetpointSamples.at(i).fDegree,					    // x = fDegreeSet &
-				                       CaclLiftAvgLbs(m_listSetpointSamples.at(i).vectSamples));// y = fAvgLift
+				                       CaclLiftAvgKg(m_listSetpointSamples.at(i).vectSamples));// y = fAvgLift
 		
 		vRotorSetPointAvg.append(pointfRotorSetPointAvg);
 	}
@@ -187,7 +187,7 @@ void MainWindow::CreateChart()
 {
 	QChart *pChart = ui->wChartView->chart();
 	pChart->setAnimationOptions(QChart::NoAnimation); 
-	pChart->setTitle("Load Cell (lbs)");
+	pChart->setTitle("Load Cell % ");
 	QValueAxis *axisX = new QValueAxis;
 	axisX->setTickCount(10);
 	pChart->addAxis(axisX, Qt::AlignBottom);
@@ -223,7 +223,7 @@ void MainWindow::OnNewData(Agent::Data data)
 
 	QChart *pChart = ui->wChartView->chart();
 	pChart->removeSeries(m_pLineSeries);
-	QPointF ptF(m_vectData.count() - 1, data.fLoadCell);
+	QPointF ptF(m_vectData.count() - 1, data.fLoadCellKg);
 	*m_pLineSeries << ptF;
 
 	if (m_pLineSeries->count() > 50)
@@ -245,14 +245,14 @@ void MainWindow::OnNewData(Agent::Data data)
 	}*/
 }
 
-float MainWindow::CaclLiftAvgLbs(QVector<Agent::Data>  LiftDataLbs) {
-	float fSumOfLiftLbs = 0.0f;
-	for (int i = 0; i < LiftDataLbs.size(); i++) {
-		fSumOfLiftLbs += LiftDataLbs.at(i).fLoadCell;
+float MainWindow::CaclLiftAvgKg(QVector<Agent::Data>  LiftDataKg) {
+	float fSumOfLiftKg = 0.0f;
+	for (int i = 0; i < LiftDataKg.size(); i++) {
+		fSumOfLiftKg += LiftDataKg.at(i).fLoadCellKg;
 	}
-	float fAvgOfLiftLbs = fSumOfLiftLbs / LiftDataLbs.size();
+	float fAvgOfLiftKg = fSumOfLiftKg / LiftDataKg.size();
 
-	return fAvgOfLiftLbs;
+	return fAvgOfLiftKg;
 }
 
 QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
@@ -353,12 +353,12 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 	// Parse Rotor Calibration Telemetry Data
 	stream << "ROTOR CALIBRATION SYSTEM - TELEMETRY DATA" << endl << endl;
 	// Create Header for Telemetry Data 
-	stream << "Time (ms)" << "," << "Load Cell (Lbs)" << "," << "Servo Cur (mA)" << ","	<< "Servo Volt (V)" << "," 
+	stream << "Time (ms)" << "," << "Load Cell (Kg)" << "," << "Servo Cur (mA)" << ","	<< "Servo Volt (V)" << "," 
 		   << "Motor Cur (A)" << "," << "Motor Vol (V)" << "," << "Servo Pos (us)" << "," << "Motor Speed (us)" << ","
 		   << " Motor Speed (Rpm)" << endl;
 	// Parse Telemetry Data
 	for (int i = 0; i < m_vectData.size(); i++) {
-		stream << m_vectData[i].fTime << "," <<  m_vectData[i].fLoadCell << "," << m_vectData[i].fServoCurrent << "," << m_vectData[i].fServoVoltage << ","
+		stream << m_vectData[i].fTime << "," <<  m_vectData[i].fLoadCellKg << "," << m_vectData[i].fServoCurrent << "," << m_vectData[i].fServoVoltage << ","
 			   << m_vectData[i].fMotorControllerCurrent << "," << m_vectData[i].fMotorControllerVoltage << "," << m_vectData[i].fServoPos << "," << m_vectData[i].fMotorSpeedPwm << "," 
 			   << m_vectData[i].fMotorSpeedRpmData << endl;
 	}
