@@ -38,7 +38,9 @@ public:
 		float fServoVoltage; /// V
 		float fMotorControllerCurrent; /// A
 		float fMotorControllerVoltage; /// V
-	    float fServoPos; /// us pulse width
+	    float fServoPosPwm; /// us pulse width
+	    float fServoPosDegEstimate; /// Estimate of Degree based on previous Calc
+
 		float fMotorSpeedPwm; /// us pulse width
 		float fMotorSpeedRpmData; /// Calc using fMotorSpeedPwm
 	};

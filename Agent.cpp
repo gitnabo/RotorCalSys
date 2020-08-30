@@ -38,7 +38,6 @@ void Agent::Open(const QString& sPort)
 
 void Agent::Close()
 {
-	SetMotorSpeedRPM(0); // Added to be safe. Test if needed
 	if (m_serial.isOpen())
 		SetMotorSpeedRPM(0); // !!!! Make sure this Stops
 	m_serial.close();
@@ -120,16 +119,21 @@ Agent::Data Agent::GetData()
 		throw Exception("Bad value received from Arduino: fMotorControllerVoltage");
 	}
 
-	data.fServoPos = slTokens.at(7).toFloat(&bOk);
+	//Servo
+	data.fServoPosPwm = slTokens.at(7).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fServoPostion");
 	}
+
+	data.fServoPosDegEstimate = ConvPwmToDegree(data.fServoPosPwm); /// Estimate of Degree based on previous Calc
+
 
 	// Motor
 	data.fMotorSpeedPwm = slTokens.at(8).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fMotorRpmSetting");
 	}
+
 	data.fMotorSpeedRpmData = data.fMotorSpeedPwm * m_fMotorConstSlope + m_fMotorConstInct;
 	
 

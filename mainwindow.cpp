@@ -354,12 +354,12 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 	stream << "ROTOR CALIBRATION SYSTEM - TELEMETRY DATA" << endl << endl;
 	// Create Header for Telemetry Data 
 	stream << "Time (ms)" << "," << "Load Cell (Kg)" << "," << "Servo Cur (mA)" << ","	<< "Servo Volt (V)" << "," 
-		   << "Motor Cur (A)" << "," << "Motor Vol (V)" << "," << "Servo Pos (us)" << "," << "Motor Speed (us)" << ","
-		   << " Motor Speed (Rpm)" << endl;
+		   << "Motor Cur (A)" << "," << "Motor Vol (V)" << "," << "Servo Pos (us)" << "," <<  " EST. Servo Pos (Deg)"
+		   << "Motor Speed (us)" << "," << " Motor Speed (Rpm)" << endl;
 	// Parse Telemetry Data
 	for (int i = 0; i < m_vectData.size(); i++) {
 		stream << m_vectData[i].fTime << "," <<  m_vectData[i].fLoadCellKg << "," << m_vectData[i].fServoCurrent << "," << m_vectData[i].fServoVoltage << ","
-			   << m_vectData[i].fMotorControllerCurrent << "," << m_vectData[i].fMotorControllerVoltage << "," << m_vectData[i].fServoPos << "," << m_vectData[i].fMotorSpeedPwm << "," 
-			   << m_vectData[i].fMotorSpeedRpmData << endl;
+			   << m_vectData[i].fMotorControllerCurrent << "," << m_vectData[i].fMotorControllerVoltage << "," << m_vectData[i].fServoPosPwm << "," << m_vectData[i].fServoPosDegEstimate << ","
+		   	   << m_vectData[i].fMotorSpeedPwm << "," << m_vectData[i].fMotorSpeedRpmData << endl;
 	}
 }

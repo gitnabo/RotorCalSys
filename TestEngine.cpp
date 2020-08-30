@@ -96,6 +96,7 @@ void TestEngine::run() /// Entry Point
 	emit Stopped();
 }
 
+/*
 void TestEngine::RunDummyData()
 {
 	auto funcGen = []() {
@@ -125,6 +126,7 @@ void TestEngine::RunDummyData()
 		Wait(200);
 	}
 }
+*/
 
 void TestEngine::WaitAndGetData(int ms) {
 	QElapsedTimer tmr;
