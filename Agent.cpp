@@ -171,7 +171,7 @@ void Agent::SetMotorSpeedRPM(float fMotorSpeedRpm)
 		fMotorSpeedPwmCdm = 1000;
 	}
 	else {
-		float fMotorSpeedPwmCdm = m_fMotorConstSlope * fMotorSpeedRpm + m_fMotorConstInct;
+		fMotorSpeedPwmCdm = m_fMotorConstSlope * fMotorSpeedRpm + m_fMotorConstInct;
 	}
 	
 
