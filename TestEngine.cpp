@@ -212,6 +212,7 @@ void TestEngine::Seq_SwDev_A()
 	Agent agent;
 	agent.Open(m_sPort);
 	Agent::Data data;
+	m_pAgent = &agent;
 
 	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / m_iSampleMs;
 
@@ -221,12 +222,15 @@ void TestEngine::Seq_SwDev_A()
 		agent.SetPitch(fDegree);
 		emit NewPitch(fDegree);
 		QString sLogMsg = "Angle of Attack:" + QString::number(fDegree);
-		LOG(sLogMsg);
+		LOG(sLogMsg);		
+
+		WaitAndGetData(m_iTimeSpentAtAOA);
+		/*
 		for (int i = 0; i < iSamplesPerSetpoint; ++i) {
-			data = agent.GetData();
-			emit NewData(data);
 			Wait(m_iSampleMs);
-		}
+			data = agent.GetData();
+			emit NewData(data);			
+		}*/
 	}
 
 	LOG("Seq Closing: Seq_SwDev_A");

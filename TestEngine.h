@@ -19,8 +19,8 @@ public:
 	// Rotor Calibration Constants
 	const float m_fAngleAtStartOfTestDegree = -1.0f;  // ! Should Be -1    
 	const float m_fAngleAtEndOfTestDegree = 3.0f;	// ! Should Be 13		 
-	const int   m_iTimeSpentAtAOA = 500; // TEMP 30000 -> 1000  for TS      
-	const int m_iSampleMs = 100;
+	const int   m_iTimeSpentAtAOA = 5000; // TEMP 30000 -> 1000  for TS      
+	const int m_iSampleMs = 1000;
 	const int m_iDelayForMotorRPM = 10000;
 
 signals:
