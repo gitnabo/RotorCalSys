@@ -231,7 +231,7 @@ void TestEngine::Seq_SwDev_A()
 			Agent::Data data = m_pAgent->GetData();
 			data.iSampleMs = tmrMs.elapsed();
 			emit NewData(data);
-			int iRemainingMs = m_iSampleMs - tmrMs.elapsed();
+			int iRemainingMs = m_iSampleMs - tmr.elapsed();
 			iRemainingMs = qMax(iRemainingMs, 0);	// Not less than zero
 			Wait(iRemainingMs);
 		}
