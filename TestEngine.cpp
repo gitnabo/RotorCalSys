@@ -211,26 +211,28 @@ void TestEngine::Seq_SwDev_A()
 	// Setup the test agent for communications
 	Agent agent;
 	agent.Open(m_sPort);
-	Agent::Data data;
 	m_pAgent = &agent;
-
-	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / m_iSampleMs;
 
 	// Iteration of the Angle Of Attack 
 	float fDegree = m_fAngleAtStartOfTestDegree;
+	QElapsedTimer tmrMs;
+	tmrMs.start();
 	for (fDegree; fDegree <= m_fAngleAtEndOfTestDegree; fDegree++) {
 		agent.SetPitch(fDegree);
 		emit NewPitch(fDegree);
 		QString sLogMsg = "Angle of Attack:" + QString::number(fDegree);
 		LOG(sLogMsg);		
 
-		WaitAndGetData(m_iTimeSpentAtAOA);
-		/*
-		for (int i = 0; i < iSamplesPerSetpoint; ++i) {
+		// Gather data for a little while
+		QElapsedTimer tmr;
+		tmr.start();
+		while (tmr.elapsed() < m_iTimeSpentAtAOA)
+		{
+			Agent::Data data = m_pAgent->GetData();
+			data.iSampleMs = tmrMs.elapsed();
+			emit NewData(data);
 			Wait(m_iSampleMs);
-			data = agent.GetData();
-			emit NewData(data);			
-		}*/
+		}
 	}
 
 	LOG("Seq Closing: Seq_SwDev_A");

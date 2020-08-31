@@ -87,7 +87,7 @@ Agent::Data Agent::GetData()
 	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
 	bool bOk;   //	
 	
-	data.fTime = slTokens.at(1).toFloat(&bOk); 
+	data.iSampleMs = slTokens.at(1).toFloat(&bOk); 
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fTime");
 	}

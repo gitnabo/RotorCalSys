@@ -30,7 +30,7 @@ public:
 	
 
 	struct Data {		
-		float fTime; /// Returns the number of milliseconds passed since the 
+		int iSampleMs; /// Returns the number of milliseconds passed since the 
 		             /// Arduino board began running the current program. 
 					 /// This number will overflow (go back to zero), after approximately 50 days.
 		float fLoadCellKg; /// Kg

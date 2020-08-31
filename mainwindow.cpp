@@ -291,7 +291,7 @@ QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
 
 void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 	// Tel File Location
-	QString sFileLocation = "C:/Dev/RotorCalSys/Output Files/";	
+	QString sFileLocation = "C:/Dev/Output Files/";	
 
 	// Tel File Name
 	QString sRotorNum = ui->lineEdit_RotorNum->text();
@@ -358,7 +358,7 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 		   << "Motor Speed (us)" << "," << " Motor Speed (Rpm)" << endl;
 	// Parse Telemetry Data
 	for (int i = 0; i < m_vectData.size(); i++) {
-		stream << m_vectData[i].fTime << "," <<  m_vectData[i].fLoadCellKg << "," << m_vectData[i].fServoCurrent << "," << m_vectData[i].fServoVoltage << ","
+		stream << m_vectData[i].iSampleMs << "," <<  m_vectData[i].fLoadCellKg << "," << m_vectData[i].fServoCurrent << "," << m_vectData[i].fServoVoltage << ","
 			   << m_vectData[i].fMotorControllerCurrent << "," << m_vectData[i].fMotorControllerVoltage << "," << m_vectData[i].fServoPosPwm << "," << m_vectData[i].fServoPosDegEstimate << ","
 		   	   << m_vectData[i].fMotorSpeedPwm << "," << m_vectData[i].fMotorSpeedRpmData << endl;
 	}
