@@ -168,7 +168,7 @@ void Agent::SetMotorSpeedRPM(float fMotorSpeedRpm)
 
 	// To Initiate and stop the motor an PWM signal of 1000 is expected
 	if (fMotorSpeedRpm == 0) {
-		fMotorSpeedPwmCdm = 1000;
+		fMotorSpeedPwmCdm = 800;
 	}
 	else {
 		fMotorSpeedPwmCdm = m_fMotorConstSlope * fMotorSpeedRpm + m_fMotorConstInct;

@@ -213,6 +213,19 @@ void TestEngine::Seq_SwDev_A()
 	agent.Open(m_sPort);
 	m_pAgent = &agent;
 
+	// Start Engine
+	agent.SetMotorSpeedRPM(0); // To turn on the ESC
+	WaitAndGetData(5000); 
+	agent.SetMotorSpeedRPM(200); 
+	WaitAndGetData(5000);
+	agent.SetMotorSpeedRPM(400);
+
+
+
+	// TEMP: for Engine Testing
+	/*
+	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
+
 	// Iteration of the Angle Of Attack 
 	float fDegree = m_fAngleAtStartOfTestDegree;
 	QElapsedTimer tmrMs;
@@ -222,7 +235,7 @@ void TestEngine::Seq_SwDev_A()
 		emit NewPitch(fDegree);
 		QString sLogMsg = "Angle of Attack:" + QString::number(fDegree);
 		LOG(sLogMsg);		
-
+		Wait(m_iSampleMs); //  To give time for the rotor to reach angle 
 		// Gather data for a little while
 		QElapsedTimer tmr;
 		tmr.start();
@@ -236,7 +249,9 @@ void TestEngine::Seq_SwDev_A()
 			Wait(iRemainingMs);
 		}
 	}
+	*/
 
+	agent.SetMotorSpeedRPM(0);
 	LOG("Seq Closing: Seq_SwDev_A");
 	agent.Close();
 }
@@ -257,21 +272,30 @@ void TestEngine::Seq_Calib_A()
 	agent.SetMotorSpeedRPM(2010); // Speed for S48 Blades
 	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
 
-	// Iteration of the Angle Of Attack 
-	int iSamplesPerSetpoint = m_iTimeSpentAtAOA / m_iSampleMs;
+		// Iteration of the Angle Of Attack 
 	float fDegree = m_fAngleAtStartOfTestDegree;
+	QElapsedTimer tmrMs;
+	tmrMs.start();
 	for (fDegree; fDegree <= m_fAngleAtEndOfTestDegree; fDegree++) {
 		agent.SetPitch(fDegree);
 		emit NewPitch(fDegree);
 		QString sLogMsg = "Angle of Attack:" + QString::number(fDegree);
 		LOG(sLogMsg);
-		for (int i = 0; i < iSamplesPerSetpoint; ++i) {
-			data = agent.GetData();
+		Wait(m_iSampleMs); //  To give time for the rotor to reach angle 
+		// Gather data for a little while
+		QElapsedTimer tmr;
+		tmr.start();
+		while (tmr.elapsed() < m_iTimeSpentAtAOA)
+		{
+			Agent::Data data = m_pAgent->GetData();
+			data.iSampleMs = tmrMs.elapsed();
 			emit NewData(data);
-			Wait(m_iSampleMs);
+			int iRemainingMs = m_iSampleMs - tmr.elapsed();
+			iRemainingMs = qMax(iRemainingMs, 0);	// Not less than zero
+			Wait(iRemainingMs);
 		}
 	}
-
+	   
 	// Shut Down System
 	agent.SetMotorSpeedRPM(0);
 	LOG("Sequence Closing");
