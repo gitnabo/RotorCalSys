@@ -27,7 +27,7 @@ public:
 	
 	void SetPitch(float fDegree); 
 	void SetMotorSpeedRPM(float fMotorSpeedRpm);
-	
+	void ZeroScale();
 
 	struct Data {		
 		int iSampleMs; /// Returns the number of milliseconds passed since the 
@@ -52,10 +52,11 @@ public:
 private:
 	QSerialPort m_serial;
 	QString ReadLine();
-
+	
 
 	float ConvPwmToDegree(float fPwmAOA); /// Angle of Attack
 	float ConvDegreeToPwm(float fDegreeAOA); /// Angle of Attack
+
 };
 
 

@@ -17,11 +17,12 @@ public:
 	bool IsRunning();
 
 	// Rotor Calibration Constants
-	const float m_fAngleAtStartOfTestDegree = -1.0f;  // ! Should Be -1    
-	const float m_fAngleAtEndOfTestDegree = 3.0f;	// ! Should Be 13		 
-	const int   m_iTimeSpentAtAOA = 5000; // TEMP 30000 -> 1000  for TS      
+	const float m_fAngleAtStartOfTestDegree = 1.0f;  // ! Should Be -1    
+	const float m_fAngleAtEndOfTestDegree = 12.0f;	// ! Should Be 13		 
+	const int   m_iTimeSpentAtAOA = 15000; // TEMP 30000 -> 1000  for TS      
 	const int m_iSampleMs = 1000;
-	const int m_iDelayForMotorRPM = 10000;
+	const int m_iDelayForMotorRPM = 20000;
+	const int m_iMotorRPM = 2960;
 
 signals:
 	void Started();
@@ -44,10 +45,12 @@ private:
 	QString m_sPort;
 	Agent* m_pAgent = nullptr;
 
+
 	// Sequences
 	void Seq_StartWarning();
 	void Seq_SwDev_A();
 	void Seq_Calib_A();
+
 
 };
 

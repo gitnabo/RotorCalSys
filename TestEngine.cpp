@@ -30,7 +30,7 @@ void TestEngine::Stop()
 {
 	// To trigger: throw AbortException();
 	m_bStopRequest = true;	
-
+	// m_pAgent->SetMotorSpeedRPM(0);
 	while (IsRunning())
 	{
 		QThread::msleep(50);
@@ -52,8 +52,9 @@ void TestEngine::LOG(QString sMsg)
 
 void TestEngine::CheckAbort()
 {
-	if (m_bStopRequest)
+	if (m_bStopRequest) {
 		throw Exception("abort request from user");
+	}
 		
 }
 
@@ -67,6 +68,7 @@ void TestEngine::Wait(int iMs)
 			break;	// Done
 
 		if (m_bStopRequest)
+
 			throw AbortException();
 		msleep(1);
 	}
@@ -81,8 +83,7 @@ void TestEngine::run() /// Entry Point
 	{
 		// Always have Warning Seq
 		// Seq_StartWarning(); // TEMP: Put back in
-		Seq_SwDev_A();	 
-		// RunDummyData();
+		Seq_Calib_A();
 	}
 	catch (const AbortException&)
 	{
@@ -135,6 +136,7 @@ void TestEngine::WaitAndGetData(int ms) {
 	{
 		Agent::Data data = m_pAgent->GetData();
 		emit NewData(data);
+		LOG("Load Cell Kg:" + QString::number(data.fLoadCellKg));
 		Wait(m_iSampleMs);
 	}
 }
@@ -204,6 +206,7 @@ void TestEngine::Seq_StartWarning()
 	agent.Close();
 }
 
+/*
 void TestEngine::Seq_SwDev_A()
 {
 	LOG("Seq Opening: Seq_SwDev_A");
@@ -213,24 +216,25 @@ void TestEngine::Seq_SwDev_A()
 	agent.Open(m_sPort);
 	m_pAgent = &agent;
 
+
 	// Start Engine
 	agent.SetMotorSpeedRPM(0); // To turn on the ESC
-	WaitAndGetData(5000); 
-	agent.SetMotorSpeedRPM(200); 
-	WaitAndGetData(5000);
-	agent.SetMotorSpeedRPM(400);
-
-
+	LOG("Motor Speed Set To 0");
+	WaitAndGetData(1000); 
+	agent.SetMotorSpeedRPM(2000);
+	LOG("Motor Speed Set To 1000");
+	WaitAndGetData(15000);
 
 	// TEMP: for Engine Testing
-	/*
-	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
+	
+	// WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
+	WaitAndGetData(2000);
 
 	// Iteration of the Angle Of Attack 
 	float fDegree = m_fAngleAtStartOfTestDegree;
 	QElapsedTimer tmrMs;
 	tmrMs.start();
-	for (fDegree; fDegree <= m_fAngleAtEndOfTestDegree; fDegree++) {
+	for (fDegree; fDegree <= m_fAngleAtEndOfTestDegree; fDegree =+ fDegree + 6) {
 		agent.SetPitch(fDegree);
 		emit NewPitch(fDegree);
 		QString sLogMsg = "Angle of Attack:" + QString::number(fDegree);
@@ -248,13 +252,14 @@ void TestEngine::Seq_SwDev_A()
 			iRemainingMs = qMax(iRemainingMs, 0);	// Not less than zero
 			Wait(iRemainingMs);
 		}
-	}
-	*/
+	}	
+	
 
 	agent.SetMotorSpeedRPM(0);
 	LOG("Seq Closing: Seq_SwDev_A");
-	agent.Close();
+	m_pAgent->Close();
 }
+*/
 
 void TestEngine::Seq_Calib_A()
 {
@@ -267,9 +272,11 @@ void TestEngine::Seq_Calib_A()
 	Agent::Data data;
 
 	// Start Engine
-	agent.SetMotorSpeedRPM(0); // To turn on the ESC
-	Wait(1000);
-	agent.SetMotorSpeedRPM(2010); // Speed for S48 Blades
+	m_pAgent->SetPitch(1);
+	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC
+	WaitAndGetData(1000);
+	m_pAgent->SetMotorSpeedRPM(m_iMotorRPM); // Speed for S48 Blades is 2010
+	LOG("Motor Speed Set To 3462");
 	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
 
 		// Iteration of the Angle Of Attack 
@@ -277,12 +284,12 @@ void TestEngine::Seq_Calib_A()
 	QElapsedTimer tmrMs;
 	tmrMs.start();
 	for (fDegree; fDegree <= m_fAngleAtEndOfTestDegree; fDegree++) {
-		agent.SetPitch(fDegree);
+		m_pAgent->SetPitch(fDegree);
 		emit NewPitch(fDegree);
 		QString sLogMsg = "Angle of Attack:" + QString::number(fDegree);
 		LOG(sLogMsg);
 		Wait(m_iSampleMs); //  To give time for the rotor to reach angle 
-		// Gather data for a little while
+		// Gather data for a little while		
 		QElapsedTimer tmr;
 		tmr.start();
 		while (tmr.elapsed() < m_iTimeSpentAtAOA)
@@ -290,6 +297,8 @@ void TestEngine::Seq_Calib_A()
 			Agent::Data data = m_pAgent->GetData();
 			data.iSampleMs = tmrMs.elapsed();
 			emit NewData(data);
+			sLogMsg = "Load Cell Kg:" + QString::number(data.fLoadCellKg);
+			LOG(sLogMsg);
 			int iRemainingMs = m_iSampleMs - tmr.elapsed();
 			iRemainingMs = qMax(iRemainingMs, 0);	// Not less than zero
 			Wait(iRemainingMs);
@@ -297,6 +306,7 @@ void TestEngine::Seq_Calib_A()
 	}
 	   
 	// Shut Down System
+	m_pAgent->SetPitch(0);
 	agent.SetMotorSpeedRPM(0);
 	LOG("Sequence Closing");
 	agent.Close();

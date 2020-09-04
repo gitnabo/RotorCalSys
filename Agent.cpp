@@ -38,8 +38,9 @@ void Agent::Open(const QString& sPort)
 
 void Agent::Close()
 {
-	if (m_serial.isOpen())
-		SetMotorSpeedRPM(0); // !!!! Make sure this Stops
+	if (m_serial.isOpen()) {
+		SetMotorSpeedRPM(0);
+	} // !!!! Make sure this Stops
 	m_serial.close();
 }
 
@@ -168,10 +169,10 @@ void Agent::SetMotorSpeedRPM(float fMotorSpeedRpm)
 
 	// To Initiate and stop the motor an PWM signal of 1000 is expected
 	if (fMotorSpeedRpm == 0) {
-		fMotorSpeedPwmCdm = 800;
+		fMotorSpeedPwmCdm = 1000;
 	}
 	else {
-		fMotorSpeedPwmCdm = m_fMotorConstSlope * fMotorSpeedRpm + m_fMotorConstInct;
+		fMotorSpeedPwmCdm = (fMotorSpeedRpm - m_fMotorConstInct) / m_fMotorConstSlope;
 	}
 	
 
@@ -202,3 +203,8 @@ float Agent::ConvDegreeToPwm(float fDegreeAOA)
 	return fPwm;
 }
 
+void Agent::ZeroScale() {
+	m_serial.write("zeroScale");
+	m_serial.write("\r\n");
+	m_serial.waitForBytesWritten(1);
+}

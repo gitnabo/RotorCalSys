@@ -195,7 +195,7 @@ void MainWindow::CreateChart()
 	pChart->addSeries(m_pLineSeries);
 
 	QValueAxis *axisY = new QValueAxis;
-	axisY->setRange(-10, 200); 
+	axisY->setRange(0, 100); 
 	axisY->setLinePenColor(m_pLineSeries->pen().color());
 
 	pChart->addAxis(axisY, Qt::AlignLeft);
@@ -226,7 +226,7 @@ void MainWindow::OnNewData(Agent::Data data)
 	QPointF ptF(m_vectData.count() - 1, data.fLoadCellKg);
 	*m_pLineSeries << ptF;
 
-	if (m_pLineSeries->count() > 50)
+	if (m_pLineSeries->count() > 500)
 		m_pLineSeries->remove(0);
 	pChart->addSeries(m_pLineSeries);
 
