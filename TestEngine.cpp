@@ -70,7 +70,7 @@ void TestEngine::Wait(int iMs)
 		if (m_bStopRequest)
 
 			throw AbortException();
-		msleep(1);
+		msleep(1); 
 	}
 }
 
@@ -275,8 +275,11 @@ void TestEngine::Seq_Calib_A()
 	m_pAgent->SetPitch(1);
 	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC
 	WaitAndGetData(1000);
+
 	m_pAgent->SetMotorSpeedRPM(m_iMotorRPM); // Speed for S48 Blades is 2010
-	LOG("Motor Speed Set To 3462");
+	QString sLogMsg = "Motor Speed Set To:" + QString::number(m_iMotorRPM);
+	LOG(sLogMsg);
+
 	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
 
 		// Iteration of the Angle Of Attack 
@@ -286,10 +289,11 @@ void TestEngine::Seq_Calib_A()
 	for (fDegree; fDegree <= m_fAngleAtEndOfTestDegree; fDegree++) {
 		m_pAgent->SetPitch(fDegree);
 		emit NewPitch(fDegree);
-		QString sLogMsg = "Angle of Attack:" + QString::number(fDegree);
+		sLogMsg = "Angle of Attack:" + QString::number(fDegree);
 		LOG(sLogMsg);
 		Wait(m_iSampleMs); //  To give time for the rotor to reach angle 
-		// Gather data for a little while		
+		// Gather data for a little while	
+
 		QElapsedTimer tmr;
 		tmr.start();
 		while (tmr.elapsed() < m_iTimeSpentAtAOA)
@@ -305,6 +309,63 @@ void TestEngine::Seq_Calib_A()
 		}
 	}
 	   
+	// Shut Down System
+	m_pAgent->SetPitch(0);
+	agent.SetMotorSpeedRPM(0);
+	LOG("Sequence Closing");
+	agent.Close();
+}
+
+
+void TestEngine::Seq_Study_at_Small_degree()
+{
+	LOG("Seq Opening: Seq_Calib_A");
+
+	// Setup the test agent for communications
+	Agent agent;
+	m_pAgent = &agent;/// This is just to have access outside of this sequence
+	agent.Open(m_sPort);
+	Agent::Data data;
+
+	// Start Engine
+	m_pAgent->SetPitch(1);
+	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC
+	WaitAndGetData(1000);
+
+	m_pAgent->SetMotorSpeedRPM(m_iMotorRPM);
+	QString sLogMsg = "Motor Speed Set To:" + QString::number(m_iMotorRPM);
+	LOG(sLogMsg);
+
+	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
+
+		// Iteration of the Angle Of Attack 
+	float fDegree = 0; // ###  m_fAngleAtStartOfTestDegree
+	QElapsedTimer tmrMs;
+	tmrMs.start();
+	for (fDegree; fDegree <= 3; fDegree = fDegree + 0.25) { //### m_fAngleAtEndOfTestDegree
+										          	        //### fDegree++
+		m_pAgent->SetPitch(fDegree);
+		emit NewPitch(fDegree);
+		sLogMsg = "Angle of Attack:" + QString::number(fDegree);
+		LOG(sLogMsg);
+		Wait(m_iSampleMs); //  To give time for the rotor to reach angle 
+		// Gather data for a little while	
+
+		QElapsedTimer tmr;
+		tmr.start();
+		while (tmr.elapsed() < m_iTimeSpentAtAOA)
+		{
+			Agent::Data data = m_pAgent->GetData();
+			data.iSampleMs = tmrMs.elapsed();
+			emit NewData(data);
+			sLogMsg = "Load Cell Kg:" + QString::number(data.fLoadCellKg);
+			LOG(sLogMsg);
+			int iRemainingMs = m_iSampleMs - tmr.elapsed();
+			iRemainingMs = qMax(iRemainingMs, 0);	// Not less than zero
+			Wait(iRemainingMs);
+		}
+	}
+
 	// Shut Down System
 	m_pAgent->SetPitch(0);
 	agent.SetMotorSpeedRPM(0);

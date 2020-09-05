@@ -16,12 +16,12 @@ public:
 	void Stop();
 	bool IsRunning();
 
-	// Rotor Calibration Constants
+	// Rotor Calibration CONSTANTS
 	const float m_fAngleAtStartOfTestDegree = 1.0f;  // ! Should Be -1    
 	const float m_fAngleAtEndOfTestDegree = 12.0f;	// ! Should Be 13		 
-	const int   m_iTimeSpentAtAOA = 15000; // TEMP 30000 -> 1000  for TS      
+	const int   m_iTimeSpentAtAOA = 20000; 
 	const int m_iSampleMs = 1000;
-	const int m_iDelayForMotorRPM = 20000;
+	const int m_iDelayForMotorRPM = 3000000; // !!! TEMP should be 30000
 	const int m_iMotorRPM = 2960;
 
 signals:
@@ -50,6 +50,7 @@ private:
 	void Seq_StartWarning();
 	void Seq_SwDev_A();
 	void Seq_Calib_A();
+	void Seq_Study_at_Small_degree();
 
 
 };
