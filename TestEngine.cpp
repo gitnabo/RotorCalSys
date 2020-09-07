@@ -82,8 +82,11 @@ void TestEngine::run() /// Entry Point
 	try
 	{
 		// Always have Warning Seq
-		// Seq_StartWarning(); // TEMP: Put back in
+		Seq_StartWarning(); // Put back in
 		Seq_Calib_A();
+
+		// Seq_Study_at_Small_degree(); //### Seq_Calib_A()
+
 	}
 	catch (const AbortException&)
 	{
@@ -272,11 +275,11 @@ void TestEngine::Seq_Calib_A()
 	Agent::Data data;
 
 	// Start Engine
-	m_pAgent->SetPitch(1);
+	m_pAgent->SetPitch(0);
 	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC
-	WaitAndGetData(1000);
+	Wait(m_iDelayForMotorRPM); // Delay for the 
 
-	m_pAgent->SetMotorSpeedRPM(m_iMotorRPM); // Speed for S48 Blades is 2010
+	m_pAgent->SetMotorSpeedRPM(m_iMotorRPM); 
 	QString sLogMsg = "Motor Speed Set To:" + QString::number(m_iMotorRPM);
 	LOG(sLogMsg);
 
@@ -310,12 +313,11 @@ void TestEngine::Seq_Calib_A()
 	}
 	   
 	// Shut Down System
-	m_pAgent->SetPitch(0);
 	agent.SetMotorSpeedRPM(0);
+	m_pAgent->SetPitch(0);	
 	LOG("Sequence Closing");
 	agent.Close();
 }
-
 
 void TestEngine::Seq_Study_at_Small_degree()
 {
@@ -328,7 +330,7 @@ void TestEngine::Seq_Study_at_Small_degree()
 	Agent::Data data;
 
 	// Start Engine
-	m_pAgent->SetPitch(1);
+	m_pAgent->SetPitch(-1);
 	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC
 	WaitAndGetData(1000);
 
@@ -336,10 +338,10 @@ void TestEngine::Seq_Study_at_Small_degree()
 	QString sLogMsg = "Motor Speed Set To:" + QString::number(m_iMotorRPM);
 	LOG(sLogMsg);
 
-	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
+	WaitAndGetData(m_iDelayForMotorRPM);// ###MOD### m_iDelayForMotorRPM // Delay for Motor RPM
 
 		// Iteration of the Angle Of Attack 
-	float fDegree = 0; // ###  m_fAngleAtStartOfTestDegree
+	float fDegree = -1; // ###  m_fAngleAtStartOfTestDegree
 	QElapsedTimer tmrMs;
 	tmrMs.start();
 	for (fDegree; fDegree <= 3; fDegree = fDegree + 0.25) { //### m_fAngleAtEndOfTestDegree
