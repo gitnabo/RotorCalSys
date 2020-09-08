@@ -301,7 +301,7 @@ float MainWindow::CaclServoNeutralOffsetDeg(QVector<float> vfLinearRegressionPar
 						// X is Deg AoA & Y is Lift
 		
 	float fServoOffset = Agent::ConvDegreeToPwm(fAoaOffsetDeg);
-	return fAoaOffsetDeg;
+	return fServoOffset;
 }
 
 void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara, float fCaclServoNeutralOffsetDeg) {

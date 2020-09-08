@@ -66,9 +66,9 @@ private:
 	const QString m_sRotorRevision = "1.1";
 	const float m_fRotorStandardLiftCurveSlope = 1.07731f; // Based on measurement of Carbon Fiber on old Rotor
 	const float m_fRotorStandardLiftCurveInct = 0.108015f; // Based on measurement of Carbon Fiber on old Rotor
-	const float m_fAngleOfStudyAoaDeg = 5.75780909; // Based on Carbon Fiber on old blades. 
-		                                           // That should be the AoA when the servo at 1520 PWM and
-		                                           // the servo will be horizontal 
+	const float m_fAngleOfStudyAoaDeg = 5.7578090f; // Based on Carbon Fiber on old blades. 
+		                                            // That should be the AoA when the servo at 1520 PWM and
+		                                            // the servo will be horizontal 
 
 
 	 

@@ -23,8 +23,7 @@ public:
 	const float m_fAngleAtEndOfTestDegree = 12.0f;	// ! Should Be 13		 
 	const int   m_iTimeSpentAtAOA = 2000; // ### TEMP Should be 1000
 	const int m_iSampleMs = 1000;
-
-
+	   	 
 signals:
 	void Started();
 	void Error(QString sError);
@@ -50,6 +49,7 @@ private:
 	void Seq_StartWarning();
 	void Seq_SwDev_A();
 	void Seq_Calib_A();
+	void Seq_Calib_B_PWM();
 	void Seq_Study_at_Small_degree();
 
 };

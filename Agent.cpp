@@ -142,12 +142,11 @@ Agent::Data Agent::GetData()
 	return data; 
 }
 
-
-//  Servo Pos = setServoOnePos
+///  Servo Pos = setServoOnePos
 void Agent::SetPitch(float fDegree)
 {
 	float fAnglePwm = ConvDegreeToPwm(fDegree);
-	
+
 	QString sServoPos = QString::number(fAnglePwm);
 	QByteArray baServoPos = sServoPos.toLocal8Bit();
 	const char *ccServoPos = baServoPos.data(); /// Creates a pointer. 
@@ -157,6 +156,9 @@ void Agent::SetPitch(float fDegree)
 	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
 }
+
+
+
 
 // ! Engine RPM = setServoTwoPos !
 void Agent::SetMotorSpeedRPM(float fMotorSpeedRpm)
@@ -185,9 +187,20 @@ void Agent::SetMotorSpeedRPM(float fMotorSpeedRpm)
 	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
 }
+void Agent::ZeroScale() {
+	m_serial.write("zeroScale");
+	m_serial.write("\r\n");
+	m_serial.waitForBytesWritten(1);
+}
+
+// ####### OLD ROTOR #######
+
+/*
 
 
-// Angle of attack: Convert from PWM to Degrees 
+
+/// Angle of attack: Convert from PWM to Degrees 
+
 float Agent::ConvPwmToDegree(float fPwmAOA)
 {
 	float fDegree;
@@ -195,16 +208,45 @@ float Agent::ConvPwmToDegree(float fPwmAOA)
 	return fDegree;
 }
 
-// Angle of attack: Convert from PWM to Degrees 
+/// Angle of attack: Convert from Degrees to PWM
 float Agent::ConvDegreeToPwm(float fDegreeAOA)
 {
 	float fPwm;
 	fPwm = (fDegreeAOA - m_fRotorConstIntc) / m_fRotorConstSlope;
 	return fPwm;
 }
+*/
 
-void Agent::ZeroScale() {
-	m_serial.write("zeroScale");
+
+// ####### NEW ROTOR ######
+
+///  Servo Pos = setServoOnePos
+void Agent::SetServoAnglePwm(float fServoAnglePwm)
+{
+	QString sServoAnglePwm = QString::number(fServoAnglePwm);
+	QByteArray baServoPos = sServoAnglePwm.toLocal8Bit();
+	const char *ccServoPos = baServoPos.data(); /// Creates a pointer. 
+												/// This is not the data from Agent::Data Agent::GetData()	
+	m_serial.write("setServoOnePos");
+	m_serial.write(ccServoPos);
 	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
 }
+
+/// Angle of attack: Convert from PWM to AoA PWM 
+float Agent::ConvPwmToDegree(float fPwmAOA)
+{
+	float fAoADegree;
+	fAoADegree = m_fPwmToDegAoaSlope * log(fPwmAOA) + m_fPwmToDegAoaIntc;
+	return fAoADegree;
+}
+
+
+/// Angle of attack: Convert from AoA Degree to PWM 
+float Agent::ConvDegreeToPwm(float fAoaDeg)
+{
+	float fServoPwm;
+	fServoPwm = exp(((fAoaDeg - m_fPwmToDegAoaIntc) / m_fPwmToDegAoaSlope));
+	return fServoPwm;
+}
+

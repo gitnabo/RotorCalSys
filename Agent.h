@@ -9,6 +9,12 @@ const float m_fLoadCellGainIntc = 0.108237333f; /// Based on exp with Doug
 const float m_fMotorConstSlope = 4.5493f; /// Based on Lenny's exp in early 2020
 const float m_fMotorConstInct = -5038.2f; /// Based on Lenny's exp in early 2020
 
+const float m_fPwmToDegAoaSlope = 16.943f;
+const float m_fPwmToDegAoaIntc = -117.34f;
+
+
+
+
 
 /**
 @brief API for the Arduino test stand
@@ -25,12 +31,17 @@ public:
 	void Close();
 
 	
-	void SetPitch(float fDegree); 
+	void SetPitch(float fDegree);
+	void SetServoAnglePwm(float fDegree);
+
 	void SetMotorSpeedRPM(float fMotorSpeedRpm);
 	void ZeroScale();
 
 	static float ConvPwmToDegree(float fPwmAOA); /// Angle of Attack
-	static float ConvDegreeToPwm(float fDegreeAOA); /// Angle of Attack
+	static float ConvDegreeToPwm(float fDegreeAOA); // # ToDo Change to PWM
+
+	// float NewRotorConvPwmToAoADegree(float fPwmAOA);
+	// float NewRotorConvAoaDegreeToPwm(float fAoaDeg);
 
 	struct Data {		
 		int iSampleMs; /// Returns the number of milliseconds passed since the 
