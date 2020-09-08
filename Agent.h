@@ -29,6 +29,9 @@ public:
 	void SetMotorSpeedRPM(float fMotorSpeedRpm);
 	void ZeroScale();
 
+	static float ConvPwmToDegree(float fPwmAOA); /// Angle of Attack
+	static float ConvDegreeToPwm(float fDegreeAOA); /// Angle of Attack
+
 	struct Data {		
 		int iSampleMs; /// Returns the number of milliseconds passed since the 
 		             /// Arduino board began running the current program. 
@@ -54,8 +57,7 @@ private:
 	QString ReadLine();
 	
 
-	float ConvPwmToDegree(float fPwmAOA); /// Angle of Attack
-	float ConvDegreeToPwm(float fDegreeAOA); /// Angle of Attack
+
 
 };
 

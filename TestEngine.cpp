@@ -82,7 +82,7 @@ void TestEngine::run() /// Entry Point
 	try
 	{
 		// Always have Warning Seq
-		Seq_StartWarning(); // Put back in
+		// Seq_StartWarning(); // Put back in
 		Seq_Calib_A();
 
 		// Seq_Study_at_Small_degree(); //### Seq_Calib_A()
@@ -146,15 +146,20 @@ void TestEngine::WaitAndGetData(int ms) {
 
 
 // Sequences
+/*
 void TestEngine::Seq_StartWarning()
 {
+	Agent agent;
+	m_pAgent = &agent;/// This is just to have access outside of this sequence
+	agent.Open(m_sPort);
+
 	LOG("Seq Opening: Seq_StartWarning");
 	LOG("!!! Warning Sequence Starting !!!");
 	LOG("!!! Stand Clear of the Rotor System !!!");
 
 	// Setup the test agent for communications
-	Agent agent;
-	agent.Open(m_sPort);
+	// Agent agent;
+	// agent.Open(m_sPort);
 
 	// Iteration of the Angle Of Attack 
 	float fDegreeStart = -3;
@@ -165,7 +170,7 @@ void TestEngine::Seq_StartWarning()
 	// Cycle Up
 	float fDegree = fDegreeStart;
 	while (fDegree <= fDegreeEnd) {
-		agent.SetPitch(fDegree);
+		m_pAgent->SetPitch(fDegree);
 		emit NewPitch(fDegree);
 		Wait(fDegreeUpdateTime);
 		// Iterator
@@ -176,7 +181,7 @@ void TestEngine::Seq_StartWarning()
 	// Cycle Down
 	fDegree = fDegreeEnd;
 	while (fDegree >= fDegreeStart) {
-		agent.SetPitch(fDegree);
+		m_pAgent->SetPitch(fDegree);
 		emit NewPitch(fDegree);
 		Wait(fDegreeUpdateTime);
 		// Iterator
@@ -187,7 +192,7 @@ void TestEngine::Seq_StartWarning()
 	// Cycle Up
 	fDegree = fDegreeStart;
 	while (fDegree <= fDegreeEnd) {
-		agent.SetPitch(fDegree);
+		m_pAgent->SetPitch(fDegree);
 		emit NewPitch(fDegree);
 		Wait(fDegreeUpdateTime);
 		// Iterator
@@ -198,7 +203,7 @@ void TestEngine::Seq_StartWarning()
 	// Cycle Down
 	fDegree = fDegreeEnd;
 	while (fDegree >= fDegreeStart) {
-		agent.SetPitch(fDegree);
+		m_pAgent->SetPitch(fDegree);
 		emit NewPitch(fDegree);
 		Wait(fDegreeUpdateTime);
 		// Iterator
@@ -206,8 +211,8 @@ void TestEngine::Seq_StartWarning()
 	}
 
 	LOG("Seq Closing: Seq_StartWarning");
-	agent.Close();
 }
+*/
 
 /*
 void TestEngine::Seq_SwDev_A()
@@ -277,15 +282,14 @@ void TestEngine::Seq_Calib_A()
 	// Start Engine
 	m_pAgent->SetPitch(0);
 	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC
-	Wait(m_iDelayForMotorRPM); // Delay for the 
+	Wait(1000); // Delay for the motor cmd to reach ESC
 
-	m_pAgent->SetMotorSpeedRPM(m_iMotorRPM); 
+	m_pAgent->SetMotorSpeedRPM(m_iMotorRPM); // Set Motor to RPM
 	QString sLogMsg = "Motor Speed Set To:" + QString::number(m_iMotorRPM);
 	LOG(sLogMsg);
+	Wait(m_iDelayForMotorRPM); // Delay for Motor RPM
 
-	WaitAndGetData(m_iDelayForMotorRPM); // Delay for Motor RPM
-
-		// Iteration of the Angle Of Attack 
+	// Iteration of the Angle Of Attack 
 	float fDegree = m_fAngleAtStartOfTestDegree;
 	QElapsedTimer tmrMs;
 	tmrMs.start();

@@ -162,11 +162,17 @@ void MainWindow::OnStopped()
 
 	// Calculate Rotor Calibration Slope and Intc
 	QVector<float> vfLinearRegression = LinearRegression(vRotorSetPointAvg);
-		
+
+	
 	ui->lineEdit_Slope->setText(QString::number(vfLinearRegression.at(0)));
 	ui->lineEdit_Intercept->setText(QString::number(vfLinearRegression.at(1)));
 
-	CreateTelFile(vfLinearRegression);
+	
+
+	
+	CreateTelFile(vfLinearRegression, CaclServoNeutralOffsetDeg(vfLinearRegression));
+
+
 	   
 	UpdateControls();
 }
@@ -289,7 +295,16 @@ QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
 	return vectCoeffs;
 }
 
-void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
+float MainWindow::CaclServoNeutralOffsetDeg(QVector<float> vfLinearRegressionPara) {	
+	float fAoaOffsetDeg = ((m_fRotorStandardLiftCurveSlope * m_fAngleOfStudyAoaDeg) + m_fRotorStandardLiftCurveInct - vfLinearRegressionPara.at(1)) / vfLinearRegressionPara.at(0);
+						// X2 - X1 = (((A1 * X1) + B1 - B2) / A2) - X1
+						// X is Deg AoA & Y is Lift
+		
+	float fServoOffset = Agent::ConvDegreeToPwm(fAoaOffsetDeg);
+	return fAoaOffsetDeg;
+}
+
+void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara, float fCaclServoNeutralOffsetDeg) {
 	// Tel File Location
 	QString sFileLocation = "C:/Dev/Output Files/";	
 
@@ -313,13 +328,15 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara) {
 	// Parse Rotor Calibration Calculations
 	stream << "ROTOR CALIBRATION SYSTEM - CALCULATIONS" << endl << endl;
 	#pragma region Rotor Calibration Constants - Line 1		
-	stream << "Rotor #" << "," << "Cal Rotor Slope" << "," 
-			<< "Cal Rotor Intc" << "," << "Rotor Rev" << "," 
-			<< "Test Date" << "," << "Test Time" << endl;
+	stream << "Rotor #" << "," << "ServoNeutralOffsetDeg" << ","
+		   << "Cal Rotor Slope" << "," << "Cal Rotor Intc" << "," 
+		   << "Rotor Rev" << "," << "Test Date" << "," 
+		   << "Test Time" << endl;
 	// Parse Rotor Calibration Constants
-	stream << ui->lineEdit_RotorNum->text() << "," << QString::number(vfLinearRegressionPara.at(0)) << "," 
-			<< QString::number(vfLinearRegressionPara.at(1)) << "," << m_sRotorRevision << ","
-			<< DateTime.toString("yyyy MM d") << "," << DateTime.toString("hh:mm:ss") << endl << endl << endl;
+	stream << ui->lineEdit_RotorNum->text() << "," << QString::number(fCaclServoNeutralOffsetDeg) << ","
+		   << QString::number(vfLinearRegressionPara.at(0)) << "," << QString::number(vfLinearRegressionPara.at(1)) << "," 
+		   << m_sRotorRevision << "," << DateTime.toString("yyyy MM d") << "," 
+		   << DateTime.toString("hh:mm:ss") << endl << endl << endl;
 	#pragma endregion
 
 	// Parse Rotor Calibration Constants
