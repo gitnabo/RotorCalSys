@@ -18,10 +18,10 @@ public:
 
 	// Rotor Calibration CONSTANTS
 	const int m_iMotorRPM = 2960; // Speed for Carbon Fiber Blades is 2960
-	const int m_iDelayForMotorRPM = 1000; // !!! ### TEMP should be 30000
+	const int m_iDelayForMotorRPM = 30000; 
 	const float m_fAngleAtStartOfTestDegree = -1.0f;  // ! Should Be -1    
 	const float m_fAngleAtEndOfTestDegree = 12.0f;	// ! Should Be 13		 
-	const int   m_iTimeSpentAtAOA = 2000; // ### TEMP Should be 1000
+	const int   m_iTimeSpentAtAOA = 20000;
 	const int m_iSampleMs = 1000;
 	   	 
 signals:

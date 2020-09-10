@@ -85,7 +85,6 @@ void TestEngine::run() /// Entry Point
 		// Seq_StartWarning(); // Put back in
 		Seq_Calib_A();
 
-		// Seq_Study_at_Small_degree(); //### Seq_Calib_A()
 
 	}
 	catch (const AbortException&)
@@ -281,7 +280,7 @@ void TestEngine::Seq_Calib_A()
 
 	// Start Engine
 
-	m_pAgent->SetPitch(Agent::ConvDegreeToPwm(0));
+	m_pAgent->SetPitch(0);
 	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC
 	Wait(1000); // Delay for the motor cmd to reach ESC
 
@@ -380,6 +379,7 @@ void TestEngine::Seq_Calib_B_PWM()
 }
 */
 
+/*
 void TestEngine::Seq_Study_at_Small_degree()
 {
 	LOG("Seq Opening: Seq_Calib_A");
@@ -435,3 +435,4 @@ void TestEngine::Seq_Study_at_Small_degree()
 	LOG("Sequence Closing");
 	agent.Close();
 }
+*/

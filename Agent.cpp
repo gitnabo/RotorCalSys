@@ -126,7 +126,7 @@ Agent::Data Agent::GetData()
 		throw Exception("Bad value received from Arduino: fServoPostion");
 	}
 
-	data.fServoPosDegEstimate = ConvPwmToDegree(data.fServoPosPwm); /// Estimate of Degree based on previous Calc
+	data.fServoPosDegEstimate = ConvPwmToAoaDegree(data.fServoPosPwm); /// Estimate of Degree based on previous Calc
 
 
 	// Motor
@@ -156,8 +156,6 @@ void Agent::SetPitch(float fDegree)
 	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
 }
-
-
 
 
 // ! Engine RPM = setServoTwoPos !
@@ -193,33 +191,36 @@ void Agent::ZeroScale() {
 	m_serial.waitForBytesWritten(1);
 }
 
-// ####### OLD ROTOR #######
-
-/*
-
-
+// ------ OLD ROTOR ------
 
 /// Angle of attack: Convert from PWM to Degrees 
 
-float Agent::ConvPwmToDegree(float fPwmAOA)
+float Agent::ConvPwmToAoaDegree(float fPwmAOA)
 {
 	float fDegree;
 	fDegree = fPwmAOA * m_fRotorConstSlope + m_fRotorConstIntc;
 	return fDegree;
 }
 
-/// Angle of attack: Convert from Degrees to PWM
+/// Angle of attack: Convert from AoA Degrees to PWM
 float Agent::ConvDegreeToPwm(float fDegreeAOA)
 {
 	float fPwm;
 	fPwm = (fDegreeAOA - m_fRotorConstIntc) / m_fRotorConstSlope;
 	return fPwm;
 }
-*/
+
+// Servo: Convert PWM to Servo Degree 
+float Agent::ConvPwmToServoDeg(float fPwm)
+{
+	float fServoDeg;
+	fServoDeg = m_fOLDRotorPwmToServoDegSlope * fPwm + m_fOLDRotorPwmToServoDegInt;
+	return fServoDeg;
+}
 
 
-// ####### NEW ROTOR ######
-
+// ------ NEW ROTOR -------
+/*
 ///  Servo Pos = setServoOnePos
 void Agent::SetServoAnglePwm(float fServoAnglePwm)
 {
@@ -234,10 +235,10 @@ void Agent::SetServoAnglePwm(float fServoAnglePwm)
 }
 
 /// Angle of attack: Convert from PWM to AoA PWM 
-float Agent::ConvPwmToDegree(float fPwmAOA)
+float Agent::ConvPwmToAoaDegree(float fPwmAOA)
 {
 	float fAoADegree;
-	fAoADegree = m_fPwmToDegAoaSlope * log(fPwmAOA) + m_fPwmToDegAoaIntc;
+	fAoADegree = m_fNEWRotorPwmToDegAoaSlope * log(fPwmAOA) + m_fNEWRotorPwmToDegAoaIntc;
 	return fAoADegree;
 }
 
@@ -246,7 +247,17 @@ float Agent::ConvPwmToDegree(float fPwmAOA)
 float Agent::ConvDegreeToPwm(float fAoaDeg)
 {
 	float fServoPwm;
-	fServoPwm = exp(((fAoaDeg - m_fPwmToDegAoaIntc) / m_fPwmToDegAoaSlope));
+	fServoPwm = exp(((fAoaDeg - m_fNEWRotorPwmToDegAoaIntc) / m_fNEWRotorPwmToDegAoaSlope));
 	return fServoPwm;
 }
+
+
+// Servo: Convert PWM to Servo Degree 
+float Agent::ConvPwmToServoDeg(float fPwm)
+{
+	float fServoDeg;
+	fServoDeg = m_fPwmToServoDegSlope * fPwm + m_fPwmToServoDegInt;
+	return fServoDeg;
+}
+*/
 

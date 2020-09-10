@@ -166,14 +166,9 @@ void MainWindow::OnStopped()
 	
 	ui->lineEdit_Slope->setText(QString::number(vfLinearRegression.at(0)));
 	ui->lineEdit_Intercept->setText(QString::number(vfLinearRegression.at(1)));
-
-	
-
 	
 	CreateTelFile(vfLinearRegression, CaclServoNeutralOffsetDeg(vfLinearRegression));
-
-
-	   
+	   	   
 	UpdateControls();
 }
 
@@ -300,8 +295,10 @@ float MainWindow::CaclServoNeutralOffsetDeg(QVector<float> vfLinearRegressionPar
 						// X2 - X1 = (((A1 * X1) + B1 - B2) / A2) - X1
 						// X is Deg AoA & Y is Lift
 		
-	float fServoOffset = Agent::ConvDegreeToPwm(fAoaOffsetDeg);
-	return fServoOffset;
+	float fServoOffsetPwm = Agent::ConvDegreeToPwm(fAoaOffsetDeg);
+	float fServoOffsetDeg = Agent::ConvPwmToServoDeg(fServoOffsetPwm); // 
+
+	return fServoOffsetDeg;
 }
 
 void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara, float fCaclServoNeutralOffsetDeg) {
