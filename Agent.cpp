@@ -192,9 +192,8 @@ void Agent::ZeroScale() {
 }
 
 // ------ OLD ROTOR ------
-
-/// Angle of attack: Convert from PWM to Degrees 
-
+/*
+/// Angle of attack: Convert from PWM to Degrees
 float Agent::ConvPwmToAoaDegree(float fPwmAOA)
 {
 	float fDegree;
@@ -217,12 +216,14 @@ float Agent::ConvPwmToServoDeg(float fPwm)
 	fServoDeg = m_fOLDRotorPwmToServoDegSlope * fPwm + m_fOLDRotorPwmToServoDegInt;
 	return fServoDeg;
 }
-
+*/
 
 // ------ NEW ROTOR -------
+
+// Not Needed ?
 /*
 ///  Servo Pos = setServoOnePos
-void Agent::SetServoAnglePwm(float fServoAnglePwm)
+//void Agent::SetServoAnglePwm(float fServoAnglePwm)
 {
 	QString sServoAnglePwm = QString::number(fServoAnglePwm);
 	QByteArray baServoPos = sServoAnglePwm.toLocal8Bit();
@@ -232,7 +233,7 @@ void Agent::SetServoAnglePwm(float fServoAnglePwm)
 	m_serial.write(ccServoPos);
 	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
-}
+}*/
 
 /// Angle of attack: Convert from PWM to AoA PWM 
 float Agent::ConvPwmToAoaDegree(float fPwmAOA)
@@ -242,22 +243,20 @@ float Agent::ConvPwmToAoaDegree(float fPwmAOA)
 	return fAoADegree;
 }
 
-
 /// Angle of attack: Convert from AoA Degree to PWM 
 float Agent::ConvDegreeToPwm(float fAoaDeg)
 {
 	float fServoPwm;
-	fServoPwm = exp(((fAoaDeg - m_fNEWRotorPwmToDegAoaIntc) / m_fNEWRotorPwmToDegAoaSlope));
+	fServoPwm = (fAoaDeg - m_fNEWRotorPwmToDegAoaIntc) / m_fNEWRotorPwmToDegAoaSlope;
 	return fServoPwm;
 }
 
-
-// Servo: Convert PWM to Servo Degree 
+/// Servo: Convert PWM to Servo Degree 
 float Agent::ConvPwmToServoDeg(float fPwm)
 {
 	float fServoDeg;
-	fServoDeg = m_fPwmToServoDegSlope * fPwm + m_fPwmToServoDegInt;
+	fServoDeg = m_fNEWRotorPwmToServoDegSlope * fPwm + m_fNEWRotorPwmToServoDegIntc;
 	return fServoDeg;
 }
-*/
+
 

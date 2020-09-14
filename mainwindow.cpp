@@ -296,7 +296,7 @@ float MainWindow::CaclServoNeutralOffsetDeg(QVector<float> vfLinearRegressionPar
 						// X is Deg AoA & Y is Lift
 		
 	float fServoOffsetPwm = Agent::ConvDegreeToPwm(fAoaOffsetDeg);
-	float fServoOffsetDeg = Agent::ConvPwmToServoDeg(fServoOffsetPwm); // 
+	float fServoOffsetDeg = Agent::ConvPwmToServoDeg(fServoOffsetPwm); 
 
 	return fServoOffsetDeg;
 }
@@ -342,7 +342,7 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara, float fCac
 	stream << "Def Rotor Const Slope" << "," << "Def Rotor Const Intc" << "," 
 			<< "Load Cell Gain Slope" << "," << "Load Cell Gain Intc" << endl;
 	// Parse Rotor Calibration Constants
-	stream << QString::number(m_fRotorConstSlope) << "," << QString::number(m_fRotorConstIntc) << "," 
+	stream << QString::number(m_fNEWRotorPwmToDegAoaSlope) << "," << QString::number(m_fNEWRotorPwmToDegAoaIntc) << ","
 			<< QString::number(m_fLoadCellGainSlope) << "," << QString::number(m_fLoadCellGainIntc) << endl << endl;
 	#pragma endregion
 		

@@ -308,7 +308,10 @@ void TestEngine::Seq_Calib_A()
 			Agent::Data data = m_pAgent->GetData();
 			data.iSampleMs = tmrMs.elapsed();
 			emit NewData(data);
-			sLogMsg = "Load Cell Kg:" + QString::number(data.fLoadCellKg);
+
+			// Display Lift
+			sLogMsg = QString::number(data.fLoadCellKg) + "kg ; " + QString::number(data.fMotorControllerCurrent) + "A ; " + QString::number(data.fMotorControllerVoltage) + "V ; " + 
+					  QString::number(data.fMotorControllerCurrent * data.fMotorControllerVoltage) + "W";
 			LOG(sLogMsg);
 			int iRemainingMs = m_iSampleMs - tmr.elapsed();
 			iRemainingMs = qMax(iRemainingMs, 0);	// Not less than zero
@@ -318,7 +321,7 @@ void TestEngine::Seq_Calib_A()
 	   
 	// Shut Down System
 	agent.SetMotorSpeedRPM(0);
-	m_pAgent->SetPitch(0);	
+	m_pAgent->SetPitch(1);	
 	LOG("Sequence Closing");
 	agent.Close();
 }

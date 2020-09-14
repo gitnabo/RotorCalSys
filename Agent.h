@@ -1,32 +1,27 @@
 #pragma once
 #include <QSerialPort>
 
-// Rotor Calibration Constants
-const float m_fRotorConstSlope = 0.024485714f; // Should not vary, Based on Measurement of Aoa 
-const float m_fRotorConstIntc = -31.46047619f;
+// OLD Rotor Calibration Constants
+/// const float m_fRotorConstSlope = 0.024485714f; // DELETE?
+/// const float m_fRotorConstIntc = -31.46047619f; // DELETE?
 
 const float m_fLoadCellGainSlope = 1.098320069f; /// Based on exp with Doug
 const float m_fLoadCellGainIntc = 0.108237333f; /// Based on exp with Doug
 
-const float m_fMotorConstSlope = 4.5493f; /// Based on Lenny's exp in early 2020
-const float m_fMotorConstInct = -5038.2f; /// Based on Lenny's exp in early 2020
-
+const float m_fMotorConstSlope = 3.7465f; /// Based on Lenny's exp in early 2020 And Gear Calc with Cyril & Ish on Sept 13 2020
+const float m_fMotorConstInct = -4149.1f; /// Based on Lenny's exp in early 2020 And Gear Calc with Cyril & Ish on Sept 13 202
 
 /// --- OLD ROTOR ---
 const float m_fOLDRotorPwmToServoDegSlope = -0.0647f;
 const float m_fOLDRotorPwmToServoDegInt = 98.293f;
 
 
-
-
-
 /// --- NEW ROTOR ---
-const float m_fNEWRotorPwmToDegAoaSlope = 16.943f;
-const float m_fNEWRotorPwmToDegAoaIntc = -117.34f;
+const float m_fNEWRotorPwmToDegAoaSlope = 0.0132f;
+const float m_fNEWRotorPwmToDegAoaIntc = -13.674f;
 
-
-
-
+const float m_fNEWRotorPwmToServoDegSlope = -0.0823f;
+const float m_fNEWRotorPwmToServoDegIntc = 125.35f;
 
 
 /**
