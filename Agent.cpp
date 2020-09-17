@@ -239,7 +239,7 @@ float Agent::ConvPwmToServoDeg(float fPwm)
 float Agent::ConvPwmToAoaDegree(float fPwmAOA)
 {
 	float fAoADegree;
-	fAoADegree = m_fNEWRotorPwmToDegAoaSlope * log(fPwmAOA) + m_fNEWRotorPwmToDegAoaIntc;
+	fAoADegree = m_fNEWRotorPwmToDegAoaSlope * fPwmAOA + m_fNEWRotorPwmToDegAoaIntc;
 	return fAoADegree;
 }
 

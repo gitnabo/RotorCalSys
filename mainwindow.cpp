@@ -248,7 +248,7 @@ void MainWindow::OnNewData(Agent::Data data)
 
 float MainWindow::CaclLiftAvgKg(QVector<Agent::Data>  LiftDataKg) {
 	float fSumOfLiftKg = 0.0f;
-	for (int i = 0; i < LiftDataKg.size(); i++) {
+	for (int i = 1; i < LiftDataKg.size() - 1; i++) { // Start at 1 to eliminate the first and last
 		fSumOfLiftKg += LiftDataKg.at(i).fLoadCellKg;
 	}
 	float fAvgOfLiftKg = fSumOfLiftKg / LiftDataKg.size();
