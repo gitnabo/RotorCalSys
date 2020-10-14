@@ -5,9 +5,12 @@
 /// const float m_fRotorConstSlope = 0.024485714f; // DELETE?
 /// const float m_fRotorConstIntc = -31.46047619f; // DELETE?
 
+
+/// Load Cell
 const float m_fLoadCellGainSlope = 1.098320069f; /// Based on exp with Doug
 const float m_fLoadCellGainIntc = 0.108237333f; /// Based on exp with Doug
 
+/// Motor
 const float m_fMotorConstSlope = 3.861666667f; /// Based on measurement Cyril & Ish Sept 14th 2020 
 const float m_fMotorConstInct = -4265.944444f; /// Based on measurement Cyril & Ish Sept 14th 2020 
 
@@ -17,8 +20,8 @@ const float m_fOLDRotorPwmToServoDegInt = 98.293f;
 
 
 /// --- NEW ROTOR ---
-const float m_fNEWRotorPwmToDegAoaSlope = 0.013222f; // Based on
-const float m_fNEWRotorPwmToDegAoaIntc = -13.6744f;
+const float m_fNEWRotorPwmToDegAoaSlope = 0.013222f; // Based on measurement
+const float m_fNEWRotorPwmToDegAoaIntc = -13.6744f; // Base on measurement 
 
 const float m_fNEWRotorPwmToServoDegSlope = -0.0823f;
 const float m_fNEWRotorPwmToServoDegIntc = 125.35f;

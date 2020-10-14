@@ -291,7 +291,7 @@ QVector<float> MainWindow::LinearRegression(QVector<QPointF> data)
 }
 
 float MainWindow::CaclServoNeutralOffsetDeg(QVector<float> vfLinearRegressionPara) {	
-	float fAoaOffsetDeg = ((m_fRotorStandardLiftCurveSlope * m_fAngleOfStudyAoaDeg) + m_fRotorStandardLiftCurveInct - vfLinearRegressionPara.at(1)) / vfLinearRegressionPara.at(0);
+	float fAoaOffsetDeg = (((m_fRotorStandardLiftCurveSlope * m_fAngleOfStudyAoaDeg) + m_fRotorStandardLiftCurveInct - vfLinearRegressionPara.at(1)) / vfLinearRegressionPara.at(0)) - m_fAngleOfStudyAoaDeg;
 						// X2 - X1 = (((A1 * X1) + B1 - B2) / A2) - X1
 						// X is Deg AoA & Y is Lift
 		
@@ -339,10 +339,12 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara, float fCac
 	// Parse Rotor Calibration Constants
 	stream <<"ROTOR CALIBRATION SYSTEM - CONSTANTS" << endl << endl;
 	#pragma region Rotor Calibration Constants - Line 2		
-	stream << "Def Rotor Const Slope" << "," << "Def Rotor Const Intc" << "," 
-			<< "Load Cell Gain Slope" << "," << "Load Cell Gain Intc" << endl;
+	stream << "Pwm to Deg Aoa Slope" << "," << "Pwm to Deg Aoa Intc" << "," 
+		   << "Standard Lift Curve Slope" << "," << "Standard Lift Curve Intc" << ","
+		   << "Load Cell Gain Slope" << "," << "Load Cell Gain Intc" << endl;
 	// Parse Rotor Calibration Constants
 	stream << QString::number(m_fNEWRotorPwmToDegAoaSlope) << "," << QString::number(m_fNEWRotorPwmToDegAoaIntc) << ","
+		   << QString::number(m_fRotorStandardLiftCurveSlope) << "," << QString::number(m_fRotorStandardLiftCurveInct) << ","
 			<< QString::number(m_fLoadCellGainSlope) << "," << QString::number(m_fLoadCellGainIntc) << endl << endl;
 	#pragma endregion
 		
