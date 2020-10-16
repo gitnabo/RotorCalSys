@@ -96,37 +96,6 @@ void TestEngine::run() /// Entry Point
 	emit Stopped();
 }
 
-/*
-void TestEngine::RunDummyData()
-{
-	auto funcGen = []() {
-		int iRnd = qrand();
-		int iVal = iRnd % 100;
-		return (float)iVal;
-	};
-
-	int i = 1;
-	while (true)
-	{
-		QString sMsg = QString("%1 line").arg(i++);
-		LOG(sMsg);
-
-		Agent::Data data;
-		data.fTime = funcGen();
-		data.fLoadCellKg = funcGen(); /// Kg
-		data.fServoCurrent = funcGen(); /// mA
-		data.fServoVoltage = funcGen(); /// V
-		data.fMotorControllerCurrent = funcGen(); /// A
-		data.fMotorControllerVoltage = funcGen(); /// V
-		//data.fServoPostion = funcGen(); /// us pulse width
-		//data.fMotorRpmSetting = funcGen(); /// us pulse width
-		emit NewData(data);
-		LOG(QString::number(data.fLoadCellKg));
-
-		Wait(200);
-	}
-}
-*/
 
 void TestEngine::WaitAndGetData(int ms) {
 	QElapsedTimer tmr;
@@ -142,73 +111,6 @@ void TestEngine::WaitAndGetData(int ms) {
 
 
 // Sequences
-/*
-void TestEngine::Seq_StartWarning()
-{
-	Agent agent;
-	m_pAgent = &agent;/// This is just to have access outside of this sequence
-	agent.Open(m_sPort);
-
-	LOG("Seq Opening: Seq_StartWarning");
-	LOG("!!! Warning Sequence Starting !!!");
-	LOG("!!! Stand Clear of the Rotor System !!!");
-
-	// Setup the test agent for communications
-	// Agent agent;
-	// agent.Open(m_sPort);
-
-	// Iteration of the Angle Of Attack 
-	float fDegreeStart = -3;
-	float fDegreeEnd = 12;
-	float fDegreeStep = 0.25;
-	float fDegreeUpdateTime = 50; // ms
-
-	// Cycle Up
-	float fDegree = fDegreeStart;
-	while (fDegree <= fDegreeEnd) {
-		m_pAgent->SetPitch(fDegree);
-		emit NewPitch(fDegree);
-		Wait(fDegreeUpdateTime);
-		// Iterator
-		fDegree = fDegree + fDegreeStep;
-	}
-	LOG("!!! Warning Sequence Starting !!!");
-
-	// Cycle Down
-	fDegree = fDegreeEnd;
-	while (fDegree >= fDegreeStart) {
-		m_pAgent->SetPitch(fDegree);
-		emit NewPitch(fDegree);
-		Wait(fDegreeUpdateTime);
-		// Iterator
-		fDegree = fDegree - fDegreeStep;
-	}
-	LOG("!!! Warning Sequence Starting !!!");
-
-	// Cycle Up
-	fDegree = fDegreeStart;
-	while (fDegree <= fDegreeEnd) {
-		m_pAgent->SetPitch(fDegree);
-		emit NewPitch(fDegree);
-		Wait(fDegreeUpdateTime);
-		// Iterator
-		fDegree = fDegree + fDegreeStep;
-	}
-	LOG("!!! Warning Sequence Starting !!!");
-
-	// Cycle Down
-	fDegree = fDegreeEnd;
-	while (fDegree >= fDegreeStart) {
-		m_pAgent->SetPitch(fDegree);
-		emit NewPitch(fDegree);
-		Wait(fDegreeUpdateTime);
-		// Iterator
-		fDegree = fDegree - fDegreeStep;
-	}
-
-	LOG("Seq Closing: Seq_StartWarning");
-}
-*/
 
 /*
 void TestEngine::Seq_SwDev_A()
@@ -290,10 +192,10 @@ void TestEngine::Seq_Calib_A()
 	QElapsedTimer tmrMs;
 	tmrMs.start();
 	for (fDegree; fDegree <= m_fAngleAtEndOfTestDegree; fDegree++) {
-		m_pAgent->SetPitch(fDegree);
-		emit NewPitch(fDegree);
 		sLogMsg = "Angle of Attack:" + QString::number(fDegree);
 		LOG(sLogMsg);
+		m_pAgent->SetPitch(fDegree);
+		emit NewPitch(fDegree);
 		Wait(m_iSampleMs); //  To give time for the rotor to reach angle 
 		// Gather data for a little while	
 
@@ -301,6 +203,8 @@ void TestEngine::Seq_Calib_A()
 		tmr.start();
 		while (tmr.elapsed() < m_iTimeSpentAtAOA)
 		{
+			sLogMsg = "Get Data - TestEngine Line 304:" + tmr.elapsed();
+			LOG(sLogMsg);
 			Agent::Data data = m_pAgent->GetData();
 			data.iSampleMs = tmrMs.elapsed();
 			emit NewData(data);
