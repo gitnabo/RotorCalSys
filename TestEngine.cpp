@@ -203,8 +203,8 @@ void TestEngine::Seq_Calib_A()
 		tmr.start();
 		while (tmr.elapsed() < m_iTimeSpentAtAOA)
 		{
-			sLogMsg = "Get Data - TestEngine Line 304:" + tmr.elapsed();
-			LOG(sLogMsg);
+			// sLogMsg = "Get Data - TestEngine Line 206:";
+			// LOG(sLogMsg);
 			Agent::Data data = m_pAgent->GetData();
 			data.iSampleMs = tmrMs.elapsed();
 			emit NewData(data);

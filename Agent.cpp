@@ -52,7 +52,7 @@ QString Agent::ReadLine()
 	tmr.start();
 	while (!m_serial.canReadLine())
 	{
-		m_serial.waitForReadyRead(30);
+		m_serial.waitForReadyRead(50); // ###TS was 30
 		if (tmr.elapsed() > TIMEOUT_MS) {
 			// Something went wrong
 			if (m_serial.bytesAvailable() == 0)
