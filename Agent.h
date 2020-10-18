@@ -78,9 +78,9 @@ public:
 private:
 	QSerialPort m_serial;
 	QString ReadLine();
-	
 
 
+	QString Tx(const QString& sReq);
 
 };
 

@@ -360,8 +360,6 @@ void printVals() {
   Serial.print(servo1Value);  //servo
   Serial.print(",");
   Serial.println(servo2Value); //batt/esc
-
-
 }
 
 

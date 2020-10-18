@@ -321,7 +321,6 @@ void TestEngine::Seq_RotorLifeTest_MotorOn()
 
 
 
-
 /*
 void TestEngine::Seq_Study_at_Small_degree()
 {

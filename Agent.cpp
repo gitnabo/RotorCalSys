@@ -44,6 +44,19 @@ void Agent::Close()
 	m_serial.close();
 }
 
+QString Agent::Tx(const QString& sReq)
+{
+	QString sCmd = QString("%1\r\n").arg(sReq);
+	m_serial.write(qPrintable(sCmd));
+	m_serial.waitForBytesWritten(1);
+
+	// Read the response from the arduino
+
+	// Are we happy with it?
+	QString sResp = ReadLine();
+	return sResp;
+}
+
 
 QString Agent::ReadLine()
 {
