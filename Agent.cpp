@@ -36,7 +36,11 @@ void Agent::Open(const QString& sPort)
 	// Read whatever data might still be in the serial port buffer, ya never know!
 	m_serial.readAll();
 
-	QString s = Req_Echo("Hello");
+	// Do a sanity check upfront to make sure everything is good
+	QString sMsg = "Hello";
+	QString s = Req_Echo(sMsg);
+	if(s != sMsg)
+		throw Exception("Echo test to arduino failed");
 }
 
 
@@ -104,17 +108,11 @@ QString Agent::Req_Echo(const QString& sMsg)
 
 Agent::Data Agent::GetData()
 {
-	// Send the command to request the data
-	/// Read whatever data might still be in the serial port buffer, ya never know!
-	m_serial.readAll();
-	m_serial.write("printVals\r\n");
-	m_serial.waitForBytesWritten(1);
-
-	QString sLine = ReadLine();
+	QString sResp = Tx("getdata");
 
 	// Parse out the data
-	int iDataPkgSize = 9;
-	QStringList slTokens = sLine.split(',');
+	int iDataPkgSize = 7;
+	QStringList slTokens = sResp.split(',');
 	if(iDataPkgSize != slTokens.count())
 		throw Exception("Invalid printContinuous response size");
 
@@ -123,40 +121,40 @@ Agent::Data Agent::GetData()
 	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
 	bool bOk;   //	
 	
-	data.iSampleMs = slTokens.at(1).toFloat(&bOk); 
+	data.iSampleMs = 0; // slTokens.at(1).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fTime");
 	}
 
 	// LoadCell gains is adjusted here
-	data.fLoadCellKg = ((slTokens.at(2).toFloat(&bOk)) * m_fLoadCellGainSlope + m_fLoadCellGainIntc) / 2.205; 
+	data.fLoadCellKg = ((slTokens.at(0).toFloat(&bOk)) * m_fLoadCellGainSlope + m_fLoadCellGainIntc) / 2.205; 
 	//  2.205 is constant to convert from Lb to kg
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fLoadCell");
 	}
 
-	data.fServoCurrent = slTokens.at(3).toFloat(&bOk);	
+	data.fServoCurrent = slTokens.at(1).toFloat(&bOk);	
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fServoCurrent");
 	}
 
-	data.fServoVoltage = slTokens.at(4).toFloat(&bOk);
+	data.fServoVoltage = slTokens.at(2).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fServoVoltage");
 	}
 
-	data.fMotorControllerCurrent = slTokens.at(5).toFloat(&bOk);
+	data.fMotorControllerCurrent = slTokens.at(3).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fMotorControllerCurrent");
 	}
 
-	data.fMotorControllerVoltage = slTokens.at(6).toFloat(&bOk);
+	data.fMotorControllerVoltage = slTokens.at(4).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fMotorControllerVoltage");
 	}
 
 	//Servo
-	data.fServoPosPwm = slTokens.at(7).toFloat(&bOk);
+	data.fServoPosPwm = slTokens.at(5).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fServoPostion");
 	}
@@ -165,15 +163,13 @@ Agent::Data Agent::GetData()
 
 
 	// Motor
-	data.fMotorSpeedPwm = slTokens.at(8).toFloat(&bOk);
+	data.fMotorSpeedPwm = slTokens.at(6).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fMotorRpmSetting");
 	}
 
 	data.fMotorSpeedRpmData = data.fMotorSpeedPwm * m_fMotorConstSlope + m_fMotorConstInct;
 	
-
-
 	return data; 
 }
 
@@ -181,15 +177,10 @@ Agent::Data Agent::GetData()
 void Agent::SetPitch(float fDegree)
 {
 	float fAnglePwm = ConvDegreeToPwm(fDegree);
+	int iPitchPwm = qRound(fAnglePwm);
 
-	QString sServoPos = QString::number(fAnglePwm);
-	QByteArray baServoPos = sServoPos.toLocal8Bit();
-	const char *ccServoPos = baServoPos.data(); /// Creates a pointer. 
-												/// This is not the data from Agent::Data Agent::GetData()	
-	m_serial.write("setServoOnePos");
-	m_serial.write(ccServoPos);
-	m_serial.write("\r\n");
-	m_serial.waitForBytesWritten(1);
+	QString sRequest = QString("setpitchpwm %1").arg(iPitchPwm);
+	Tx(sRequest);
 }
 
 
@@ -203,46 +194,15 @@ void Agent::SetMotorSpeedRPM(float fMotorSpeedRpm)
 	float fMotorSpeedPwmCdm;
 
 	// To Initiate and stop the motor an PWM signal of 1000 is expected
-	if (fMotorSpeedRpm == 0) {
+	if (fMotorSpeedRpm == 0)
 		fMotorSpeedPwmCdm = 1000;
-	}
-	else {
+	else
 		fMotorSpeedPwmCdm = (fMotorSpeedRpm - m_fMotorConstInct) / m_fMotorConstSlope;
-	}
-	
-
-	QString sMotorSpeed = QString::number(fMotorSpeedPwmCdm);
-	QByteArray baMotorSpeed = sMotorSpeed.toLocal8Bit();
-	const char *ccMotorSpeed = baMotorSpeed.data();
-
-	m_serial.write("setServoTwoPos");
-	m_serial.write(ccMotorSpeed);
-	m_serial.write("\r\n");
-	m_serial.waitForBytesWritten(1);
+	   
+	QString sRequest = QString("setrpmpwm %1").arg(qRound(fMotorSpeedPwmCdm));
+	Tx(sRequest);
 }
 
-void Agent::ZeroScale() {
-	m_serial.write("zeroScale");
-	m_serial.write("\r\n");
-	m_serial.waitForBytesWritten(1);
-}
-
-
-
-// Not Needed ?
-/*
-///  Servo Pos = setServoOnePos
-//void Agent::SetServoAnglePwm(float fServoAnglePwm)
-{
-	QString sServoAnglePwm = QString::number(fServoAnglePwm);
-	QByteArray baServoPos = sServoAnglePwm.toLocal8Bit();
-	const char *ccServoPos = baServoPos.data(); /// Creates a pointer. 
-												/// This is not the data from Agent::Data Agent::GetData()	
-	m_serial.write("setServoOnePos");
-	m_serial.write(ccServoPos);
-	m_serial.write("\r\n");
-	m_serial.waitForBytesWritten(1);
-}*/
 
 /// Angle of attack: Convert from PWM to AoA PWM 
 float Agent::ConvPwmToAoaDegree(float fPwmAOA)

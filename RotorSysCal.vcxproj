@@ -203,19 +203,15 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Agent.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SerialPort.cpp" />
     <ClCompile Include="TestEngine.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="mainwindow.h">
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -236,12 +232,9 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="mainwindow.ui">
-    </QtUic>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Agent.h" />
     <ClInclude Include="Exception.h" />
+    <QtMoc Include="MainWindow.h" />
     <ClInclude Include="pch.h" />
     <QtMoc Include="SerialPort.h" />
     <QtMoc Include="TestEngine.h" />
@@ -249,6 +242,9 @@
   <ItemGroup>
     <None Include="postbuild.bat" />
     <None Include="RotorCalSys-Arduino.ino" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="MainWindow.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

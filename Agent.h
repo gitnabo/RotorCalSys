@@ -41,7 +41,6 @@ public:
 	void SetPitch(float fDegree);
 
 	void SetMotorSpeedRPM(float fMotorSpeedRpm);
-	void ZeroScale();
 
 	static float ConvPwmToAoaDegree(float fPwmAOA); /// Angle of Attack
 	static float ConvDegreeToPwm(float fDegreeAOA); // # ToDo Change to PWM

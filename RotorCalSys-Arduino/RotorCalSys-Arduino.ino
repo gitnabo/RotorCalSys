@@ -121,6 +121,7 @@ void ProcessRequest(const String& sRequest)
   String sResponse = sID;
   sResponse += ": ";
   sResponse += sResponseData;
+  sResponse += "\n";
   
   Serial.print(sResponse.c_str());
 }
@@ -140,12 +141,12 @@ String ProcessRequest(const String& sOp, const String& sParams)
   // The mother-of-all switch statements
   if(sOp == "getdata")
     return GetData();
-  else if(sOp == "pitchpwm") {
+  else if(sOp == "setpitchpwm") {
     int iPWM = sParams.toInt();
     SetPitchPwm(iPWM);
     return "";
   }
-  else if(sOp == "rpmpwm") {
+  else if(sOp == "setrpmpwm") {
     int iPWM = sParams.toInt();
     SetRpmPwm(iPWM);
     return "";

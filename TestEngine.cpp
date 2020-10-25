@@ -81,8 +81,7 @@ void TestEngine::run() /// Entry Point
 	emit Started();
 	try
 	{
-		Seq_Calib_A();
-		
+		Seq_Calib_A();		
 	}
 	catch (const AbortException&)
 	{
