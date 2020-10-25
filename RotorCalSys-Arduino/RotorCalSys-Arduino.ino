@@ -3,11 +3,22 @@
 
 
 
-
+// Top-level protocol handlnig
 void ProcessRequest(const String& sRequest);
 String ProcessRequest(const String& sOp, const String& sParams);
 String ServiceSerial();
 
+// Request processing for individual commands
+String GetData();
+void SetPitchPwm(int iPitchPWM);
+void SetRpmPwm(int iRpmPwm);
+
+
+
+void Debug(const char* pszMsg)
+{
+  //Serial.print(pszMsg);
+}
 
 
 void setup() {
@@ -19,6 +30,7 @@ void setup() {
   }
 
 }//setup
+
 
 
 
@@ -67,9 +79,9 @@ String ServiceSerial() {
 
 void ProcessRequest(const String& sRequest)
 {
-  Serial.print("Received request: ");
-  Serial.print(sRequest);
-  Serial.print("\r\n");
+  Debug("Received request: ");
+  Debug(sRequest.c_str());
+  Debug("\r\n");
 
   // Parse the request. It must be in the format of <id>: <op> <data>
   String sLine = sRequest;
@@ -101,6 +113,7 @@ void ProcessRequest(const String& sRequest)
     sLine.trim();
     sParams = sLine;
   }
+  sOperation.toLowerCase();
 
   // Process the operation
   String sResponseData = ProcessRequest(sOperation, sParams);
@@ -108,25 +121,58 @@ void ProcessRequest(const String& sRequest)
   String sResponse = sID;
   sResponse += ": ";
   sResponse += sResponseData;
-  Serial.print("Response: ");
+  
   Serial.print(sResponse.c_str());
-  Serial.print("\r\n");
 }
 
 
 
 String ProcessRequest(const String& sOp, const String& sParams)
 {
-  Serial.print("Processing request: \r\n");
-  Serial.print("Op    : ");
-  Serial.print(sOp.c_str());
-  Serial.print("\r\n");
-  Serial.print("Params: ");
-  Serial.print(sParams.c_str());
-  Serial.print("\r\n");
+  Debug("Processing request: \r\n");
+  Debug("Op    : ");
+  Debug(sOp.c_str());
+  Debug("\r\n");
+  Debug("Params: ");
+  Debug(sParams.c_str());
+  Debug("\r\n");
 
   // The mother-of-all switch statements
-  if(sOp == "echo") {
-    return sParams;
+  if(sOp == "getdata")
+    return GetData();
+  else if(sOp == "pitchpwm") {
+    int iPWM = sParams.toInt();
+    SetPitchPwm(iPWM);
+    return "";
   }
+  else if(sOp == "rpmpwm") {
+    int iPWM = sParams.toInt();
+    SetRpmPwm(iPWM);
+    return "";
+  }
+  else if(sOp == "echo")
+    return sParams;
+  else
+    return "";
+}
+
+
+/************ Command Implementation ************/
+
+String GetData()
+{
+  String sData = "1.0,2.0,3.0,4.0,5.0,6.0,7.0";
+  return sData;  
+}
+
+
+void SetPitchPwm(int iPitchPWM)
+{
+  
+}
+
+
+void SetRpmPwm(int iRpmPwm)
+{
+  
 }
