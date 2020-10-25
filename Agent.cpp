@@ -13,6 +13,7 @@ Agent::Agent()
 {
 }
 
+
 Agent::~Agent()
 {
 	Close();
@@ -34,19 +35,23 @@ void Agent::Open(const QString& sPort)
 
 	// Read whatever data might still be in the serial port buffer, ya never know!
 	m_serial.readAll();
+
+	QString s = Req_Echo("Hello");
 }
+
 
 void Agent::Close()
 {
-	if (m_serial.isOpen()) {
+	if (m_serial.isOpen())
 		SetMotorSpeedRPM(0);
-	} // !!!! Make sure this Stops
 	m_serial.close();
 }
 
+
 QString Agent::Tx(const QString& sReq)
 {
-	QString sCmd = QString("%1\r\n").arg(sReq);
+	QString sCmd = QString("%1: %2\r\n").arg(
+				QString::number(++m_uiRequestID), sReq);
 	m_serial.write(qPrintable(sCmd));
 	m_serial.waitForBytesWritten(1);
 
@@ -54,7 +59,16 @@ QString Agent::Tx(const QString& sReq)
 
 	// Are we happy with it?
 	QString sResp = ReadLine();
-	return sResp;
+
+	// Parse out the ID to verify the protocol
+	int iColonPos = sResp.indexOf(':');
+	if(-1 == iColonPos)
+		throw Exception("Invalid Response: No colon");
+	QString sID = sResp.left(iColonPos);
+	sResp.remove(0, iColonPos + 1);
+	QString sData = sResp.trimmed();
+
+	return sData;
 }
 
 
@@ -77,8 +91,16 @@ QString Agent::ReadLine()
 
 	// Read the line
 	QString sLine = m_serial.readLine();
-	return sLine;
+	return sLine.trimmed();
 }
+
+
+QString Agent::Req_Echo(const QString& sMsg)
+{
+	QString sReq = QString("echo %1").arg(sMsg);
+	return Tx(sReq);
+}
+
 
 Agent::Data Agent::GetData()
 {
@@ -198,40 +220,14 @@ void Agent::SetMotorSpeedRPM(float fMotorSpeedRpm)
 	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
 }
+
 void Agent::ZeroScale() {
 	m_serial.write("zeroScale");
 	m_serial.write("\r\n");
 	m_serial.waitForBytesWritten(1);
 }
 
-// ------ OLD ROTOR ------
-/*
-/// Angle of attack: Convert from PWM to Degrees
-float Agent::ConvPwmToAoaDegree(float fPwmAOA)
-{
-	float fDegree;
-	fDegree = fPwmAOA * m_fRotorConstSlope + m_fRotorConstIntc;
-	return fDegree;
-}
 
-/// Angle of attack: Convert from AoA Degrees to PWM
-float Agent::ConvDegreeToPwm(float fDegreeAOA)
-{
-	float fPwm;
-	fPwm = (fDegreeAOA - m_fRotorConstIntc) / m_fRotorConstSlope;
-	return fPwm;
-}
-
-// Servo: Convert PWM to Servo Degree 
-float Agent::ConvPwmToServoDeg(float fPwm)
-{
-	float fServoDeg;
-	fServoDeg = m_fOLDRotorPwmToServoDegSlope * fPwm + m_fOLDRotorPwmToServoDegInt;
-	return fServoDeg;
-}
-*/
-
-// ------ NEW ROTOR -------
 
 // Not Needed ?
 /*
@@ -252,7 +248,7 @@ float Agent::ConvPwmToServoDeg(float fPwm)
 float Agent::ConvPwmToAoaDegree(float fPwmAOA)
 {
 	float fAoADegree;
-	fAoADegree = m_fNEWRotorPwmToDegAoaSlope * fPwmAOA + m_fNEWRotorPwmToDegAoaIntc;
+	fAoADegree = m_fRotorPwmToDegAoaSlope * fPwmAOA + m_fRotorPwmToDegAoaIntc;
 	return fAoADegree;
 }
 
@@ -260,7 +256,7 @@ float Agent::ConvPwmToAoaDegree(float fPwmAOA)
 float Agent::ConvDegreeToPwm(float fAoaDeg)
 {
 	float fServoPwm;
-	fServoPwm = (fAoaDeg - m_fNEWRotorPwmToDegAoaIntc) / m_fNEWRotorPwmToDegAoaSlope;
+	fServoPwm = (fAoaDeg - m_fRotorPwmToDegAoaIntc) / m_fRotorPwmToDegAoaSlope;
 	return fServoPwm;
 }
 
@@ -268,7 +264,7 @@ float Agent::ConvDegreeToPwm(float fAoaDeg)
 float Agent::ConvPwmToServoDeg(float fPwm)
 {
 	float fServoDeg;
-	fServoDeg = m_fNEWRotorPwmToServoDegSlope * fPwm + m_fNEWRotorPwmToServoDegIntc;
+	fServoDeg = m_fRotorPwmToServoDegSlope * fPwm + m_fRotorPwmToServoDegIntc;
 	return fServoDeg;
 }
 

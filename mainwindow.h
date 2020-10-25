@@ -31,6 +31,7 @@ private slots:
 	void OnLog(QString sMsg);
 
 private:
+	bool m_bInitialized = false;
 	QLineSeries* m_pLineSeries = nullptr;
 	void CreateChart();
 	void ResetChart();

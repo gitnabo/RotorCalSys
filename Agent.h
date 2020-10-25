@@ -14,17 +14,13 @@ const float m_fLoadCellGainIntc = 0.108237333f; /// Based on exp with Doug
 const float m_fMotorConstSlope = 3.861666667f; /// Based on measurement Cyril & Ish Sept 14th 2020 
 const float m_fMotorConstInct = -4265.944444f; /// Based on measurement Cyril & Ish Sept 14th 2020 
 
-/// --- OLD ROTOR ---
-const float m_fOLDRotorPwmToServoDegSlope = -0.0647f;
-const float m_fOLDRotorPwmToServoDegInt = 98.293f;
-
 
 /// --- NEW ROTOR ---
-const float m_fNEWRotorPwmToDegAoaSlope = 0.013222f; // Based on measurement
-const float m_fNEWRotorPwmToDegAoaIntc = -13.6744f; // Base on measurement 
+const float m_fRotorPwmToDegAoaSlope = 0.013222f; // Based on measurement
+const float m_fRotorPwmToDegAoaIntc = -13.6744f; // Base on measurement 
 
-const float m_fNEWRotorPwmToServoDegSlope = -0.0823f;
-const float m_fNEWRotorPwmToServoDegIntc = 125.35f;
+const float m_fRotorPwmToServoDegSlope = -0.0823f;
+const float m_fRotorPwmToServoDegIntc = 125.35f;
 
 
 /**
@@ -43,7 +39,6 @@ public:
 
 	
 	void SetPitch(float fDegree);
-	//void SetServoAnglePwm(float fDegree);
 
 	void SetMotorSpeedRPM(float fMotorSpeedRpm);
 	void ZeroScale();
@@ -52,8 +47,6 @@ public:
 	static float ConvDegreeToPwm(float fDegreeAOA); // # ToDo Change to PWM
 	static float ConvPwmToServoDeg(float fPwm);
 
-	// float NewRotorConvPwmToAoADegree(float fPwmAOA);
-	// float NewRotorConvAoaDegreeToPwm(float fAoaDeg);
 
 	struct Data {		
 		int iSampleMs; /// Returns the number of milliseconds passed since the 
@@ -72,16 +65,16 @@ public:
 	};
 	Data GetData();
 
-
-
 	
 private:
 	QSerialPort m_serial;
 	QString ReadLine();
 
+	QString Req_Echo(const QString& sMsg);
 
+	// Do a complete transaction
 	QString Tx(const QString& sReq);
-
+	uint m_uiRequestID = 0;
 };
 
 

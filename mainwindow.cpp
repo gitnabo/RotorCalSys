@@ -40,6 +40,8 @@ MainWindow::MainWindow(QWidget *parent)
 	m_pTimerUpdate->start();
 	setWindowTitle("Rotor Calibrator");
 	CreateChart();
+
+	m_bInitialized = true;
 }
 
 MainWindow::~MainWindow()
@@ -116,7 +118,8 @@ void MainWindow::SaveSettings()
 
 void MainWindow::on_cbSerialPorts_currentIndexChanged(int /*iIndex*/)
 {
-	SaveSettings();
+	if(m_bInitialized)
+		SaveSettings();
 }
 
 void MainWindow::UpdateControls()
@@ -343,7 +346,7 @@ void MainWindow::CreateTelFile(QVector<float> vfLinearRegressionPara, float fCac
 		   << "Standard Lift Curve Slope" << "," << "Standard Lift Curve Intc" << ","
 		   << "Load Cell Gain Slope" << "," << "Load Cell Gain Intc" << endl;
 	// Parse Rotor Calibration Constants
-	stream << QString::number(m_fNEWRotorPwmToDegAoaSlope) << "," << QString::number(m_fNEWRotorPwmToDegAoaIntc) << ","
+	stream << QString::number(m_fRotorPwmToDegAoaSlope) << "," << QString::number(m_fRotorPwmToDegAoaIntc) << ","
 		   << QString::number(m_fRotorStandardLiftCurveSlope) << "," << QString::number(m_fRotorStandardLiftCurveInct) << ","
 			<< QString::number(m_fLoadCellGainSlope) << "," << QString::number(m_fLoadCellGainIntc) << endl << endl;
 	#pragma endregion
