@@ -1,5 +1,31 @@
 
 #include <Wire.h>
+#include <Servo.h>
+
+// For simulating on an Adafruit feather (because that's what Steve has)
+#define FEATHER
+
+
+#ifndef FEATHER
+#include "HX711.h"
+#include <Adafruit_ADS1015.h>
+
+#define DOUT  10
+#define CLK  16
+HX711 g_scale(DOUT, CLK);
+
+// ADCs
+Adafruit_ADS1015 g_ads1115[] = {(0x48),(0x49)};  
+
+#endif
+
+
+Servo g_servoMotor; // RPM used to be called '2'
+Servo g_servoPitch;
+int g_iServoMotorVal = 0;
+int g_iServoPitchVal = 0;
+
+
 
 
 
@@ -12,7 +38,7 @@ String ServiceSerial();
 String GetData();
 void SetPitchPwm(int iPitchPWM);
 void SetRpmPwm(int iRpmPwm);
-
+float readADC(int iADC);
 
 
 void Debug(const char* pszMsg)
@@ -22,9 +48,19 @@ void Debug(const char* pszMsg)
 
 
 void setup() {
-  Serial.begin(57600);  //baud doesnt matter for pro micro
+  Serial.begin(57600);  
 
-  //wait for serial port to open
+  // Set pins for servos
+  g_servoPitch.attach(5);
+  g_servoMotor.attach(6);
+
+#ifndef FEATHER
+  //set pins for scale
+  g_scale.set_scale();
+  g_scale.tare(); //Reset the scale to 0
+#endif
+
+  // Wait for serial port to open
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
@@ -160,20 +196,89 @@ String ProcessRequest(const String& sOp, const String& sParams)
 
 /************ Command Implementation ************/
 
-String GetData()
-{
-  String sData = "1.0,2.0,3.0,4.0,5.0,6.0,7.0";
-  return sData;  
-}
+
 
 
 void SetPitchPwm(int iPitchPWM)
 {
-  
+  g_iServoMotorVal = iPitchPWM;
+  g_servoMotor.writeMicroseconds(iPitchPWM);
 }
 
 
+
 void SetRpmPwm(int iRpmPwm)
+{  
+  g_iServoMotorVal = iRpmPwm;
+  g_servoPitch.writeMicroseconds(iRpmPwm);
+}
+
+
+// 0=amp0, 1=volt0, 2=amp1, 3=volt1
+float readADC(int iADC)
 {
+#ifdef FEATHER
+  return 1.0f;
+#else
+  float fSum = 0.0f;
+
+  // get x point average
+  int iCount = 100;
+  for (int i = 0; i < iCount; ++i) {
+    switch(iADC)
+    {
+      case 0:
+        fSum += 0.003f * 1000.0f * g_ads1115[0].readADC_Differential_0_1();
+        break;
+      case 1:
+        fSum += 0.003f * 1.104f * g_ads1115[0].readADC_Differential_2_3();
+        break;
+      case 2:
+        fSum += 0.002f * 1000.0f * g_ads1115[1].readADC_Differential_0_1();
+        break;
+      case 3:
+        fSum += 0.002f * 15.71f * g_ads1115[1].readADC_Differential_2_3();
+        break;
+    }
+    delay(1);   
+  }
+    
+  float fVal = fSum / (float)iCount;
+
+  return fVal;
+#endif
+}
+
+
+String GetData()
+{  
+#ifdef FEATHER
+  // Fake data
+  String sData = "1.0,2.0,3.0,4.0,5.0,6.0,7.0";
+  return sData;  
+#else
+  // Read the real data from the hardware
+
+  float fScaleRaw = (float)g_scale.read();
+  float fScale = fScaleRaw * 0.0000072418f + 0.38f;
+
+  float fAmp0 = readADC(0);
+  float fVolt0 = readADC(1);
+  float fAmp1 = readADC(2);
+  float fVolt1 = readADC(3);
   
+  Serial.print(fScale);
+  Serial.print(",");
+  Serial.print(fAmp0);  //servo
+  Serial.print(",");
+  Serial.print(fVolt0);  //servo
+  Serial.print(",");
+  Serial.print(fAmp1);  //batt/esc
+  Serial.print(",");
+  Serial.print(fVolt1);//batt/esc
+  Serial.print(",");
+  Serial.print(g_iServoMotorVal);  //servo
+  Serial.print(",");
+  Serial.println(g_iServoMotorVal); //batt/esc
+#endif
 }
