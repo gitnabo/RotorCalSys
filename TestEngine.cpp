@@ -178,7 +178,7 @@ void TestEngine::Seq_Calib_A()
 	// Agent::Data data;
 
 	// Start Engine
-	m_pAgent->SetPitch(0);
+	m_pAgent->SetPitch(1);
 	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC
 	Wait(1000); // Delay for the motor cmd to reach ESC
 
