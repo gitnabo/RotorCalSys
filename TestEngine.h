@@ -20,9 +20,9 @@ public:
 	/// Constants - Rotor Calibration 
 	const int m_iMotorRPM = 3220;// Speed for Carbon Fiber Blades is 2960
 	const int m_iDelayForMotorRPM = 45000; 
-	const float m_fAngleAtStartOfTestDegree = 1.0f;     
-	const float m_fAngleAtEndOfTestDegree = 7.0f;		 
-	const int m_iTimeSpentAtAOA = 30000;
+	const float m_fAngleAtStartOfTestDegree = 9.5f;// $$$ 1.0f    
+	const float m_fAngleAtEndOfTestDegree = 10.0f;		 
+	const int m_iTimeSpentAtAOA = 7200000;// 30000
 	const int m_iSampleMs = 1000;
 
 	/// Constants - Life Test
@@ -57,6 +57,8 @@ private:
 	void Seq_RotorLifeTest_MotorOn();
 	void Seq_Calib_B_PWM();
 	void Seq_Study_at_Small_degree();
+	void Seq_RotorLifeTest_MotorOn_V2()
+
 
 };
 
