@@ -1,1 +1,3 @@
 *.suo
+*.VC.db-shm
+*.VC.db-wal

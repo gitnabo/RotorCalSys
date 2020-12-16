@@ -203,6 +203,7 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Agent.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
@@ -241,7 +242,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="postbuild.bat" />
-    <None Include="RotorCalSys-Arduino.ino" />
+    <None Include="RotorCalSys-Arduino\RotorCalSys-Arduino.ino" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWindow.ui" />

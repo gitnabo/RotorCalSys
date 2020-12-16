@@ -3,7 +3,7 @@
 #include <Servo.h>
 
 // For simulating on an Adafruit feather (because that's what Steve has)
-#define FEATHER
+//#define FEATHER
 
 
 #ifndef FEATHER
@@ -12,7 +12,8 @@
 
 #define DOUT  10
 #define CLK  16
-HX711 g_scale(DOUT, CLK);
+
+HX711 g_scale;
 
 // ADCs
 Adafruit_ADS1015 g_ads1115[] = {(0x48),(0x49)};  
@@ -56,6 +57,7 @@ void setup() {
 
 #ifndef FEATHER
   //set pins for scale
+  g_scale.begin(DOUT, CLK);
   g_scale.set_scale();
   g_scale.tare(); //Reset the scale to 0
 #endif
