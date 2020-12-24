@@ -174,10 +174,18 @@ String ProcessRequest(const String& sOp, const String& sParams)
   // The mother-of-all switch statements
   if(sOp == "getdata")
     return GetData();
-  else if(sOp == "setpitchpwm") {
-    int iPWM = sParams.toInt();
-    SetPitchPwm(iPWM);
-    return "";
+  else if (sOp == "setpitchpwm") {
+	  int iPWM = sParams.toInt();
+	  SetPitchPwm(iPWM);
+	  return "";
+  }
+  else if (sOp == "setpitchpwmramp") {
+	  // For testing
+	  for (int iPWM = 200; iPWM < 1520; iPWM = iPWM + 100) {
+		  SetPitchPwm(iPWM);
+		  delay(100);
+	  }
+	  return "";
   }
   else if(sOp == "setrpmpwm") {
     int iPWM = sParams.toInt();
@@ -198,7 +206,7 @@ String ProcessRequest(const String& sOp, const String& sParams)
 
 void SetPitchPwm(int iPitchPWM)
 {
-  g_iServoMotorVal = iPitchPWM;
+  g_iServoPitchVal = iPitchPWM;
   g_servoMotor.writeMicroseconds(iPitchPWM);
 }
 
@@ -276,6 +284,6 @@ String GetData()
   Serial.print(",");
   Serial.print(g_iServoMotorVal);  //servo
   Serial.print(",");
-  Serial.println(g_iServoMotorVal); //batt/esc
+  Serial.println(g_iServoPitchVal); //batt/esc
 #endif
 }
