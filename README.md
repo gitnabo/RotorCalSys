@@ -4,7 +4,7 @@ Rotor Calibration System
 Board Manager, "SparkFun AVR Boards"
 
 To build for the arduino, select
-SparkFun Pro Micro->Arduino AVR Boards->Arduino Mini
+Arduino Micro->Arduino AVR Boards->Arduino Micro
 
 Preferences, Additional boards manager URLs:
 https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json

@@ -54,6 +54,7 @@ void setup() {
   // Set pins for servos
   g_servoPitch.attach(5);
   g_servoMotor.attach(6);
+return;
 
 #ifndef FEATHER
   //set pins for scale
@@ -62,18 +63,13 @@ void setup() {
   g_scale.tare(); //Reset the scale to 0
 #endif
 
-  // Wait for serial port to open
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
-
 }//setup
 
 
 
 
 
-void loop() {
+void loop() {  
   // Service the serial port
   String sRequest = ServiceSerial();
 
@@ -115,8 +111,7 @@ String ServiceSerial() {
 
 
 
-void ProcessRequest(const String& sRequest)
-{
+void ProcessRequest(const String& sRequest){
   Debug("Received request: ");
   Debug(sRequest.c_str());
   Debug("\r\n");
