@@ -44,7 +44,7 @@ float readADC(int iADC);
 
 void Debug(const char* pszMsg)
 {
-  //Serial.print(pszMsg);
+  Serial.print(pszMsg);
 }
 
 
@@ -182,8 +182,22 @@ String ProcessRequest(const String& sOp, const String& sParams)
   else if (sOp == "setpitchpwmramp") {
 	  // For testing
 	  for (int iPWM = 200; iPWM < 1520; iPWM = iPWM + 100) {
+		  char sz[32];
+		  sprintf(sz, "Pitch=%d\r\n", iPWM);
+		  Debug(sz);
 		  SetPitchPwm(iPWM);
 		  delay(100);
+	  }
+	  return "";
+  }
+  else if (sOp == "setrpmpwmramp") {
+	  // For testing
+	  for (int iPWM = 1000; iPWM < 1960; iPWM = iPWM + 100) {
+		  char sz[32];
+		  sprintf(sz, "Rpm=%d\r\n", iPWM);
+		  Debug(sz);
+		  SetRpmPwm(iPWM);
+		  delay(500);
 	  }
 	  return "";
   }
