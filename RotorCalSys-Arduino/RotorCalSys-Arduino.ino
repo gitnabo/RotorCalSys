@@ -174,6 +174,14 @@ String ProcessRequest(const String& sOp, const String& sParams)
   // The mother-of-all switch statements
   if(sOp == "getdata")
     return GetData();
+  else if (sOp == "getdatas") {
+	  int iCount = sParams.toInt();
+	  for (int i = 0; i < iCount; ++i) {
+		  GetData();
+		  delay(500);
+	  }
+	  return "";
+  }
   else if (sOp == "setpitchpwm") {
 	  int iPWM = sParams.toInt();
 	  SetPitchPwm(iPWM);
