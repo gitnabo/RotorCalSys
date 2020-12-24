@@ -52,8 +52,8 @@ void setup() {
   Serial.begin(57600);  
 
   // Set pins for servos
-  g_servoPitch.attach(5);
-  g_servoMotor.attach(6);
+  g_servoPitch.attach(6);
+  g_servoMotor.attach(5);
 return;
 
 #ifndef FEATHER
@@ -181,15 +181,15 @@ String ProcessRequest(const String& sOp, const String& sParams)
   }
   else if (sOp == "setpitchpwmramp") {
 	  // For testing
-	  for (int iPWM = 200; iPWM < 1520; iPWM = iPWM + 100) {
+	  for (int iPWM = 800; iPWM < 2100; iPWM = iPWM + 100) {
 		  char sz[32];
 		  sprintf(sz, "Pitch=%d\r\n", iPWM);
 		  Debug(sz);
 		  SetPitchPwm(iPWM);
-		  delay(100);
+		  delay(500);
 	  }
 	  return "";
-  }
+  }  
   else if (sOp == "setrpmpwmramp") {
 	  // For testing
 	  for (int iPWM = 1000; iPWM < 1960; iPWM = iPWM + 100) {
