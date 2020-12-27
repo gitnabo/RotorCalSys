@@ -178,8 +178,9 @@ String ProcessRequest(const String& sOp, const String& sParams)
 	  int iCount = sParams.toInt();
 	  for (int i = 0; i < iCount; ++i) {
 		  GetData();
-		  delay(500);
+		  delay(1000);
 	  }
+   Debug("Done GetDataS \r\n");
 	  return "";
   }
   else if (sOp == "setpitchpwm") {
@@ -293,7 +294,9 @@ String GetData()
   float fVolt0 = readADC(1);
   float fAmp1 = readADC(2);
   float fVolt1 = readADC(3);
-  
+
+  Serial.print(millis());
+  Serial.print(",");
   Serial.print(fScale);
   Serial.print(",");
   Serial.print(fAmp0);  //servo
