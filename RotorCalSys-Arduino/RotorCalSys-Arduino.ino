@@ -32,7 +32,7 @@ int g_iServoPitchVal = 0;
 
 // Top-level protocol handlnig
 void ProcessRequest(const String& sRequest);
-String ProcessRequest(const String& sOp, const String& sParams);
+String ExecuteRequest(const String& sOp, const String& sParams);
 String ServiceSerial();
 
 // Request processing for individual commands
@@ -149,7 +149,7 @@ void ProcessRequest(const String& sRequest){
   sOperation.toLowerCase();
 
   // Process the operation
-  String sResponseData = ProcessRequest(sOperation, sParams);
+  String sResponseData = ExecuteRequest(sOperation, sParams);
 
   String sResponse = sID;
   sResponse += ": ";
@@ -161,7 +161,7 @@ void ProcessRequest(const String& sRequest){
 
 
 
-String ProcessRequest(const String& sOp, const String& sParams)
+String ExecuteRequest(const String& sOp, const String& sParams)
 {
   Debug("Processing request: \r\n");
   Debug("Op    : ");
@@ -295,20 +295,22 @@ String GetData()
   float fAmp1 = readADC(2);
   float fVolt1 = readADC(3);
 
-  Serial.print(millis());
-  Serial.print(",");
-  Serial.print(fScale);
-  Serial.print(",");
-  Serial.print(fAmp0);  //servo
-  Serial.print(",");
-  Serial.print(fVolt0);  //servo
-  Serial.print(",");
-  Serial.print(fAmp1);  //batt/esc
-  Serial.print(",");
-  Serial.print(fVolt1);//batt/esc
-  Serial.print(",");
-  Serial.print(g_iServoMotorVal);  //servo
-  Serial.print(",");
-  Serial.println(g_iServoPitchVal); //batt/esc
+  String sResp;
+  sResp += millis();
+  sResp += ",";
+  sResp += fScale;
+  sResp += ",";
+  sResp += fAmp0;  //servo
+  sResp += ",";
+  sResp += fVolt0;  //servo
+  sResp += ",";
+  sResp += fAmp1;  //batt/esc
+  sResp += ",";
+  sResp += fVolt1;//batt/esc
+  sResp += ",";
+  sResp += g_iServoMotorVal;  //servo
+  sResp += ",";
+  sResp += g_iServoPitchVal; //batt/esc
+  return sResp;
 #endif
 }

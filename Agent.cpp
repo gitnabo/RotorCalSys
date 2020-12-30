@@ -121,6 +121,10 @@ QString Agent::Tx(const QString& sReq)
 	if(-1 == iColonPos)
 		throw Exception("Invalid Response: No colon");
 	QString sID = sResp.left(iColonPos);
+	int iID = sID.toInt();
+	if (iID != m_uiRequestID) {
+		throw Exception("Invalid ID, Protocol out of sync.");
+	}
 	sResp.remove(0, iColonPos + 1);
 	QString sData = sResp.trimmed();
 
