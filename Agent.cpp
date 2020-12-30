@@ -4,6 +4,7 @@
 #include <QElapsedTimer>
 #include <QThread>
 #include "Exception.h"
+#include <windows.h>
 
 #define TIMEOUT_MS		4000
 
@@ -22,10 +23,55 @@ Agent::~Agent()
 
 void Agent::Open(const QString& sPort)
 {
+	int iBaud = 57600;
+	/*
+	QString sDevice = QString("\\\\.\\%1").arg(sPort);
+	WCHAR szPort[32];
+	memset(szPort, 0, 32);
+	sDevice.toWCharArray(szPort);
+
+	// Attempt to open the serial port
+	HANDLE hFilevice = ::CreateFile(szPort, GENERIC_WRITE | GENERIC_READ,
+		0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (INVALID_HANDLE_VALUE == hFilevice){
+		QString sEx = QString ("Could not open COM port %1").arg(sPort);
+		throw Exception(sEx);
+	}
+	// Setup the DCB
+	
+
+	DCB dcb;
+	memset(&dcb, 0, sizeof(DCB));
+	dcb.DCBlength = sizeof(DCB);
+	dcb.BaudRate = iBaud;
+	dcb.fBinary = TRUE;
+	dcb.fParity = FALSE;
+	dcb.fOutxCtsFlow = FALSE;
+	dcb.fOutxDsrFlow = FALSE;
+	dcb.fDtrControl = DTR_CONTROL_DISABLE;
+	dcb.fDsrSensitivity = FALSE;
+	dcb.fTXContinueOnXoff = FALSE;
+	dcb.fOutX = FALSE;
+	dcb.fInX = FALSE;
+	dcb.fErrorChar = FALSE;
+	dcb.fNull = FALSE;
+	dcb.fRtsControl = RTS_CONTROL_DISABLE;
+	dcb.fAbortOnError = FALSE;
+	dcb.ByteSize = 8;
+	dcb.Parity = NOPARITY;
+	dcb.StopBits = ONESTOPBIT;
+	
+	BOOL bOk = ::SetCommState(hFilevice, &dcb);
+	::CloseHandle(hFilevice);
+	if (!bOk){
+		throw Exception ("Failed to set DCB");
+	}
+	*/
+
 	QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
 	QSerialPortInfo port(sPort);
 	m_serial.setPort(port);
-	m_serial.setBaudRate(57600);
+	m_serial.setBaudRate(iBaud);
 	m_serial.setDataBits(QSerialPort::Data8);
 	m_serial.setStopBits(QSerialPort::StopBits::OneStop);
 	m_serial.setParity(QSerialPort::Parity::NoParity);
@@ -46,8 +92,14 @@ void Agent::Open(const QString& sPort)
 
 void Agent::Close()
 {
-	if (m_serial.isOpen())
-		SetMotorSpeedRPM(0);
+	try{ 
+		if (m_serial.isOpen())
+			SetMotorSpeedRPM(0);
+	}
+	catch (const Exception&)
+	{
+
+	}
 	m_serial.close();
 }
 
@@ -81,15 +133,17 @@ QString Agent::ReadLine()
 	// Spin a bit so that we can hopefully just read a single line
 	QElapsedTimer tmr;
 	tmr.start();
-	while (!m_serial.canReadLine())
+	while (!m_serial.canReadLine()) // Can Not Read Line Not = True
 	{
-		m_serial.waitForReadyRead(50); // ###TS was 30
+		m_serial.waitForReadyRead(50); // ###TS was 30 // Delete foo
 		if (tmr.elapsed() > TIMEOUT_MS) {
 			// Something went wrong
+			
 			if (m_serial.bytesAvailable() == 0)
 				throw Exception("No response from test stand");
 			else
-				throw Exception("No response from test stand (no full line)");
+				throw Exception("No response from test stand (no full line)")
+			;
 		}
 	}
 

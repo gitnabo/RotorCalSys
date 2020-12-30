@@ -44,7 +44,7 @@ float readADC(int iADC);
 
 void Debug(const char* pszMsg)
 {
-  Serial.print(pszMsg);
+  //Serial.print(pszMsg);
 }
 
 
