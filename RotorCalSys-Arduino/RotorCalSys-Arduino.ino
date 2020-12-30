@@ -37,6 +37,7 @@ String ServiceSerial();
 
 // Request processing for individual commands
 String GetData();
+String GetScale();
 void SetPitchPwm(int iPitchPWM);
 void SetRpmPwm(int iRpmPwm);
 float readADC(int iADC);
@@ -174,15 +175,8 @@ String ExecuteRequest(const String& sOp, const String& sParams)
   // The mother-of-all switch statements
   if(sOp == "getdata")
     return GetData();
-  else if (sOp == "getdatas") {
-	  int iCount = sParams.toInt();
-	  for (int i = 0; i < iCount; ++i) {
-		  GetData();
-		  delay(1000);
-	  }
-   Debug("Done GetDataS \r\n");
-	  return "";
-  }
+  else if(sOp == "getscale")
+    return GetScale();
   else if (sOp == "setpitchpwm") {
 	  int iPWM = sParams.toInt();
 	  SetPitchPwm(iPWM);
@@ -311,6 +305,27 @@ String GetData()
   sResp += g_iServoMotorVal;  //servo
   sResp += ",";
   sResp += g_iServoPitchVal; //batt/esc
+  return sResp;
+#endif
+}
+
+
+
+String GetScale()
+{  
+#ifdef FEATHER
+  // Fake data
+  String sData = "1.23";
+  return sData;  
+#else
+  // Read the real data from the hardware
+
+  float fScaleRaw = (float)g_scale.read();
+  float fScale = fScaleRaw * 0.0000072418f + 0.38f;
+
+  String sResp;
+  sResp += fScale;
+
   return sResp;
 #endif
 }

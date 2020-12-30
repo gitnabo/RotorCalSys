@@ -64,6 +64,8 @@ public:
 	};
 	Data GetData();
 
+	float GetScale();	///< Just read the scale
+
 	
 private:
 	QSerialPort m_serial;

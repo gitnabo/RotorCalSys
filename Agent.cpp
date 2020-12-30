@@ -5,8 +5,9 @@
 #include <QThread>
 #include "Exception.h"
 #include <windows.h>
+#include <QDebug>
 
-#define TIMEOUT_MS		4000
+#define TIMEOUT_MS		30000
 
 
 
@@ -87,6 +88,16 @@ void Agent::Open(const QString& sPort)
 	QString s = Req_Echo(sMsg);
 	if(s != sMsg)
 		throw Exception("Echo test to arduino failed");
+
+	// ### TEST
+	for (int i = 0; i < 100; ++i) {
+		QElapsedTimer tmr;
+		tmr.start();
+		float fScale = GetScale();
+		QString sMsg = QString("scale=%1, ms=%2").arg(fScale).arg(tmr.elapsed());
+		qDebug() << sMsg;
+	}
+
 }
 
 
@@ -169,7 +180,7 @@ Agent::Data Agent::GetData()
 	QString sResp = Tx("getdata");
 
 	// Parse out the data
-	int iDataPkgSize = 7;
+	int iDataPkgSize = 8;
 	QStringList slTokens = sResp.split(',');
 	if(iDataPkgSize != slTokens.count())
 		throw Exception("Invalid printContinuous response size");
@@ -179,7 +190,7 @@ Agent::Data Agent::GetData()
 	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
 	bool bOk;   //	
 	
-	data.iSampleMs = 0; // slTokens.at(1).toFloat(&bOk);
+	data.iSampleMs = slTokens.at(1).toFloat(&bOk);
 	if (!bOk) {
 		throw Exception("Bad value received from Arduino: fTime");
 	}
@@ -229,6 +240,19 @@ Agent::Data Agent::GetData()
 	data.fMotorSpeedRpmData = data.fMotorSpeedPwm * m_fMotorConstSlope + m_fMotorConstInct;
 	
 	return data; 
+}
+
+float Agent::GetScale()
+{
+	QString sResp = Tx("getscale");
+
+	// Parse out the scale, it just returns one float
+	bool bOk;
+	float fScale = sResp.toFloat(&bOk);
+	if (!bOk) 
+		throw Exception("Bad scale value received from Arduino");
+
+	return fScale;
 }
 
 ///  Servo Pos = setServoOnePos
