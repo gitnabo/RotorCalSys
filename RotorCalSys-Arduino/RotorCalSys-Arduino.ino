@@ -25,6 +25,7 @@ Servo g_servoMotor; // RPM used to be called '2'
 Servo g_servoPitch;
 int g_iServoMotorVal = 0;
 int g_iServoPitchVal = 0;
+float g_fPreviousScaleReading = 00.0f;
 
 
 
@@ -320,12 +321,28 @@ String GetScale()
 #else
   // Read the real data from the hardware
 
-  float fScaleRaw = (float)g_scale.read();
+  // This code is meant to help deal with the scale sensor taking so long.
+  // This code is not yet tested.
+  /*
+  // Create a timeout feature bc the 
+  int iMS = millis();
+  int iTimeoutMs = millis() + 250;
+  while(millis() < iTimeoutMs){
+    float fScaleRaw = (float)g_scale.read();
+  }
+  
+  if (g_fPreviousScaleReading != fScaleRaw){
+    g_fPreviousScaleReading = fScaleRaw;
+  }
+
   float fScale = fScaleRaw * 0.0000072418f + 0.38f;
 
   String sResp;
-  sResp += fScale;
-
+  //sResp += fScale;
+  sResp += iElapsedMs;
+  */
+  String sResp;
+  sResp = "0";
   return sResp;
 #endif
 }
