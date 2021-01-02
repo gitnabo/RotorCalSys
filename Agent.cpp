@@ -115,7 +115,7 @@ void Agent::Close()
 }
 
 
-QString Agent::Tx(const QString& sReq)
+QString Agent::Tx(QString sReq)
 {
 	QString sCmd = QString("%1: %2\r\n").arg(
 				QString::number(++m_uiRequestID), sReq);

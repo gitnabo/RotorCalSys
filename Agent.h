@@ -74,7 +74,7 @@ private:
 	QString Req_Echo(const QString& sMsg);
 
 	// Do a complete transaction
-	QString Tx(const QString& sReq);
+	QString Tx(QString sReq);
 	uint m_uiRequestID = 0;
 };
 
