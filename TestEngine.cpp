@@ -251,7 +251,7 @@ void TestEngine::Seq_EnduranceTestOneAngle()
 	int iTestDurationMs = 3600000; // 3,600,000 is 1hr
 	QElapsedTimer tmrMs;
 	tmrMs.start();
-	while (tmr.elapsed() < iTestDurationMs){
+	while (tmrMs.elapsed() < iTestDurationMs){
 		sLogMsg = "Angle of Attack:" + QString::number(fDegree);
 		LOG(sLogMsg);
 		m_pAgent->SetPitch(fDegree);
@@ -261,7 +261,7 @@ void TestEngine::Seq_EnduranceTestOneAngle()
 
 		QElapsedTimer tmr;
 		tmr.start();
-		while (tmr.elapsed() < iTestDurationMs)
+		while (tmrMs.elapsed() < iTestDurationMs)
 		{
 			// sLogMsg = "Get Data - TestEngine Line 206:";
 			// LOG(sLogMsg);

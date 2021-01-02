@@ -282,8 +282,8 @@ String GetData()
 #else
   // Read the real data from the hardware
 
-  float fScaleRaw = (float)g_scale.read();
-  float fScale = fScaleRaw * 0.0000072418f + 0.38f;
+  String sScale = GetScale();
+
 
   float fAmp0 = readADC(0);
   float fVolt0 = readADC(1);
@@ -293,7 +293,7 @@ String GetData()
   String sResp;
   sResp += millis();
   sResp += ",";
-  sResp += fScale;
+  sResp += sScale;
   sResp += ",";
   sResp += fAmp0;  //servo
   sResp += ",";
@@ -341,8 +341,9 @@ String GetScale()
   //sResp += fScale;
   sResp += iElapsedMs;
   */
-  String sResp;
-  sResp = "0";
+
+  String sResp;// ### Temp. So that the scale responds something.
+  sResp = "0"; // ### Temp. So that the scale responds something.
   return sResp;
 #endif
 }
