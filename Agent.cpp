@@ -311,3 +311,71 @@ float Agent::ConvPwmToServoDeg(float fPwm)
 }
 
 
+// TEMP: To test ADC on Arduino
+Agent::Data Agent::GetDataTEST()
+{
+	QString sResp = Tx("getdata");
+
+
+	// Parse out the data
+	int iDataPkgSize = 8;
+	QStringList slTokens = sResp.split(',');
+	if (iDataPkgSize != slTokens.count())
+		int foo;
+
+	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
+	Data data;
+	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
+	bool bOk;   //	
+
+	data.iSampleMs = slTokens.at(1).toFloat(&bOk);
+	if (!bOk) {
+		int foo;
+	}
+
+	// LoadCell gains is adjusted here
+	data.fLoadCellKg = ((slTokens.at(0).toFloat(&bOk)) * m_fLoadCellGainSlope + m_fLoadCellGainIntc) / 2.205;
+	//  2.205 is constant to convert from Lb to kg
+	if (!bOk) {
+		int foo;
+	}
+
+	data.fServoCurrent = slTokens.at(1).toFloat(&bOk);
+	if (!bOk) {
+		int foo;
+	}
+
+	data.fServoVoltage = slTokens.at(2).toFloat(&bOk);
+	if (!bOk) {
+		int foo;
+	}
+
+	data.fMotorControllerCurrent = slTokens.at(3).toFloat(&bOk);
+	if (!bOk) {
+		//throw Exception("Bad value received from Arduino: fMotorControllerCurrent");
+	}
+
+	data.fMotorControllerVoltage = slTokens.at(4).toFloat(&bOk);
+	if (!bOk) {
+		int foo;
+	}
+
+	//Servo
+	data.fServoPosPwm = slTokens.at(5).toFloat(&bOk);
+	if (!bOk) {
+		int foo;
+	}
+
+	data.fServoPosDegEstimate = ConvPwmToAoaDegree(data.fServoPosPwm); /// Estimate of Degree based on previous Calc
+
+
+	// Motor
+	data.fMotorSpeedPwm = slTokens.at(6).toFloat(&bOk);
+	if (!bOk) {
+		int foo;
+	}
+
+	data.fMotorSpeedRpmData = data.fMotorSpeedPwm * m_fMotorConstSlope + m_fMotorConstInct;
+
+	return data;	
+}

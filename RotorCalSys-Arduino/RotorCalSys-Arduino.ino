@@ -13,6 +13,8 @@
 #define DOUT  10
 #define CLK  16
 
+
+
 HX711 g_scale;
 
 // ADCs
@@ -251,7 +253,7 @@ float readADC(int iADC)
     switch(iADC)
     {
       case 0:
-        fSum += 0.003f * 1000.0f * g_ads1115[0].readADC_Differential_0_1();
+        fSum += 0.003f * 1000.0f * g_ads1115[0].readADC_Differential_0_1(); 
         break;
       case 1:
         fSum += 0.003f * 1.104f * g_ads1115[0].readADC_Differential_2_3();
@@ -267,6 +269,9 @@ float readADC(int iADC)
   }
     
   float fVal = fSum / (float)iCount;
+  Debug("read ACD: ");
+  Debug(iADC);
+  Debug("\r\n");
 
   return fVal;
 #endif

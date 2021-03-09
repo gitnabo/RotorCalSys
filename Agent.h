@@ -46,6 +46,8 @@ public:
 	static float ConvDegreeToPwm(float fDegreeAOA); // # ToDo Change to PWM
 	static float ConvPwmToServoDeg(float fPwm);
 
+	
+
 
 	struct Data {		
 		int iSampleMs; /// Returns the number of milliseconds passed since the 
@@ -63,7 +65,7 @@ public:
 		float fMotorSpeedRpmData; /// Calc using fMotorSpeedPwm
 	};
 	Data GetData();
-
+	Agent::Data GetDataTEST();
 	float GetScale();	///< Just read the scale
 
 	
