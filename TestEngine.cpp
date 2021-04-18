@@ -180,15 +180,15 @@ void TestEngine::Seq_Calib_A()
 	QString sVer = QString("Arduino Version: %1").arg(agent.GetVersion());
 	LOG(sVer);
 
-	// Start Engine
+	// Start Engine 
+	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC	
 	m_pAgent->SetPitch(0);
 	Wait(2000);
 	m_pAgent->SetPitch(8);
 	Wait(2000);
 	m_pAgent->SetPitch(0);
 	Wait(2000);
-	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC
-	Wait(1000); // Delay for the motor cmd to reach ESC
+
 
 	m_pAgent->SetMotorSpeedRPM(m_iMotorRPM); // Set Motor to RPM
 	QString sLogMsg = "Motor Speed Set To:" + QString::number(m_iMotorRPM);
