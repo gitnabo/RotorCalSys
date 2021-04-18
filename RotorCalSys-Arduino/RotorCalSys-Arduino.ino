@@ -12,7 +12,8 @@
  *
  * The instructions for getting the board support package setup:
  *
- * 1. In Arduino IDE, go to Preferences and add this URL to the "Additional Board Manager URLs" entry
+ * 1. In Arduino IDE, go to Preferences and add this URL to the "Additional Board Manager URLs" entry,
+ *          https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json
  * 2. Open the "Board Manager" from the Tools menu
  * 3. Type "sparkfun", it should filter down to a few entries
  * 4. Install the SparkFun AVR package
@@ -83,13 +84,6 @@ float readADC(int iADC);
 void Debug(const char* pszMsg)
 {
   //Serial.print(pszMsg);
-}
-
-void Debug(int iVal)
-{
-	char sz[16];
-	sprintf(sz, "%d", iVal);
-	Debug(sz);
 }
 
 
