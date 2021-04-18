@@ -200,36 +200,36 @@ Agent::Data Agent::GetData()
 		throw Exception("Bad value received from Arduino: fTime");
 
 	// LoadCell gains is adjusted here
-	float fLoadCellRawKg = mapData.value("load").toFloat(&bOk);
+	float fLoadCellRawKg = mapData.value("kg").toFloat(&bOk);
 	if (!bOk)
 		throw Exception("Bad value received from Arduino: fLoadCell");
 	data.fLoadCellKg = (fLoadCellRawKg * m_fLoadCellGainSlope + m_fLoadCellGainIntc) / 2.205;
 	//  2.205 is constant to convert from Lb to kg
 
-	data.fServoCurrent = mapData.value("servo_i").toFloat(&bOk);
+	data.fServoCurrent = mapData.value("servo_amp").toFloat(&bOk);
 	if (!bOk)
 		throw Exception("Bad value received from Arduino: fServoCurrent");	
 
-	data.fServoVoltage = mapData.value("servo_v").toFloat(&bOk);
+	data.fServoVoltage = mapData.value("servo_volt").toFloat(&bOk);
 	if (!bOk)
 		throw Exception("Bad value received from Arduino: fServoVoltage");	
 
-	data.fMotorControllerCurrent = mapData.value("motor_i").toFloat(&bOk);
+	data.fMotorControllerCurrent = mapData.value("motor_amp").toFloat(&bOk);
 	if (!bOk)
 		throw Exception("Bad value received from Arduino: fMotorControllerCurrent");	
 
-	data.fMotorControllerVoltage = mapData.value("motor_v").toFloat(&bOk);
+	data.fMotorControllerVoltage = mapData.value("motor_volt").toFloat(&bOk);
 	if (!bOk)
 		throw Exception("Bad value received from Arduino: fMotorControllerVoltage");	
 
-	data.fServoPosPwm = mapData.value("servo_pos").toFloat(&bOk);
+	data.fServoPosPwm = mapData.value("servo_pitch").toFloat(&bOk);
 	if (!bOk)
 		throw Exception("Bad value received from Arduino: fServoPostion");
 
 	data.fServoPosDegEstimate = ConvPwmToAoaDegree(data.fServoPosPwm); /// Estimate of Degree based on previous Calc
 
 	// Motor
-	data.fMotorSpeedPwm = mapData.value("speed_pwm").toFloat(&bOk);
+	data.fMotorSpeedPwm = mapData.value("motor_rpm").toFloat(&bOk);
 	if (!bOk)
 		throw Exception("Bad value received from Arduino: fMotorRpmSetting");	
 
