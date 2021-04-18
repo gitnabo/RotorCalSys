@@ -58,14 +58,10 @@ Adafruit_ADS1015 g_ads1115[2];
 #endif
 
 
-Servo g_servoMotor; // RPM used to be called '2'
-Servo g_servoPitch;
-int g_iServoMotorVal = 0;
-int g_iServoPitchVal = 0;
-float g_fPreviousScaleReading = 00.0f;
-
-
-
+Servo g_servo_MotorRpm; // RPM used to be called '2'
+Servo g_servo_Pitch;
+int g_iServoMotorRpm = 0;
+int g_iServoPitchPwm = 0;
 
 
 // Top-level protocol handlnig
@@ -91,12 +87,12 @@ void setup() {
   Serial.begin(57600);  
 
   // Set pins for servos
-  g_servoPitch.attach(6);
-  g_servoMotor.attach(5);
+  g_servo_Pitch.attach(5);
+  g_servo_MotorRpm.attach(6);
 
   g_ads1115[0].begin(0x48);
   g_ads1115[1].begin(0x49);
-
+  SetRpmPwm(1000);
 return;
 
 #ifndef FEATHER
@@ -219,7 +215,7 @@ String ExecuteRequest(const String& sOp, const String& sParams)
     return GetData();
   else if(sOp == "getscale")
     return GetScale();
-  else if (sOp == "setpitchpwm") {
+  else if (sOp == "setpitchpwm") {// Rotor Servo
 	  int iPWM = sParams.toInt();
 	  SetPitchPwm(iPWM);
 	  return "";
@@ -246,7 +242,7 @@ String ExecuteRequest(const String& sOp, const String& sParams)
 	  }
 	  return "";
   }
-  else if(sOp == "setrpmpwm") {
+  else if(sOp == "setrpmpwm") { // Motor RPM
     int iPWM = sParams.toInt();
     SetRpmPwm(iPWM);
     return "";
@@ -265,16 +261,16 @@ String ExecuteRequest(const String& sOp, const String& sParams)
 
 void SetPitchPwm(int iPitchPWM)
 {
-  g_iServoPitchVal = iPitchPWM;
-  g_servoMotor.writeMicroseconds(iPitchPWM);
+  g_iServoPitchPwm = iPitchPWM;
+  g_servo_Pitch.writeMicroseconds(iPitchPWM);
 }
 
 
 
 void SetRpmPwm(int iRpmPwm)
 {  
-  g_iServoMotorVal = iRpmPwm;
-  g_servoPitch.writeMicroseconds(iRpmPwm);
+  g_iServoMotorRpm = iRpmPwm;
+  g_servo_MotorRpm.writeMicroseconds(iRpmPwm);
 }
 
 
@@ -326,9 +322,6 @@ String GetData()
 #else
   // Read the real data from the hardware
 
-  String sScale = GetScale();
-
-
   float fAmp0 = readADC(0);
   float fVolt0 = readADC(1);
   float fAmp1 = readADC(2);
@@ -336,13 +329,13 @@ String GetData()
 
   String sResp;
   sResp += "ms=" + String(millis()) + ",";
-  sResp += "kg=" + String (sScale) + ",";
+  sResp += "kg=" + String (GetScale()) + ",";
   sResp += "servo_amp=" + String (fAmp0) + ",";
   sResp += "servo_volt=" + String (fVolt0) + ","; 
   sResp += "motor_volt=" + String (fAmp1) + ",";  
   sResp += "motor_amp=" + String (fVolt1) + ",";  
-  sResp += "servo_pitch=" + String (g_iServoPitchVal) + ",";  
-  sResp += "motor_rpm=" + String (g_iServoMotorVal);  
+  sResp += "servo_pitch=" + String (g_iServoPitchPwm) + ",";  
+  sResp += "motor_rpm=" + String (g_iServoMotorRpm);  
  
   return sResp;
 #endif
@@ -361,27 +354,10 @@ String GetScale()
 
   // This code is meant to help deal with the scale sensor taking so long.
   // This code is not yet tested.
-  /*
-  // Create a timeout feature bc the 
-  int iMS = millis();
-  int iTimeoutMs = millis() + 250;
-  while(millis() < iTimeoutMs){
-    float fScaleRaw = (float)g_scale.read();
-  }
   
-  if (g_fPreviousScaleReading != fScaleRaw){
-    g_fPreviousScaleReading = fScaleRaw;
-  }
-
+  // Create a timeout feature bc the 
+  float fScaleRaw = (float)g_scale.read();    
   float fScale = fScaleRaw * 0.0000072418f + 0.38f;
-
-  String sResp;
-  //sResp += fScale;
-  sResp += iElapsedMs;
-  */
-
-  String sResp;// ### Temp. So that the scale responds something.
-  sResp = "0"; // ### Temp. So that the scale responds something.
-  return sResp;
+  return String(fScale);
 #endif
 }

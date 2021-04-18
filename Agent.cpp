@@ -88,16 +88,6 @@ void Agent::Open(const QString& sPort)
 	QString s = Req_Echo(sMsg);
 	if(s != sMsg)
 		throw Exception("Echo test to arduino failed");
-
-	// ### TEST
-	for (int i = 0; i < 100; ++i) {
-		QElapsedTimer tmr;
-		tmr.start();
-		float fScale = GetScale();
-		QString sMsg = QString("scale=%1, ms=%2").arg(fScale).arg(tmr.elapsed());
-		qDebug() << sMsg;
-	}
-
 }
 
 
