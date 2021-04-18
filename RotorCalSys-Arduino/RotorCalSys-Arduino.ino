@@ -1,4 +1,3 @@
-
 /* This program runs on the SparkFun ProMicro 5V/16MHz arduino board.
  *
  *  Just plug-in the board, and windows should automatically install the right USB to Serial
@@ -76,7 +75,7 @@ float ReadMotorA();
 
 String Version()
 {
-	return "0.4";
+	return "0.5";
 }
 
 
@@ -289,16 +288,16 @@ float readRawADC(int iADC)
 		switch (iADC)
 		{
 		case 0:
-			fSum += g_ads1115[0].readADC_Differential_0_1();
+			fSum += g_ads1115[0].readADC_Differential_0_1();  // servo PitchA
 			break;
 		case 1:
-			fSum += g_ads1115[0].readADC_Differential_2_3();
+			fSum += g_ads1115[0].readADC_Differential_2_3();  // servo PitchV
 			break;
 		case 2:
-			fSum += g_ads1115[1].readADC_Differential_0_1();
+			fSum += g_ads1115[1].readADC_Differential_0_1();  // MotorA
 			break;
 		case 3:
-			fSum += g_ads1115[1].readADC_Differential_2_3();
+			fSum += g_ads1115[1].readADC_Differential_2_3();  // MotorV
 			break;
 		}
 		delay(1);
@@ -313,24 +312,27 @@ float readRawADC(int iADC)
 }
 
 
-float ReadPitchServoV()
-{
-	return readRawADC(0) * 0.003f * 1000.0f;
-}
+
+
 
 float ReadPitchServoA()
 {
 	return readRawADC(1) * 0.003f * 1.104f;
 }
 
-float ReadMotorV()
+float ReadPitchServoV()
 {
-	return readRawADC(2) * 0.002f * 1000.0f;
+	return readRawADC(0) * 0.003f * 1000.0f;
 }
 
 float ReadMotorA()
 {
-	return readRawADC(3) * 0.002f * 15.71f;
+	return readRawADC(3) * 0.002f * 1000;
+}
+
+float ReadMotorV()
+{
+	return readRawADC(2) * 0.002f * 15.71f;
 }
 
 
