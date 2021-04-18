@@ -72,7 +72,7 @@ float readADC(int iADC);
 
 String Version()
 {
-	return "0.2";
+	return "0.3";
 }
 
 
@@ -244,6 +244,9 @@ String ExecuteRequest(const String& sOp, const String& sParams)
   }
   else if (sOp == "echo")
 	  return sParams;
+  else if (sOp == "tarescale") {
+	  g_scale.tare();
+	  return "";
   else if (sOp == "getversion")
 	  return Version();
   else
