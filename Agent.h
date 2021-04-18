@@ -65,7 +65,6 @@ public:
 		float fMotorSpeedRpmData; /// Calc using fMotorSpeedPwm
 	};
 	Data GetData();
-	Agent::Data GetDataTEST();
 	float GetScale();	///< Just read the scale
 
 	

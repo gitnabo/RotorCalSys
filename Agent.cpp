@@ -179,63 +179,59 @@ Agent::Data Agent::GetData()
 {
 	QString sResp = Tx("getdata");
 
-	// Parse out the data
-	int iDataPkgSize = 8;
 	QStringList slTokens = sResp.split(',');
-	if(iDataPkgSize != slTokens.count())
-		throw Exception("Invalid printContinuous response size");
 
-	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
+	QMap<QString, QString> mapData;
+	for (const QString& s : slTokens)
+	{
+		// Parse out the key/value
+		QStringList sl = s.split('=');
+		if(sl.count() != 2)
+			throw Exception("Invalid getdata response");
+		mapData[sl.at(0)] = sl.at(1);
+	}
+
 	Data data;
 	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
 	bool bOk;   //	
 	
-	data.iSampleMs = slTokens.at(1).toFloat(&bOk);
-	if (!bOk) {
+	data.iSampleMs = mapData.value("ms").toInt(&bOk);
+	if (!bOk)
 		throw Exception("Bad value received from Arduino: fTime");
-	}
 
 	// LoadCell gains is adjusted here
-	data.fLoadCellKg = ((slTokens.at(0).toFloat(&bOk)) * m_fLoadCellGainSlope + m_fLoadCellGainIntc) / 2.205; 
-	//  2.205 is constant to convert from Lb to kg
-	if (!bOk) {
+	float fLoadCellRawKg = mapData.value("load").toFloat(&bOk);
+	if (!bOk)
 		throw Exception("Bad value received from Arduino: fLoadCell");
-	}
+	data.fLoadCellKg = (fLoadCellRawKg * m_fLoadCellGainSlope + m_fLoadCellGainIntc) / 2.205;
+	//  2.205 is constant to convert from Lb to kg
 
-	data.fServoCurrent = slTokens.at(1).toFloat(&bOk);	
-	if (!bOk) {
-		throw Exception("Bad value received from Arduino: fServoCurrent");
-	}
+	data.fServoCurrent = mapData.value("servo_i").toFloat(&bOk);
+	if (!bOk)
+		throw Exception("Bad value received from Arduino: fServoCurrent");	
 
-	data.fServoVoltage = slTokens.at(2).toFloat(&bOk);
-	if (!bOk) {
-		throw Exception("Bad value received from Arduino: fServoVoltage");
-	}
+	data.fServoVoltage = mapData.value("servo_v").toFloat(&bOk);
+	if (!bOk)
+		throw Exception("Bad value received from Arduino: fServoVoltage");	
 
-	data.fMotorControllerCurrent = slTokens.at(3).toFloat(&bOk);
-	if (!bOk) {
-		throw Exception("Bad value received from Arduino: fMotorControllerCurrent");
-	}
+	data.fMotorControllerCurrent = mapData.value("motor_i").toFloat(&bOk);
+	if (!bOk)
+		throw Exception("Bad value received from Arduino: fMotorControllerCurrent");	
 
-	data.fMotorControllerVoltage = slTokens.at(4).toFloat(&bOk);
-	if (!bOk) {
-		throw Exception("Bad value received from Arduino: fMotorControllerVoltage");
-	}
+	data.fMotorControllerVoltage = mapData.value("motor_v").toFloat(&bOk);
+	if (!bOk)
+		throw Exception("Bad value received from Arduino: fMotorControllerVoltage");	
 
-	//Servo
-	data.fServoPosPwm = slTokens.at(5).toFloat(&bOk);
-	if (!bOk) {
+	data.fServoPosPwm = mapData.value("servo_pos").toFloat(&bOk);
+	if (!bOk)
 		throw Exception("Bad value received from Arduino: fServoPostion");
-	}
 
 	data.fServoPosDegEstimate = ConvPwmToAoaDegree(data.fServoPosPwm); /// Estimate of Degree based on previous Calc
 
-
 	// Motor
-	data.fMotorSpeedPwm = slTokens.at(6).toFloat(&bOk);
-	if (!bOk) {
-		throw Exception("Bad value received from Arduino: fMotorRpmSetting");
-	}
+	data.fMotorSpeedPwm = mapData.value("speed_pwm").toFloat(&bOk);
+	if (!bOk)
+		throw Exception("Bad value received from Arduino: fMotorRpmSetting");	
 
 	data.fMotorSpeedRpmData = data.fMotorSpeedPwm * m_fMotorConstSlope + m_fMotorConstInct;
 	
@@ -310,72 +306,3 @@ float Agent::ConvPwmToServoDeg(float fPwm)
 	return fServoDeg;
 }
 
-
-// TEMP: To test ADC on Arduino
-Agent::Data Agent::GetDataTEST()
-{
-	QString sResp = Tx("getdata");
-
-
-	// Parse out the data
-	int iDataPkgSize = 8;
-	QStringList slTokens = sResp.split(',');
-	if (iDataPkgSize != slTokens.count())
-		int foo;
-
-	// Parse the line tokens "Read:,85435976,-0.34,0.00,0.04,0.17,0.00,50,50"
-	Data data;
-	memset(&data, 0, sizeof(data)); /// Clears data from any previous data
-	bool bOk;   //	
-
-	data.iSampleMs = slTokens.at(1).toFloat(&bOk);
-	if (!bOk) {
-		int foo;
-	}
-
-	// LoadCell gains is adjusted here
-	data.fLoadCellKg = ((slTokens.at(0).toFloat(&bOk)) * m_fLoadCellGainSlope + m_fLoadCellGainIntc) / 2.205;
-	//  2.205 is constant to convert from Lb to kg
-	if (!bOk) {
-		int foo;
-	}
-
-	data.fServoCurrent = slTokens.at(1).toFloat(&bOk);
-	if (!bOk) {
-		int foo;
-	}
-
-	data.fServoVoltage = slTokens.at(2).toFloat(&bOk);
-	if (!bOk) {
-		int foo;
-	}
-
-	data.fMotorControllerCurrent = slTokens.at(3).toFloat(&bOk);
-	if (!bOk) {
-		//throw Exception("Bad value received from Arduino: fMotorControllerCurrent");
-	}
-
-	data.fMotorControllerVoltage = slTokens.at(4).toFloat(&bOk);
-	if (!bOk) {
-		int foo;
-	}
-
-	//Servo
-	data.fServoPosPwm = slTokens.at(5).toFloat(&bOk);
-	if (!bOk) {
-		int foo;
-	}
-
-	data.fServoPosDegEstimate = ConvPwmToAoaDegree(data.fServoPosPwm); /// Estimate of Degree based on previous Calc
-
-
-	// Motor
-	data.fMotorSpeedPwm = slTokens.at(6).toFloat(&bOk);
-	if (!bOk) {
-		int foo;
-	}
-
-	data.fMotorSpeedRpmData = data.fMotorSpeedPwm * m_fMotorConstSlope + m_fMotorConstInct;
-
-	return data;	
-}
