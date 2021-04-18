@@ -201,11 +201,11 @@ Agent::Data Agent::GetData()
 	data.fLoadCellKg = (fLoadCellRawKg * m_fLoadCellGainSlope + m_fLoadCellGainIntc) / 2.205;
 	//  2.205 is constant to convert from Lb to kg
 
-	data.fServoCurrent = mapData.value("servo_amp").toFloat(&bOk);
+	data.fServoCurrent = mapData.value("pitch_servo_amp").toFloat(&bOk);
 	if (!bOk)
 		throw Exception("Bad value received from Arduino: fServoCurrent");	
 
-	data.fServoVoltage = mapData.value("servo_volt").toFloat(&bOk);
+	data.fServoVoltage = mapData.value("pitch_servo_volt").toFloat(&bOk);
 	if (!bOk)
 		throw Exception("Bad value received from Arduino: fServoVoltage");	
 

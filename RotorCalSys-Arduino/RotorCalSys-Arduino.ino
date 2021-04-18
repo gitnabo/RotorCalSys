@@ -72,7 +72,7 @@ float readADC(int iADC);
 
 String Version()
 {
-	return "0.3";
+	return "0.4";
 }
 
 
@@ -322,8 +322,8 @@ String GetData()
   String sResp;
   sResp += "ms=" + String(millis()) + ",";
   sResp += "kg=" + String (GetScale()) + ",";
-  sResp += "servo_amp=" + String (fAmp0) + ",";
-  sResp += "servo_volt=" + String (fVolt0) + ","; 
+  sResp += "pitch_servo_amp=" + String (fAmp0) + ",";
+  sResp += "pitch_servo_volt=" + String (fVolt0) + ","; 
   sResp += "motor_volt=" + String (fAmp1) + ",";  
   sResp += "motor_amp=" + String (fVolt1) + ",";  
   sResp += "servo_pitch=" + String (g_iServoPitchPwm) + ",";  
