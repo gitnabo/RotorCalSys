@@ -72,7 +72,7 @@ float readADC(int iADC);
 
 String Version()
 {
-	return "0.0";
+	return "0.1";
 }
 
 
