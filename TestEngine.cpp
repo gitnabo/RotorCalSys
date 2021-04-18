@@ -177,6 +177,9 @@ void TestEngine::Seq_Calib_A()
 	agent.Open(m_sPort);
 	// Agent::Data data;
 
+	QString sVer = QString("Arduino Version: %1").arg(agent.GetVersion());
+	LOG(sVer);
+
 	// Start Engine
 	m_pAgent->SetPitch(0);
 	Wait(2000);

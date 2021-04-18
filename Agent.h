@@ -36,6 +36,7 @@ public:
 
 	void Open(const QString& sPort);
 	void Close();
+	QString GetVersion();
 
 	
 	void SetPitch(float fDegree);

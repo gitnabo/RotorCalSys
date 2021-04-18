@@ -76,6 +76,11 @@ void SetPitchPwm(int iPitchPWM);
 void SetRpmPwm(int iRpmPwm);
 float readADC(int iADC);
 
+String Version()
+{
+	return "0.0";
+}
+
 
 void Debug(const char* pszMsg)
 {
@@ -247,8 +252,10 @@ String ExecuteRequest(const String& sOp, const String& sParams)
     SetRpmPwm(iPWM);
     return "";
   }
-  else if(sOp == "echo")
-    return sParams;
+  else if (sOp == "echo")
+	  return sParams;
+  else if (sOp == "getversion")
+	  return Version();
   else
     return "";
 }

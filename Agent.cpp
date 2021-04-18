@@ -104,6 +104,11 @@ void Agent::Close()
 	m_serial.close();
 }
 
+QString Agent::GetVersion()
+{
+	QString sVer = Tx("getversion");
+	return sVer;
+}
 
 QString Agent::Tx(QString sReq)
 {
