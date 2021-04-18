@@ -85,6 +85,13 @@ void Debug(const char* pszMsg)
   //Serial.print(pszMsg);
 }
 
+void Debug(int iVal)
+{
+	char sz[16];
+	sprintf(sz, "%d", iVal);
+	Debug(sz);
+}
+
 
 void setup() {
   Serial.begin(57600);  
