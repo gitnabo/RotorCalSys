@@ -180,16 +180,33 @@ void TestEngine::Seq_Calib_A()
 	QString sVer = QString("Arduino Version: %1").arg(agent.GetVersion());
 	LOG(sVer);
 
-	// Start Engine 
-	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC	
+	// Make sure we begin with the motor stopped
+	m_pAgent->SetMotorSpeedRPM(0);
+
+	// Wave to the user with the pitch a few times, we want to warn them that shit is going 
+	// to get a little scary. So we start by making a rucus with the pitch, we wave at them.
 	m_pAgent->SetPitch(0);
-	Wait(2000);
-	m_pAgent->SetPitch(8);
-	Wait(2000);
+	for (int i = 0; i < 5; ++i)
+	{
+		m_pAgent->SetPitch(8);
+		Wait(100);
+		m_pAgent->SetPitch(0);
+		Wait(100);
+	}
 	m_pAgent->SetPitch(0);
-	Wait(2000);
+
+	// Now we count down till motor start. We make a little rotor tick every 1 sec.
+	for (int i = 0; i < 5; ++i)
+	{
+		Wait(1000);
+		m_pAgent->SetPitch(6);
+		Wait(50);
+		m_pAgent->SetPitch(0);
+	}
+	Wait(50);
 
 
+	// Start Engine!
 	m_pAgent->SetMotorSpeedRPM(m_iMotorRPM); // Set Motor to RPM
 	QString sLogMsg = "Motor Speed Set To:" + QString::number(m_iMotorRPM);
 	LOG(sLogMsg);
