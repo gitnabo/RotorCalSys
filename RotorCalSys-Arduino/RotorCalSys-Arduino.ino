@@ -68,7 +68,11 @@ String GetData();
 String GetScale();
 void SetPitchPwm(int iPitchPWM);
 void SetRpmPwm(int iRpmPwm);
-float readADC(int iADC);
+float readRawADC(int iADC);
+float ReadPitchServoV();
+float ReadPitchServoA();
+float ReadMotorV();
+float ReadMotorA();
 
 String Version()
 {
@@ -275,59 +279,75 @@ void SetRpmPwm(int iRpmPwm)
 }
 
 
-// 0=amp0, 1=volt0, 2=amp1, 3=volt1
-float readADC(int iADC)
+float readRawADC(int iADC)
 {
-  float fSum = 0.0f;
+	float fSum = 0.0f;
 
-  // get x point average
-  int iCount = 100;
-  for (int i = 0; i < iCount; ++i) {
-    switch(iADC)
-    {
-      case 0:
-        fSum += 0.003f * 1000.0f * g_ads1115[0].readADC_Differential_0_1(); 
-        break;
-      case 1:
-        fSum += 0.003f * 1.104f * g_ads1115[0].readADC_Differential_2_3();
-        break;
-      case 2:
-        fSum += 0.002f * 1000.0f * g_ads1115[1].readADC_Differential_0_1();
-        break;
-      case 3:
-        fSum += 0.002f * 15.71f * g_ads1115[1].readADC_Differential_2_3();
-        break;
-    }
-    delay(1);   
-  }
-    
-  float fVal = fSum / (float)iCount;
-  Debug("read ACD: ");
-  Debug(iADC);
-  Debug("\r\n");
+	// get x point average
+	int iCount = 100;
+	for (int i = 0; i < iCount; ++i) {
+		switch (iADC)
+		{
+		case 0:
+			fSum += g_ads1115[0].readADC_Differential_0_1();
+			break;
+		case 1:
+			fSum += g_ads1115[0].readADC_Differential_2_3();
+			break;
+		case 2:
+			fSum += g_ads1115[1].readADC_Differential_0_1();
+			break;
+		case 3:
+			fSum += g_ads1115[1].readADC_Differential_2_3();
+			break;
+		}
+		delay(1);
+	}
 
-  return fVal;
+	float fVal = fSum / (float)iCount;
+	Debug("read ACD: ");
+	Debug(iADC);
+	Debug("\r\n");
+
+	return fVal;
 }
+
+
+float ReadPitchServoV()
+{
+	return readRawADC(0) * 0.003f * 1000.0f;
+}
+
+float ReadPitchServoA()
+{
+	return readRawADC(1) * 0.003f * 1.104f;
+}
+
+float ReadMotorV()
+{
+	return readRawADC(2) * 0.002f * 1000.0f;
+}
+
+float ReadMotorA()
+{
+	return readRawADC(3) * 0.002f * 15.71f;
+}
+
 
 
 String GetData()
 { 
   // Read the real data from the hardware
-
-  float fAmp0 = readADC(0);
-  float fVolt0 = readADC(1);
-  float fAmp1 = readADC(2);
-  float fVolt1 = readADC(3);
-
+	
   String sResp;
   sResp += "ms=" + String(millis()) + ",";
-  sResp += "kg=" + String (GetScale()) + ",";
-  sResp += "pitch_servo_amp=" + String (fAmp0) + ",";
-  sResp += "pitch_servo_volt=" + String (fVolt0) + ","; 
-  sResp += "motor_volt=" + String (fAmp1) + ",";  
-  sResp += "motor_amp=" + String (fVolt1) + ",";  
-  sResp += "servo_pitch=" + String (g_iServoPitchPwm) + ",";  
-  sResp += "motor_rpm=" + String (g_iServoMotorRpm);  
+  sResp += "kg=" + String(GetScale()) + ",";
+  sResp += "pitch_servo_amp=" + String(ReadPitchServoA()) + ",";
+  sResp += "pitch_servo_volt=" + String(ReadPitchServoV()) + ",";
+  sResp += "motor_volt=" + String(ReadMotorV()) + ",";
+  sResp += "motor_amp=" + String(ReadMotorA()) + ",";
+  sResp += "servo_pitch=" + String(g_iServoPitchPwm) + ",";  
+  sResp += "motor_rpm=" + String(g_iServoMotorRpm);  
  
   return sResp;
 }
