@@ -52,7 +52,7 @@
 HX711 g_scale;
 
 // ADCs
-Adafruit_ADS1015 g_ads1115[] = {(0x48),(0x49)};  
+Adafruit_ADS1015 g_ads1115[2]; 
 
 #endif
 
@@ -92,6 +92,10 @@ void setup() {
   // Set pins for servos
   g_servoPitch.attach(6);
   g_servoMotor.attach(5);
+
+  g_ads1115[0].begin(0x48);
+  g_ads1115[1].begin(0x49);
+
 return;
 
 #ifndef FEATHER
