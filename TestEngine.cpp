@@ -238,7 +238,7 @@ void TestEngine::Seq_Calib_A()
 			emit NewData(data);
 
 			// Display Lift
-			sLogMsg = QString("%1kg ; %2A ; %3V ; %4W").arg(
+			sLogMsg = QString("load=%1kg Motor A=%2 Motor V=%3V Motor W=%4").arg(
 							QString::number(data.fLoadCellKg),
 							QString::number(data.fMotorControllerCurrent),
 							QString::number(data.fMotorControllerVoltage),
