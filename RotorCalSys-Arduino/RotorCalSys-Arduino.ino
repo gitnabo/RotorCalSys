@@ -37,11 +37,7 @@
 #include <Wire.h>
 #include <Servo.h>
 
-// For simulating on an Adafruit feather (because that's what Steve has)
-//#define FEATHER
 
-
-#ifndef FEATHER
 #include <HX711.h>
 #include <Adafruit_ADS1X15.h>
 
@@ -54,8 +50,6 @@ HX711 g_scale;
 
 // ADCs
 Adafruit_ADS1015 g_ads1115[2]; 
-
-#endif
 
 
 Servo g_servo_MotorRpm; // RPM used to be called '2'
@@ -99,13 +93,10 @@ void setup() {
   g_ads1115[1].begin(0x49);
   SetRpmPwm(1000);
 
-#ifndef FEATHER
   //set pins for scale
   g_scale.begin(SCALE_PIN_DOUT, SCALE_PIN_CLK);
   g_scale.set_scale();
   g_scale.tare(); //Reset the scale to 0
-#endif
-
 }//setup
 
 
@@ -283,9 +274,6 @@ void SetRpmPwm(int iRpmPwm)
 // 0=amp0, 1=volt0, 2=amp1, 3=volt1
 float readADC(int iADC)
 {
-#ifdef FEATHER
-  return 1.0f;
-#else
   float fSum = 0.0f;
 
   // get x point average
@@ -315,17 +303,11 @@ float readADC(int iADC)
   Debug("\r\n");
 
   return fVal;
-#endif
 }
 
 
 String GetData()
-{  
-#ifdef FEATHER
-  // Fake data
-  String sData = "1.0,2.0,3.0,4.0,5.0,6.0,7.0";
-  return sData;  
-#else
+{ 
   // Read the real data from the hardware
 
   float fAmp0 = readADC(0);
@@ -344,18 +326,12 @@ String GetData()
   sResp += "motor_rpm=" + String (g_iServoMotorRpm);  
  
   return sResp;
-#endif
 }
 
 
 
 String GetScale()
-{  
-#ifdef FEATHER
-  // Fake data
-  String sData = "1.23";
-  return sData;  
-#else
+{ 
   // Read the real data from the hardware
 
   // This code is meant to help deal with the scale sensor taking so long.
@@ -365,5 +341,4 @@ String GetScale()
   float fScaleRaw = (float)g_scale.read();    
   float fScale = fScaleRaw * 0.0000072418f + 0.38f;
   return String(fScale);
-#endif
 }
