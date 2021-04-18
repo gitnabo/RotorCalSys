@@ -38,6 +38,8 @@ public:
 	void Close();
 	QString GetVersion();
 
+	// Call this when the motor is off
+	void TareScale();
 	
 	void SetPitch(float fDegree);
 

@@ -233,6 +233,12 @@ Agent::Data Agent::GetData()
 	return data; 
 }
 
+
+void Agent::TareScale()
+{
+	QString sResp = Tx("tarescale");
+}
+
 float Agent::GetScale()
 {
 	QString sResp = Tx("getscale");

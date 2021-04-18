@@ -203,7 +203,10 @@ void TestEngine::Seq_Calib_A()
 		Wait(50);
 		m_pAgent->SetPitch(0);
 	}
-	Wait(50);
+	Wait(250);
+
+	LOG("Taring Scale");
+	m_pAgent->TareScale();
 
 
 	// Start Engine!
