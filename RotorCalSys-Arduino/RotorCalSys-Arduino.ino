@@ -45,8 +45,8 @@
 #include <HX711.h>
 #include <Adafruit_ADS1X15.h>
 
-#define DOUT  10
-#define CLK  16
+#define SCALE_PIN_DOUT  10
+#define SCALE_PIN_CLK  16
 
 
 
@@ -98,11 +98,10 @@ void setup() {
   g_ads1115[0].begin(0x48);
   g_ads1115[1].begin(0x49);
   SetRpmPwm(1000);
-return;
 
 #ifndef FEATHER
   //set pins for scale
-  g_scale.begin(DOUT, CLK);
+  g_scale.begin(SCALE_PIN_DOUT, SCALE_PIN_CLK);
   g_scale.set_scale();
   g_scale.tare(); //Reset the scale to 0
 #endif
