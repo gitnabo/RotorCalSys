@@ -83,7 +83,6 @@ void TestEngine::run() /// Entry Point
 	{
 		// Seq_EnduranceTestOneAngle();
 		Seq_Calib_A();
-		// Seq_DevA();
 	}
 	catch (const AbortException&)
 	{
@@ -380,67 +379,6 @@ void TestEngine::Seq_RotorLifeTest_MotorOn()
 				iRemainingMs = qMax(iRemainingMs, 0);	// Not less than zero
 				Wait(iRemainingMs);
 			}
-		}
-	}
-
-	// Shut Down System
-	agent.SetMotorSpeedRPM(0);
-	m_pAgent->SetPitch(1);
-	LOG("Sequence Closing");
-	agent.Close();
-}
-
-void TestEngine::Seq_DevA()
-{
-	LOG("Seq Opening: Seq_DevA");
-
-	// Setup the test agent for communications
-	Agent agent;
-	m_pAgent = &agent;/// This is just to have access outside of this sequence
-	agent.Open(m_sPort);
-	// Agent::Data data;
-
-	// Start Engine
-	m_pAgent->SetPitch(0);
-	m_pAgent->SetPitch(8);
-	m_pAgent->SetPitch(0);
-	m_pAgent->SetMotorSpeedRPM(0); // To turn on the ESC
-	Wait(1000); // Delay for the motor cmd to reach ESC
-
-	m_pAgent->SetMotorSpeedRPM(m_iMotorRPM); // Set Motor to RPM
-	QString sLogMsg = "Motor Speed Set To:" + QString::number(m_iMotorRPM);
-	LOG(sLogMsg);
-	Wait(m_iDelayForMotorRPM); // Delay for Motor RPM
-
-	// Iteration of the Angle Of Attack 
-	float fDegree = m_fAngleAtStartOfTestDegree;
-	QElapsedTimer tmrMs;
-	tmrMs.start();
-	for (fDegree; fDegree <= m_fAngleAtEndOfTestDegree; fDegree++) {
-		sLogMsg = "Angle of Attack:" + QString::number(fDegree);
-		LOG(sLogMsg);
-		m_pAgent->SetPitch(fDegree);
-		emit NewPitch(fDegree);
-		Wait(m_iSampleMs); //  To give time for the rotor to reach angle 
-		// Gather data for a little while	
-
-		QElapsedTimer tmr;
-		tmr.start();
-		while (tmr.elapsed() < m_iTimeSpentAtAOA)
-		{
-			// sLogMsg = "Get Data - TestEngine Line 206:";
-			// LOG(sLogMsg);
-			Agent::Data data = m_pAgent->GetDataTEST();
-			data.iSampleMs = tmrMs.elapsed();
-			emit NewData(data);
-
-			// Display Lift
-			sLogMsg = QString::number(data.fLoadCellKg) + "kg ; " + QString::number(data.fMotorControllerCurrent) + "A ; " + QString::number(data.fMotorControllerVoltage) + "V ; " +
-				QString::number(data.fMotorControllerCurrent * data.fMotorControllerVoltage) + "W";
-			LOG(sLogMsg);
-			int iRemainingMs = m_iSampleMs - tmr.elapsed();
-			iRemainingMs = qMax(iRemainingMs, 0);	// Not less than zero
-			Wait(iRemainingMs);
 		}
 	}
 

@@ -56,7 +56,6 @@ private:
 	void Seq_Calib_A();
 	void Seq_EnduranceTestOneAngle();
 	void Seq_RotorLifeTest_MotorOn();
-	void Seq_DevA();
 	void Seq_Calib_B_PWM();
 	void Seq_Study_at_Small_degree();
 
