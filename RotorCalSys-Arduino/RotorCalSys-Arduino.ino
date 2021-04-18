@@ -21,6 +21,16 @@
  * 7. Set the COM port to match the correct device manager entry
  * 8. Run Examples/Communication/SerialCallResponse, you should see AAA coming out of the Serial Monitor
  *
+ * Next, we need to install the libraries for the HX711 load sensor and the Adafruit ADS1015 ADC. Follow these
+ * instructions:
+ * 1. Menu "Sketch/Include Library/Manage Libraries"
+ * 2. Enter HX711 in the search pane
+ * 3. Select the HX711 library by Bogdan Necula
+ * 4. Install it
+ *
+ * Do the same for these libraries:
+ *    Adafruit BusIO
+ *    Adafruit ADS1x15
  */
 
 #include <Wire.h>
@@ -31,8 +41,8 @@
 
 
 #ifndef FEATHER
-#include "HX711.h"
-#include <Adafruit_ADS1015.h>
+#include <HX711.h>
+#include <Adafruit_ADS1X15.h>
 
 #define DOUT  10
 #define CLK  16
