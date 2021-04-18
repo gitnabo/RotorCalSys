@@ -1,4 +1,28 @@
 
+/* This program runs on the SparkFun ProMicro 5V/16MHz arduino board.
+ *
+ *  Just plug-in the board, and windows should automatically install the right USB to Serial
+ *  kernel-mode-driver. Make sure that when you plug in your board that it pops up on a COM port in device manager.
+ *
+ * The board support package for Arduino for this board can be found here:
+ *  https://learn.sparkfun.com/tutorials/pro-micro--fio-v3-hookup-guide/installing-windows
+ *  https://github.com/sparkfun/Arduino_Boards/archive/master.zip
+ *
+ * The instructions are confusing, they are talking at first mainly about the kernel mode windows driver.
+ *
+ * The instructions for getting the board support package setup:
+ *
+ * 1. In Arduino IDE, go to Preferences and add this URL to the "Additional Board Manager URLs" entry
+ * 2. Open the "Board Manager" from the Tools menu
+ * 3. Type "sparkfun", it should filter down to a few entries
+ * 4. Install the SparkFun AVR package
+ * 5. Again in the Tools menu, select the "SparkFun Pro Micro"
+ * 6. Select the 5V, 16MHz processor option
+ * 7. Set the COM port to match the correct device manager entry
+ * 8. Run Examples/Communication/SerialCallResponse, you should see AAA coming out of the Serial Monitor
+ *
+ */
+
 #include <Wire.h>
 #include <Servo.h>
 
