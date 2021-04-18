@@ -335,21 +335,15 @@ String GetData()
   float fVolt1 = readADC(3);
 
   String sResp;
-  sResp += millis();
-  sResp += ",";
-  sResp += sScale;
-  sResp += ",";
-  sResp += fAmp0;  //servo
-  sResp += ",";
-  sResp += fVolt0;  //servo
-  sResp += ",";
-  sResp += fAmp1;  //batt/esc
-  sResp += ",";
-  sResp += fVolt1;//batt/esc
-  sResp += ",";
-  sResp += g_iServoMotorVal;  //servo
-  sResp += ",";
-  sResp += g_iServoPitchVal; //batt/esc
+  sResp += "ms=" + String(millis()) + ",";
+  sResp += "kg=" + String (sScale) + ",";
+  sResp += "servo_amp=" + String (fAmp0) + ",";
+  sResp += "servo_volt=" + String (fVolt0) + ","; 
+  sResp += "motor_volt=" + String (fAmp1) + ",";  
+  sResp += "motor_amp=" + String (fVolt1) + ",";  
+  sResp += "servo_pitch=" + String (g_iServoPitchVal) + ",";  
+  sResp += "motor_rpm=" + String (g_iServoMotorVal);  
+ 
   return sResp;
 #endif
 }
