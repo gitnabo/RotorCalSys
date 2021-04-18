@@ -238,8 +238,11 @@ void TestEngine::Seq_Calib_A()
 			emit NewData(data);
 
 			// Display Lift
-			sLogMsg = QString::number(data.fLoadCellKg) + "kg ; " + QString::number(data.fMotorControllerCurrent) + "A ; " + QString::number(data.fMotorControllerVoltage) + "V ; " + 
-					  QString::number(data.fMotorControllerCurrent * data.fMotorControllerVoltage) + "W";
+			sLogMsg = QString("%1kg ; %2A ; %3V ; %4W").arg(
+							QString::number(data.fLoadCellKg),
+							QString::number(data.fMotorControllerCurrent),
+							QString::number(data.fMotorControllerVoltage),
+							QString::number(data.fMotorControllerCurrent * data.fMotorControllerVoltage) );
 			LOG(sLogMsg);
 			int iRemainingMs = m_iSampleMs - tmr.elapsed();
 			iRemainingMs = qMax(iRemainingMs, 0);	// Not less than zero
