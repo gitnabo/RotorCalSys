@@ -186,7 +186,7 @@ void TestEngine::Seq_Calib_A()
 	// Wave to the user with the pitch a few times, we want to warn them that shit is going 
 	// to get a little scary. So we start by making a rucus with the pitch, we wave at them.
 	
-7  /	m_pAgent->SetPitch(0);
+	m_pAgent->SetPitch(0);
 	for (int i = 0; i < 5; ++i)
 	{
 		m_pAgent->SetPitch(8);
