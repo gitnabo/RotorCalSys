@@ -227,8 +227,8 @@ void TestEngine::Seq_Calib_A()
 		m_pAgent->SetPitch(fDegree);
 		emit NewPitch(fDegree);
 		Wait(m_iSampleMs); //  To give time for the rotor to reach angle 
+		
 		// Gather data for a little while	
-
 		QElapsedTimer tmr;
 		tmr.start();
 		while (tmr.elapsed() < m_iTimeSpentAtAOA)
@@ -241,10 +241,10 @@ void TestEngine::Seq_Calib_A()
 
 			// Display Lift
 			sLogMsg = QString("load=%1kg Motor A=%2 Motor V=%3V Motor W=%4").arg(
-							QString::number(data.fLoadCellKg),
-							QString::number(data.fMotorControllerCurrent),
-							QString::number(data.fMotorControllerVoltage),
-							QString::number(data.fMotorControllerCurrent * data.fMotorControllerVoltage) );
+					  QString::number(data.fLoadCellKg),
+					  QString::number(data.fMotorControllerCurrent),
+					  QString::number(data.fMotorControllerVoltage),
+					  QString::number(data.fMotorControllerCurrent * data.fMotorControllerVoltage) );
 			LOG(sLogMsg);
 			int iRemainingMs = m_iSampleMs - tmr.elapsed();
 			iRemainingMs = qMax(iRemainingMs, 0);	// Not less than zero
