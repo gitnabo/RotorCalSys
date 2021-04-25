@@ -262,6 +262,12 @@ void Agent::SetPitch(float fDegree)
 	Tx(sRequest);
 }
 
+void Agent::SetPitchPwm(int fPwm)
+{
+	QString sRequest = QString("setpitchpwm %1").arg(fPwm);
+	Tx(sRequest);
+}
+
 
 // ! Engine RPM = setServoTwoPos !
 void Agent::SetMotorSpeedRPM(float fMotorSpeedRpm)

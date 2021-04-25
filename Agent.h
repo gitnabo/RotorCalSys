@@ -43,6 +43,8 @@ public:
 	
 	void SetPitch(float fDegree);
 
+	void SetPitchPwm(int fPwm);
+
 	void SetMotorSpeedRPM(float fMotorSpeedRpm);
 
 	static float ConvPwmToAoaDegree(float fPwmAOA); /// Angle of Attack
