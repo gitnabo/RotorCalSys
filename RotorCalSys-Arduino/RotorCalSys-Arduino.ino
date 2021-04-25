@@ -283,7 +283,7 @@ float readRawADC(int iADC)
 	float fSum = 0.0f;
 
 	// get x point average
-	int iCount = 100;
+	int iCount = 50; 
 	for (int i = 0; i < iCount; ++i) {
 		switch (iADC)
 		{
@@ -312,29 +312,27 @@ float readRawADC(int iADC)
 }
 
 
-
-
-
+// Power Measurement: Servo
 float ReadPitchServoA()
 {
-	return readRawADC(1) * 0.003f * 1.104f;
+	return readRawADC(0) * 0.003f * 1.104f;
 }
 
 float ReadPitchServoV()
 {
-	return readRawADC(0) * 0.003f * 1000.0f;
+	return readRawADC(1) * 0.003f * 1000.0f;
 }
 
+// Power Measurement: Motor
 float ReadMotorA()
 {
-	return readRawADC(3) * 0.002f * 1000;
+	return readRawADC(2) * 0.002f * 1000;
 }
 
 float ReadMotorV()
 {
-	return readRawADC(2) * 0.002f * 15.71f;
+	return readRawADC(3) * 0.002f * 15.71f;
 }
-
 
 
 String GetData()
