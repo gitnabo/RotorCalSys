@@ -75,7 +75,7 @@ float ReadMotorA();
 
 String Version()
 {
-	return "0.5";
+	return "0.51";
 }
 
 
