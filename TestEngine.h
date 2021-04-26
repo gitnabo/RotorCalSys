@@ -22,7 +22,7 @@ public:
 	const int m_iDelayForMotorRPM = 45000; // ### Should be 45000
 	const float m_fAngleAtStartOfTestDegree = 0.0f;     
 	const float m_fAngleAtEndOfTestDegree = 11.0f;		 
-	const int m_iTimeSpentAtAOA = 40000;
+	const int m_iTimeSpentAtAOA = 30000;
 	const int m_iSampleMs = 1000;
 
 	/// Constants - Life Test
