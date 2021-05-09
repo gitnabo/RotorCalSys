@@ -75,7 +75,7 @@ float ReadMotorA();
 
 String Version()
 {
-	return "0.532";
+	return "0.534";
 }
 
 
@@ -326,14 +326,26 @@ float ReadPitchServoV()
 // Power Measurement: Motor
 float ReadMotorA()
 {
-	/// New correction factor were added based on read back comparison on Apr 25 2021
-  return readRawADC(2) * 0.265f - 15.0f;
+	/// Following values were calculated based on a set of run on May 9 2021
+  float fAvgInput  = 159.7823077;
+  float fStdInput  = 71.3891654;
+  float fAvgOutput = 24.24615385;
+  float fStdOutput = 13.04694188;
+  float fMotorA = (((readRawADC(2)-fAvgInput)*fStdOutput/fStdInput)+fAvgOutput);
+
+  return fMotorA;
 }
 
 float ReadMotorV()
 {
-/// New correction factor were added based on read back comparison on Apr 25 2021
-  return readRawADC(3) * 0.048348624;
+	/// Following values were calculated based on a set of run on May 9 2021
+  float fAvgInput  = 1090.188462;
+  float fStdInput  = 4.727881566;
+  float fAvgOutput = 52.89230769;
+  float fStdOutput = 0.189127552;
+  float fMotorV = (((readRawADC(3)-fAvgInput)*fStdOutput/fStdInput)+fAvgOutput);
+
+  return fMotorV;
 }
 
 

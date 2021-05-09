@@ -293,9 +293,9 @@ void TestEngine::Seq_EnduranceTestOneAngle()
 		LOG(sLogMsg);
 		m_pAgent->SetPitch(fDegree);
 		emit NewPitch(fDegree);
-		Wait(m_iSampleMs); //  To give time for the rotor to reach angle 
+		Wait(m_iSampleMs); ///  To give time for the rotor to reach angle 
+		
 		// Gather data for a little while	
-
 		QElapsedTimer tmr;
 		tmr.start();
 		while (tmrMs.elapsed() < iTestDurationMs)
